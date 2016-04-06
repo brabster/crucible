@@ -6,11 +6,16 @@
   [spec]
   {"Fn::Join" [(:delimiter spec) (into [] (map #(convert-value %) (:values spec)))]})
 
+(defn convert-fn-select
+  [spec]
+  {"Fn::Select" [(:index spec) (into [] (map #(convert-value %) (:values spec)))]})
+
 (defn convert-fn
   [f]
   (let [type (first f)
         spec (second f)]
-    (cond (= type :join) (convert-fn-join spec))))
+    (cond (= type :join) (convert-fn-join spec)
+          (= type :select) (convert-fn-select spec))))
 
 (defn convert-pseudo
   [type]

@@ -31,6 +31,14 @@
   (testing "join fn strings value"
     (is (= {"Fn::Join" ["." ["foo" "bar"]]}
            (encode [:fn [:join {:delimiter "." :values ["foo" "bar"]}]]))))
+
+  (testing "select fn string value"
+    (is (= {"Fn::Select" ["1" ["foo" "bar"]]}
+           (encode [:fn [:select {:index "1" :values ["foo" "bar"]}]]))))
+
+  (testing "select fn ref value"
+    (is (= {"Fn::Select" ["1" ["foo" {"Ref" "blah"}]]}
+           (encode [:fn [:select {:index "1" :values ["foo" [:ref :blah]]}]]))))
   
   (testing "property value walk"
     (is (= {"Fn::Join" ["-" [{"Ref" "foo"} "bar" {"Ref" "AWS::AccountId"}]]}
