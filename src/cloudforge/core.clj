@@ -14,7 +14,12 @@
 
 (defn convert-pseudo
   [type]
-  (cond (= type :account) {"Ref" "AWS::Account"}))
+  (cond (= type :account-id) {"Ref" "AWS::AccountId"}
+        (= type :region) {"Ref" "AWS::Region"}
+        (= type :notification-arns) {"Ref" "AWS::NotificationARNs"}
+        (= type :no-value) {"Ref" "AWS::NoValue"}
+        (= type :stack-id) {"Ref" "AWS::StackId"}
+        (= type :stack-name) {"Ref" "AWS::StackName"}))
 
 (defn convert-ref
   [r]
