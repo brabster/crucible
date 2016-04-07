@@ -10,6 +10,10 @@
   (testing "ref value"
     (is (= {"Ref" "x"} (encode [:ref "x"]))))
 
+  (testing "select fn get-att value"
+    (is (= {"Fn::GetAtt" ["resource" "foo"]}
+           (encode [:ref :resource :foo]))))
+
   (testing "pseudo-account value"
     (is (= {"Ref" "AWS::AccountId"} (encode [:pseudo :account-id]))))
 
@@ -36,10 +40,10 @@
     (is (= {"Fn::Select" ["1" ["foo" "bar"]]}
            (encode [:fn [:select {:index "1" :values ["foo" "bar"]}]]))))
 
-  (testing "select fn ref value"
+  (testing "select fn select value"
     (is (= {"Fn::Select" ["1" ["foo" {"Ref" "blah"}]]}
            (encode [:fn [:select {:index "1" :values ["foo" [:ref :blah]]}]]))))
-  
+
   (testing "property value walk"
     (is (= {"Fn::Join" ["-" [{"Ref" "foo"} "bar" {"Ref" "AWS::AccountId"}]]}
            (encode [:fn [:join {:delimiter "-"

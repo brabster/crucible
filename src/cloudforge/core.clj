@@ -13,9 +13,9 @@
 (defn convert-fn
   [f]
   (let [type (first f)
-        spec (second f)]
-    (cond (= type :join) (convert-fn-join spec)
-          (= type :select) (convert-fn-select spec))))
+        spec (rest f)]
+    (cond (= type :join) (apply convert-fn-join spec)
+          (= type :select) (apply convert-fn-select spec))))
 
 (defn convert-pseudo
   [type]
@@ -27,17 +27,19 @@
         (= type :stack-name) {"Ref" "AWS::StackName"}))
 
 (defn convert-ref
-  [r]
-  {"Ref" (name r)})
+  ([r]
+   {"Ref" (name r)})
+  ([r att]
+   {"Fn::GetAtt" [(name r) (name att)]}))
 
 (defn convert-value
   [v]
   (if (string? v) v
       (let [type (first v)
-            spec (second v)]
-        (cond (= type :fn) (convert-fn spec)
-              (= type :pseudo) (convert-pseudo spec)
-              (= type :ref) (convert-ref spec)))))
+            spec (rest v)]
+        (cond (= type :fn) (apply convert-fn spec)
+              (= type :pseudo) (apply convert-pseudo spec)
+              (= type :ref) (apply convert-ref spec)))))
 
 (defn encode
   [map]
