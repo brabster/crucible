@@ -1,6 +1,6 @@
-(ns cloudforge.parameters
+(ns crucible.parameters
   (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [cloudforge.values :refer [convert-value]]))
+            [crucible.values :refer [convert-value]]))
 
 (defn encode-key
   [k]

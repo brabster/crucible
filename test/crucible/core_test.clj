@@ -1,6 +1,6 @@
-(ns cloudforge.core-test
+(ns crucible.core-test
   (:require [clojure.test :refer :all]
-            [cloudforge.core :refer :all]))
+            [crucible.core :refer :all]))
 
 (deftest value-conversions
 

@@ -1,6 +1,6 @@
-(ns cloudforge.parameters-test
+(ns crucible.parameters-test
   (:require [clojure.test :refer :all]
-            [cloudforge.parameters :refer :all]))
+            [crucible.parameters :refer :all]))
 
 (deftest parameter-conversions
 

@@ -1,6 +1,6 @@
-# cloudforge
+# crucible
 
-FIXME: description
+Create better cloudformation templates with Clojure
 
 ## Installation
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar cloudforge-0.1.0-standalone.jar [args]
+    $ java -jar crucible-0.1.0-standalone.jar [args]
 
 ## Options
 
