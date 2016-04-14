@@ -4,7 +4,7 @@ Create better cloudformation templates with Clojure
 
 ## Installation
 
-Download from http://example.com/FIXME.
+[![Clojars Project](https://img.shields.io/clojars/v/crucible.svg)](https://clojars.org/crucible)
 
 ## Usage
 
