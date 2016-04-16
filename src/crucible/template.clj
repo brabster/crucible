@@ -5,28 +5,27 @@
             [crucible.parameters :refer [encode-parameter]]
             [crucible.outputs :refer [encode-output]]))
 
-(defn encode-key
+(defn- encode-key
   [k]
   (name (->PascalCase k)))
 
-(defn encode-template-element
+(defn- encode-template-element
   [encode [k v]]
   [(encode-key k) (encode v)])
+
+(defn- encode-elements
+  [template-map type-label encode-type-fn]
+  [(encode-key type-label)
+   (into {} (->> template-map
+                 type-label
+                 seq
+                 (map (partial encode-template-element encode-type-fn))))])
 
 (defn make-template
   [element-map]
   (reduce (fn [acc [k v]] (if (seq v) (assoc acc k v) acc))
           {}
-          (-> [["AWSTemplateFormatVersion" "2010-09-09"]]
-              (conj ["Parameters" (into {} (->> element-map
-                                                :parameters
-                                                seq
-                                                (map (partial encode-template-element encode-parameter))))])
-              (conj ["Resources" (into {} (->> element-map
-                                               :resources
-                                               seq
-                                               (map (partial encode-template-element encode-resource))))])
-              (conj ["Outputs" (into {} (->> element-map
-                                             :outputs
-                                             seq
-                                             (map (partial encode-template-element encode-output))))]))))
+          [["AWSTemplateFormatVersion" "2010-09-09"]
+           (encode-elements element-map :parameters encode-parameter)
+           (encode-elements element-map :resources encode-resource)
+           (encode-elements element-map :outputs encode-output)]))
