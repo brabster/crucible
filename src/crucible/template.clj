@@ -2,7 +2,8 @@
   (:require [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.core :as core]
             [crucible.resources :refer [encode-resource]]
-            [crucible.parameters :refer [encode-parameter]]))
+            [crucible.parameters :refer [encode-parameter]]
+            [crucible.outputs :refer [encode-output]]))
 
 (defn encode-key
   [k]
@@ -24,4 +25,8 @@
               (conj ["Resources" (into {} (->> element-map
                                                :resources
                                                seq
-                                               (map (partial encode-template-element encode-resource))))]))))
+                                               (map (partial encode-template-element encode-resource))))])
+              (conj ["Outputs" (into {} (->> element-map
+                                             :outputs
+                                             seq
+                                             (map (partial encode-template-element encode-output))))]))))

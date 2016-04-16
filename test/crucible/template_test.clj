@@ -39,3 +39,11 @@
             "Resources" {"MyResource" vpc-cf}}
            (make-template {:parameters {:my-param {:type :string}}
                            :resources {:my-resource vpc-crucible}})))))
+
+(deftest template-resources-and-outputs-test
+  (testing "template with resource and output"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Resources" {"MyResource" vpc-cf}
+            "Outputs" {"MyOutput" {"Value" {"Ref" "foo"}}}}
+           (make-template {:resources {:my-resource vpc-crucible}
+                           :outputs {:my-output {:value [:ref :foo]}}})))))
