@@ -3,7 +3,7 @@
             [crucible.resources :refer :all]
             [crucible.resources.aws.ec2 :refer [eip]]))
 
-(deftest test
+(deftest test-resources
 
   (testing "minimal custom resource"
     (is (= {"Type" "Custom::MyResource"
