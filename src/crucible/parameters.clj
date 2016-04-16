@@ -28,6 +28,30 @@
   [[k no-echo?]]
   [(encode-key k) (str no-echo?)])
 
+(defmethod encode-kv :constraint-description
+  [[k constraint-description]]
+  [(encode-key k) (str constraint-description)])
+
+(defmethod encode-kv :allowed-pattern
+  [[k pattern]]
+  [(encode-key k) (str pattern)])
+
+(defmethod encode-kv :min-value
+  [[k n]]
+  [(encode-key k) (str n)])
+
+(defmethod encode-kv :max-value
+  [[k n]]
+  [(encode-key k) (str n)])
+
+(defmethod encode-kv :min-length
+  [[k n]]
+  [(encode-key k) (str n)])
+
+(defmethod encode-kv :max-length
+  [[k n]]
+  [(encode-key k) (str n)])
+
 (defn encode-parameter
   [spec]
   (into {} (map encode-kv (seq spec))))
