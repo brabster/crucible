@@ -5,7 +5,7 @@
             [crucible.parameters :refer [encode-parameter]]))
 
 (defn encode-key
-  [k] 
+  [k]
   (name (->PascalCase k)))
 
 (defn encode-template-element
@@ -14,8 +14,14 @@
 
 (defn make-template
   [element-map]
-  (into {"AWSTemplateFormatVersion" "2010-09-09"}
-        {"Resources" (into {} (->> element-map
-                                   :resources 
-                                   seq 
-                                   (map (partial encode-template-element encode-resource))))}))
+  (reduce (fn [acc [k v]] (if (seq v) (assoc acc k v) acc))
+          {}
+          (-> [["AWSTemplateFormatVersion" "2010-09-09"]]
+              (conj ["Parameters" (into {} (->> element-map
+                                                :parameters
+                                                seq
+                                                (map (partial encode-template-element encode-parameter))))])
+              (conj ["Resources" (into {} (->> element-map
+                                               :resources
+                                               seq
+                                               (map (partial encode-template-element encode-resource))))]))))
