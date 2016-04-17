@@ -1,4 +1,5 @@
-(ns crucible.values)
+(ns crucible.values
+  (:require [camel-snake-kebab.core :refer [->PascalCase]]))
 
 (declare convert-value)
 
@@ -32,12 +33,18 @@
   ([r att]
    {"Fn::GetAtt" [(name r) (name att)]}))
 
+(defn encode-key
+  [k]
+  (name (->PascalCase k)))
+
 (defn convert-value
   [v]
-  (if (string? v) v
-      (let [type (first v)
-            spec (rest v)]
-        (cond (= type :fn) (apply convert-fn spec)
-              (= type :pseudo) (apply convert-pseudo spec)
-              (= type :ref) (apply convert-ref spec)))))
+  (cond (nil? v) nil
+        (string? v) v
+        :else (let [type (first v)
+                    spec (rest v)]
+                (cond (= type :fn) (apply convert-fn spec)
+                      (= type :pseudo) (apply convert-pseudo spec)
+                      (= type :ref) (apply convert-ref spec)
+                      :else {(encode-key type) (first spec)}))))
 

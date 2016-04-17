@@ -4,6 +4,9 @@
 
 (deftest value-conversions
 
+  (testing "unknown key"
+    (is (= {"Foo" "bar"} (encode [:foo "bar"]))))
+  
   (testing "string value"
     (is (= "foo" (encode "foo"))))
 
