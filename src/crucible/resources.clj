@@ -15,9 +15,18 @@
   [policy]
   (if policy (encode-key policy)))
 
+(declare encode-resource-properties)
+
+(defn encode-value
+  [v]
+  (cond (map? v) (encode-resource-properties v)
+        (and (vector? v)
+             (not (keyword? (first v)))) (into [] (map encode-resource-properties v))
+        :else (convert-value v)))
+
 (defn encode-resource-properties
   [properties]
-  (into {} (map (fn [[k v]] [(encode-key k) (convert-value v)]) (seq properties))))
+  (into {} (map (fn [[k v]] [(encode-key k) (encode-value v)]) (seq properties))))
 
 (defn encode-resource
   [type-spec & {:keys [creation-policy deletion-policy update-policy depends-on properties]}]
