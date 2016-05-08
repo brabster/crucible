@@ -10,8 +10,8 @@
   (name (->PascalCase k)))
 
 (defn- encode-template-element
-  [encode [k v]]
-  [(encode-key k) (encode v)])
+  [template encode [k v]]
+  [(encode-key k) (encode template v)])
 
 (defn- encode-elements
   [template-map type-label encode-type-fn]
@@ -19,7 +19,7 @@
    (into {} (->> template-map
                  type-label
                  seq
-                 (map (partial encode-template-element encode-type-fn))))])
+                 (map (partial encode-template-element template-map encode-type-fn))))])
 
 (defn make-template
   [element-map]

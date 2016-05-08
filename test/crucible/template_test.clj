@@ -17,7 +17,8 @@
   (testing "template with multiple resources"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Resources" {"MyVpc" vpc-cf "MyOtherVpc" vpc-cf}}
-           (make-template {:resources {:my-vpc vpc-crucible :my-other-vpc vpc-crucible}})))))
+           (make-template {:resources {:my-vpc vpc-crucible
+                                       :my-other-vpc vpc-crucible}})))))
 
 (deftest template-parameters-test
   (testing "template with single parameter"
@@ -44,6 +45,13 @@
   (testing "template with resource and output"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Resources" {"MyResource" vpc-cf}
-            "Outputs" {"MyOutput" {"Value" {"Ref" "foo"}}}}
+            "Outputs" {"MyOutput" {"Value" {"Ref" "my-resource"}}}}
            (make-template {:resources {:my-resource vpc-crucible}
-                           :outputs {:my-output {:value [:ref :foo]}}})))))
+                           :outputs {:my-output [:ref :my-resource]}})))))
+
+(deftest resource-reference-validation-test
+  (testing "reference non-existent parameter from resource property throws"
+    (is (thrown? AssertionError (make-template {:resources
+                                           {:my-resource
+                                            {:name "Custom::Test"
+                                             :properties {:test [:ref :foo]}}}})))))
