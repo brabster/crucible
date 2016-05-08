@@ -2,6 +2,10 @@
   (:require [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.values :refer [convert-value]]))
 
+(defn resource
+  [spec & {:as properties}]
+  (merge spec properties))
+
 (defn generic-resource
   [resource-type props]
   {:name resource-type
@@ -29,13 +33,13 @@
   (into {} (map (fn [[k v]] [(encode-key k) (encode-value template v)]) (seq properties))))
 
 (defn encode-resource
-  [template type-spec & {:keys [creation-policy deletion-policy update-policy depends-on]}]
-  (->> {"Type" (:name type-spec)
+  [template {:keys [name properties creation-policy deletion-policy update-policy depends-on]}]
+  (->> {"Type" name
         "CreationPolicy" (encode-policy creation-policy)
         "UpdatePolicy" (encode-policy update-policy)
         "DeletionPolicy" (encode-policy deletion-policy)
         "DependsOn" (convert-value template depends-on)
-        "Properties" (encode-resource-properties template (:properties type-spec))}
+        "Properties" (encode-resource-properties template properties)}
        seq
        (filter (fn [[k v]] ((complement nil?) v)))
        (into {})))
