@@ -3,9 +3,11 @@
             [crucible.values :refer [convert-value]]))
 
 (defn encode-output
-  [{:keys [description value]}]
-  (->> {"Description" description
-        "Value" (convert-value value)}
-       seq
-       (filter (fn [[k v]] ((complement nil?) v)))
-       (into {})))
+  ([template value]
+   (encode-output template value nil))
+  ([template value description]
+   (->> {"Description" description
+         "Value" (convert-value template value)}
+        seq
+        (filter (fn [[k v]] ((complement nil?) v)))
+        (into {}))))

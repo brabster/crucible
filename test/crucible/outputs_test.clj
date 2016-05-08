@@ -6,12 +6,11 @@
 
   (testing "minimal output"
     (is (= {"Value" {"Ref" "foo"}}
-           (encode-output {:value [:ref :foo]}))))
+           (encode-output {:parameters {:foo nil}} [:ref :foo]))))
   
   (testing "output with description"
     (is (= {"Description" "foo"
             "Value" {"Ref" "bar"}}
-           (encode-output {:description "foo"
-                           :value [:ref :bar]})))))
+           (encode-output {:parameters {:bar nil}} [:ref :bar] "foo")))))
 
 
