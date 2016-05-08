@@ -2,6 +2,8 @@
 
 Create better cloudformation templates with Clojure
 
+[![Travis Build](https://travis-ci.org/brabster/crucible.svg?branch=master)](https://travis-ci.org/brabster/crucible)
+
 ## Installation
 
 [![Clojars Project](https://img.shields.io/clojars/v/crucible.svg)](https://clojars.org/crucible)
