@@ -53,5 +53,5 @@
   [(encode-key k) (str n)])
 
 (defn encode-parameter
-  [spec]
+  [_ spec]
   (into {} (map encode-kv (seq spec))))
