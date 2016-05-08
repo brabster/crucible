@@ -15,6 +15,7 @@
                           "ProvisionedThroughput" {"ReadCapacityUnits" "1"
                                                    "WriteCapacityUnits" "1"}}}
            (encode-resource
+            {}
             (table {:table-name "MyTable"
                     :attribute-definitions [{:attribute-name "id" :attribute-type "S"}
                                             {:attribute-name "sort" :attribute-type "N"}]
