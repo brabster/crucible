@@ -1,1 +1,4 @@
 language: clojure
+
+after_success:
+        "lein deploy"
