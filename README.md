@@ -10,7 +10,7 @@ Create better cloudformation templates with Clojure
 
 ## Usage
 
-See sample in (https://github.com/github/brabster/blob/master/test/crucible/samples/vpc_single_instance_in_subnet.clj)
+See sample in https://github.com/brabster/crucible/blob/master/test/crucible/samples/vpc_single_instance_in_subnet.clj
 
 ## Examples
 
