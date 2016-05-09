@@ -29,7 +29,7 @@
                                       :deletion-policy :retain)))))
   (testing "resource with complex values"
     (is (= {"Type" "AWS::EC2::EIP"
-            "DependsOn" {"Ref" "foo"}
+            "DependsOn" {"Ref" "Foo"}
             "Properties" {"InstanceId" "i-123"
                           "Domain" {"Fn::Join" ["" ["v" "p" "c"]]}}}
            (encode-resource {:parameters {:foo nil}}

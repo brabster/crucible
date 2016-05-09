@@ -11,10 +11,10 @@
     (is (= "foo" (convert-value nil "foo"))))
 
   (testing "ref value"
-    (is (= {"Ref" "x"} (convert-value {:parameters {:x nil}} [:ref :x]))))
+    (is (= {"Ref" "Foo"} (convert-value {:parameters {:foo nil}} [:ref :foo]))))
 
   (testing "select fn get-att value"
-    (is (= {"Fn::GetAtt" ["resource" "foo"]}
+    (is (= {"Fn::GetAtt" ["Resource" "Foo"]}
            (convert-value {:resources {:resource nil}} [:ref :resource :foo]))))
 
   (testing "pseudo-account value"
@@ -44,12 +44,12 @@
            (convert-value nil [:fn [:select {:index "1" :values ["foo" "bar"]}]]))))
 
   (testing "select fn select value"
-    (is (= {"Fn::Select" ["1" ["foo" {"Ref" "blah"}]]}
+    (is (= {"Fn::Select" ["1" ["foo" {"Ref" "Blah"}]]}
            (convert-value {:parameters {:blah nil}}
                           [:fn [:select {:index "1" :values ["foo" [:ref :blah]]}]]))))
 
   (testing "property value walk"
-    (is (= {"Fn::Join" ["-" [{"Ref" "foo"} "bar" {"Ref" "AWS::AccountId"}]]}
+    (is (= {"Fn::Join" ["-" [{"Ref" "Foo"} "bar" {"Ref" "AWS::AccountId"}]]}
            (convert-value {:parameters {:foo nil}}
                           [:fn [:join {:delimiter "-"
                                           :values [[:ref :foo]

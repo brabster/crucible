@@ -5,12 +5,12 @@
 (deftest output-conversions
 
   (testing "minimal output"
-    (is (= {"Value" {"Ref" "foo"}}
+    (is (= {"Value" {"Ref" "Foo"}}
            (encode-output {:parameters {:foo nil}} [:ref :foo]))))
   
   (testing "output with description"
     (is (= {"Description" "foo"
-            "Value" {"Ref" "bar"}}
+            "Value" {"Ref" "Bar"}}
            (encode-output {:parameters {:bar nil}} [:ref :bar] "foo")))))
 
 

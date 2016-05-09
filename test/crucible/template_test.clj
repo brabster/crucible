@@ -55,7 +55,7 @@
   (testing "template with resource and output"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Resources" {"MyResource" vpc-cf}
-            "Outputs" {"MyOutput" {"Value" {"Ref" "my-resource"}}}}
+            "Outputs" {"MyOutput" {"Value" {"Ref" "MyResource"}}}}
            (make-template {:resources {:my-resource (resource vpc-crucible)}
                            :outputs {:my-output [:ref :my-resource]}})))))
 
@@ -65,3 +65,15 @@
                                                 {:my-resource
                                                  {:name "Custom::Test"
                                                   :properties {:test [:ref :foo]}}}})))))
+
+(deftest references-match-template-keys
+  (testing "references in values match template keys"
+    (let [t (make-template {:parameters {:foo nil}
+                            :resources {:bar {:name "Custom::Test"
+                                              :properties {:baz [:ref :foo]}}}})]
+      (is (contains? (get t "Parameters") (get-in t ["Resources"
+                                                     "Bar"
+                                                     "Properties"
+                                                     "Baz"
+                                                     "Ref"]))))))
+
