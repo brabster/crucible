@@ -17,7 +17,9 @@
 
 (defn encode-policy
   [policy]
-  (if policy (encode-key policy)))
+  (if policy
+    (if (map? policy) (reduce-kv (fn [m k v] (assoc m (encode-key k) v)) {} policy)
+        (encode-key policy))))
 
 (declare encode-resource-properties)
 
