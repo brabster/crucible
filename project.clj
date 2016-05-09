@@ -1,4 +1,4 @@
-(defproject crucible "0.1.0-SNAPSHOT"
+(defproject crucible "0.2.0-SNAPSHOT"
   :description "AWS Cloudformation templates in Clojure"
   :url "http://github.com/brabster/crucible"
   :license {:name "Eclipse Public License"
