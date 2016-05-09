@@ -1,21 +1,16 @@
 (ns crucible.template
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [crucible.core :as core]
+  (:require [crucible.template-key :refer [->key]]
             [crucible.resources :refer [encode-resource]]
             [crucible.parameters :refer [encode-parameter]]
             [crucible.outputs :refer [encode-output]]))
 
-(defn- encode-key
-  [k]
-  (name (->PascalCase k)))
-
 (defn- encode-template-element
   [template encode [k v]]
-  [(encode-key k) (encode template v)])
+  [(->key k) (encode template v)])
 
 (defn- encode-elements
   [template-map type-label encode-type-fn]
-  [(encode-key type-label)
+  [(->key type-label)
    (into {} (->> template-map
                  type-label
                  seq

@@ -1,5 +1,6 @@
 (ns crucible.values
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]))
+  (:require [camel-snake-kebab.core :refer [->PascalCase]]
+            [crucible.template-key :refer [->key]]))
 
 (declare convert-value)
 
@@ -36,10 +37,10 @@
 (defn convert-ref
   ([template r]
    {:pre [(referenceable? template r)]}
-   {"Ref" (name r)})
+   {"Ref" (->key r)})
   ([template r att]
    {:pre [(referenceable? template r)]}
-   {"Fn::GetAtt" [(name r) (name att)]}))
+   {"Fn::GetAtt" [(->key r) (->key att)]}))
 
 (defn encode-key
   [k]
