@@ -1,10 +1,10 @@
 (ns crucible.samples.vpc-single-instance-in-subnet
-  (:require [crucible.core :refer [template resource ref join]]
+  (:require [crucible.core :refer [template resource xref join]]
             [crucible.resources.aws.ec2 :as ec2]))
 
 (defn network-acl-entry
   [rule-number from-port to-port & {:keys [egress]}]
-  (ec2/network-acl-entry :network-acl-id (ref :network-acl)
+  (ec2/network-acl-entry :network-acl-id (xref :network-acl)
                          :rule-number (str rule-number)
                          :protocol "6" ;;tcp
                          :rule-action "allow"
@@ -33,16 +33,16 @@
         {:vpc (resource (ec2/vpc :cidr-block "10.0.0.0/16"))
          :subnet (resource (ec2/subnet :cidr-block "10.0.0.0/24"))
          :internet-gateway (resource (ec2/internet-gateway))
-         :attach-gateway (resource (ec2/vpc-gateway-attachment :vpc-id (ref :vpc)))
-         :route-table (resource (ec2/route-table :vpc-id (ref :vpc)))
-         :route (resource (ec2/route :route-table-id (ref :route-table)
+         :attach-gateway (resource (ec2/vpc-gateway-attachment :vpc-id (xref :vpc)))
+         :route-table (resource (ec2/route-table :vpc-id (xref :vpc)))
+         :route (resource (ec2/route :route-table-id (xref :route-table)
                                      :destination-cidr-block "0.0.0.0/0"
-                                     :gateway-id (ref :internet-gateway))
-                          :depends-on (ref :attach-gateway))
+                                     :gateway-id (xref :internet-gateway))
+                          :depends-on (xref :attach-gateway))
          :subnet-route-table-association (resource (ec2/subnet-route-table-association
-                                                    :subnet-id (ref :subnet)
-                                                    :route-table-id (ref :route-table)))
-         :network-acl (resource (ec2/network-acl :vpc-id (ref :vpc)))
+                                                    :subnet-id (xref :subnet)
+                                                    :route-table-id (xref :route-table)))
+         :network-acl (resource (ec2/network-acl :vpc-id (xref :vpc)))
          :inbound-http-network-acl-entry (resource (network-acl-entry 100 80 80))
          :inbound-ssh-network-acl-entry (resource (network-acl-entry 101 22 22))
          :inbound-response-ports-network-acl-entry (resource (network-acl-entry 102 1024 65535))
@@ -50,24 +50,24 @@
          :outbound-https-network-acl-entry (resource (network-acl-entry 101 443 443 :egress true))
          :outbound-response-ports-network-acl-entry (resource (network-acl-entry 101 1024 65535 :egress true))
          :subnet-network-acl-association (resource (ec2/subnet-network-acl-association
-                                                    :subnet-id (ref :subnet)
-                                                    :network-acl-id (ref :network-acl)))
-         :iP-address (resource (ec2/eip :domain "vpc" :instance-id (ref :web-server-instance))
-                               :depends-on (ref :attach-gateway))
+                                                    :subnet-id (xref :subnet)
+                                                    :network-acl-id (xref :network-acl)))
+         :iP-address (resource (ec2/eip :domain "vpc" :instance-id (xref :web-server-instance))
+                               :depends-on (xref :attach-gateway))
          :instance-security-group (resource
                                    (ec2/security-group
-                                    :vpc-id (ref :vpc)
+                                    :vpc-id (xref :vpc)
                                     :group-description "Enable SSH access via port 22"
                                     :security-group-ingress
                                     [{:ip-protocol "tcp"
-                                      :from-port "22" :to-port "22" :cidr-ip (ref :ssh-location)}
+                                      :from-port "22" :to-port "22" :cidr-ip (xref :ssh-location)}
                                      {:ip-protocol "tcp"
                                       :from-port "80" :to-port "80" :cidr-ip "0.0.0.0/0"}]))
          :web-server-instance (resource
                                (ec2/instance
                                 :image-id "xyz"
-                                :instance-type (ref :instance-type)
-                                :key-name (ref :key-name))
-                               :depends-on (ref :attach-gateway)
+                                :instance-type (xref :instance-type)
+                                :key-name (xref :key-name))
+                               :depends-on (xref :attach-gateway)
                                :creation-policy {:resource-signal {:timeout "PT15M"}})}
-        :outputs {:URL (join ["http://" (ref :web-server-instance :public-ip)])}))
+        :outputs {:URL (join ["http://" (xref :web-server-instance :public-ip)])}))

@@ -10,7 +10,7 @@
   [spec & properties]
   (apply res/resource spec properties))
 
-(defn ref
+(defn xref
   ([r]
    [:ref r])
   ([r att]
