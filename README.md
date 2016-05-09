@@ -10,9 +10,7 @@ Create better cloudformation templates with Clojure
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar crucible-0.1.0-standalone.jar [args]
+See sample in (https://github.com/github/brabster/blob/master/test/crucible/samples/vpc_single_instance_in_subnet.clj)
 
 ## Examples
 
