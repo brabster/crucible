@@ -6,7 +6,7 @@ Create better cloudformation templates with Clojure
 
 ## Installation
 
-[![Clojars Project](https://img.shields.io/clojars/v/crucible.svg)](https://clojars.org/crucible)
+![](https://clojars.org/crucible/latest-version.svg)
 
 ## Examples
 
@@ -38,4 +38,4 @@ See more complex sample in https://github.com/brabster/crucible/blob/master/test
 
 ## License
 
-Distributed under the [[http://opensource.org/licenses/eclipse-1.0.php][Eclipse Public License]],
+Distributed under the [Eclipse Public License](http://opensource.org/licenses/eclipse-1.0.php)
