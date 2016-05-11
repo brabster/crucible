@@ -7,7 +7,10 @@
                 [org.clojure/clojure "1.8.0"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                               :username :env/clojars_username
-                              :password :env/clojars_password}]]
+                              :password :env/clojars_password}]
+                ["releases" {:url "https://clojars.org/repo"
+                            :username :env/clojars_username
+                            :password :env/clojars_password}]]
   :main ^:skip-aot crucible.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
