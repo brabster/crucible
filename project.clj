@@ -5,7 +5,9 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies[[camel-snake-kebab "0.4.0"]
                 [org.clojure/clojure "1.8.0"]]
-  :plugins [[lein-ancient "0.6.10"]]
+  :plugins [[lein-ancient "0.6.10"]
+            [jonase/eastwood "0.2.3"]
+            [lein-kibit "0.1.2"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                               :username :env/clojars_username
                               :password :env/clojars_password}]
