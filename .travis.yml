@@ -1,8 +1,6 @@
 language: clojure
 
-lein: lein2
-
-script: lein2 do clean, ancient, kibit, eastwood, test
+script: lein do clean, ancient, kibit, eastwood, test
 
 after_success:
         "lein deploy"
