@@ -5,7 +5,7 @@ lein: lein2
 script: lein2 do clean, ancient, test
 
 jdk:
- - openjdk8
+ - openjdk7
  - oraclejdk8
 
 after_success:
