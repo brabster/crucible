@@ -3,11 +3,11 @@
   :url "http://github.com/brabster/crucible"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies[[camel-snake-kebab "0.4.0"]
+  :dependencies [[camel-snake-kebab "0.4.0"]
                 [org.clojure/clojure "1.8.0"]]
   :plugins [[lein-ancient "0.6.10"]
             [lein-kibit "0.1.2"]
-            [lein-eastwood "0.2.3"]
+            [jonase/eastwood "0.2.3"]
             [lein-cloverage "1.0.6"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                               :username :env/clojars_username
