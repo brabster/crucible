@@ -1,7 +1,7 @@
 language: clojure
 
 script: 
- - lein do clean, kibit, eastwood
+ - lein do clean, check, kibit, eastwood
  - lein ancient
  - lein do cloverage, test
 
