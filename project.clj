@@ -6,7 +6,9 @@
   :dependencies[[camel-snake-kebab "0.4.0"]
                 [org.clojure/clojure "1.8.0"]]
   :plugins [[lein-ancient "0.6.10"]
-            [lein-checkall "0.1.1"]]
+            [lein-kibit "0.1.2"]
+            [lein-eastwood "0.2.3"]
+            [lein-cloverage "1.0.6"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                               :username :env/clojars_username
                               :password :env/clojars_password}]
