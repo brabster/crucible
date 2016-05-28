@@ -16,8 +16,14 @@
   ([r att]
    [:ref r att]))
 
-(defn join
-  ([v]
+(defn join 
+  ([vals]
    [:fn [:join {:delimiter "" :values v}]])
-  ([delimiter v]
+  ([delimiter vals]
    [:fn [:join {:delimiter delimiter :values v}]]))
+
+(defn select
+  [i vals]
+  [:fn [:select {:index i :values vals}]])
+
+
