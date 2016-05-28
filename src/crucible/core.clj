@@ -18,9 +18,9 @@
 
 (defn join 
   ([vals]
-   [:fn [:join {:delimiter "" :values v}]])
+   [:fn [:join {:delimiter "" :values vals}]])
   ([delimiter vals]
-   [:fn [:join {:delimiter delimiter :values v}]]))
+   [:fn [:join {:delimiter delimiter :values vals}]]))
 
 (defn select
   [i vals]
