@@ -32,7 +32,9 @@
 
 (defn encode-resource-properties
   [template properties]
-  (into {} (map (fn [[k v]] [(encode-key k) (encode-value template v)]) (seq properties))))
+  (if (string? properties)
+    properties
+    (into {} (map (fn [[k v]] (when v [(encode-key k) (encode-value template v)])) (seq properties)))))
 
 (defn encode-resource
   [template {:keys [name properties creation-policy deletion-policy update-policy depends-on]}]
