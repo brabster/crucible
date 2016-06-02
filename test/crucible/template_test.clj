@@ -34,21 +34,21 @@
   (testing "template with single parameter"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Parameters" {"MyParam" {"Type" "String"}}}
-           (make-template {:parameters {:my-param {:type :string}}}))))
+           (make-template :my-param [:parameter {:type :string}]))))
 
   (testing "template with multiple parameters"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Parameters" {"MyParam" {"Type" "String"}
                           "MyOtherParam" {"Type" "Number"}}}
-           (make-template {:parameters {:my-param {:type :string}
-                                        :my-other-param {:type :number}}})))))
+           (make-template :my-param [:parameter {:type :string}]
+                          :my-other-param [:parameter {:type :number}])))))
 
 (deftest template-resources-and-parameters-test
   (testing "template with parameter and resource"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Parameters" {"MyParam" {"Type" "String"}}
             "Resources" {"MyResource" vpc-cf}}
-           (make-template {:parameters {:my-param {:type :string}}
+           (make-template {:my-param [:parameter {:type :string}]
                            :resources {:my-resource (resource vpc-crucible)}})))))
 
 (deftest template-resources-and-outputs-test
@@ -76,4 +76,3 @@
                                                      "Properties"
                                                      "Baz"
                                                      "Ref"]))))))
-

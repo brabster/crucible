@@ -4,23 +4,22 @@
             [crucible.parameters :refer [encode-parameter]]
             [crucible.outputs :refer [encode-output]]))
 
-(defn- encode-template-element
-  [template encode [k v]]
-  [(->key k) (encode template v)])
+(defmulti encode-element (fn [_ [type & _]] type))
 
-(defn- encode-elements
-  [template-map type-label encode-type-fn]
-  [(->key type-label)
-   (into {} (->> template-map
-                 type-label
-                 seq
-                 (map (partial encode-template-element template-map encode-type-fn))))])
+(defmethod encode-element :default
+  [template-map [type spec]]
+  (prn type spec))
+
+(defmethod encode-element :parameter
+  [template-map [_ spec]]
+  (encode-parameter nil spec))
+
+(defmulti place-element (fn [_ _ [type & _]] type))
+
+(defmethod place-element :parameter
+  [m k v]
+  (assoc-in m ["Parameters" (->key k)] (encode-element m v)))
 
 (defn make-template
-  [element-map]
-  (reduce (fn [acc [k v]] (if (seq v) (assoc acc k v) acc))
-          {}
-          [["AWSTemplateFormatVersion" "2010-09-09"]
-           (encode-elements element-map :parameters encode-parameter)
-           (encode-elements element-map :resources encode-resource)
-           (encode-elements element-map :outputs encode-output)]))
+  [& {:as elements}]
+  (reduce-kv place-element {"AWSTemplateFormatVersion" "2010-09-09"} elements))
