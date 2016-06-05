@@ -1,8 +1,12 @@
 (ns crucible.template
-  (:require [crucible.template-key :refer [->key]]
+  (:require [schema.core :as schema]
+            [clojure.spec :as spec]
+            [crucible.template-key :refer [->key]]
             [crucible.resources :refer [encode-resource]]
             [crucible.parameters :refer [encode-parameter]]
             [crucible.outputs :refer [encode-output]]))
+
+
 
 (defmulti encode-element (fn [_ [type & _]] type))
 
@@ -14,12 +18,21 @@
   [template-map [_ spec]]
   (encode-parameter nil spec))
 
-(defmulti place-element (fn [_ _ [type & _]] type))
+(s/defn ^:always-validate element-type->cf-type :- OutputTemplateSectionKey
+  [type :- InputTemplateElementType]
+  (-> type
+      name
+      (str "s")
+      ->key))
 
-(defmethod place-element :parameter
-  [m k v]
-  (assoc-in m ["Parameters" (->key k)] (encode-element m v)))
+(defn place-encoded-element
+  [m k [type & _ :as v]]
+  (if (= k :description) (assoc m "Description" v)
+      (assoc-in m [(element-type->cf-type type) (->key k)] (encode-element m v))))
 
-(defn make-template
-  [& {:as elements}]
-  (reduce-kv place-element {"AWSTemplateFormatVersion" "2010-09-09"} elements))
+(s/defn make-template
+  [& element-seq] :- OutputTemplate
+  (let [{:as elements} element-seq]
+    (reduce-kv place-encoded-element
+               {"AWSTemplateFormatVersion" ""}
+               elements)))
