@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[camel-snake-kebab "0.4.0"]
                  [cheshire "5.6.1"]
-                 [org.clojure/clojure "1.9.0-alpha4"]]
+                 [org.clojure/clojure "1.9.0-alpha5"]]
   :plugins [[lein-ancient "0.6.10"]
             [lein-kibit "0.1.2"]
             [jonase/eastwood "0.2.3"]
