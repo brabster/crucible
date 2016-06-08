@@ -5,8 +5,8 @@
 (s/def ::props-type keyword?)
 
 (s/def ::resource-property-value (s/or :value ::v/value
-                                       :values (s/* ::v/value)
-                                       :map-vector (s/* map?)))
+                                       :values (s/+ ::v/value)
+                                       :map-vector (s/+ map?)))
 
 (defmulti properties-type ::props-type)
 
