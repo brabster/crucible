@@ -1,38 +1,47 @@
 (ns crucible.template
-  (:require [schema.core :as schema]
-            [clojure.spec :as spec]
-            [crucible.template-key :refer [->key]]
-            [crucible.resources :refer [encode-resource]]
-            [crucible.parameters :refer [encode-parameter]]
-            [crucible.outputs :refer [encode-output]]))
+  (:require [clojure.spec :as s]
+            [crucible.parameters :as p]
+            [crucible.resources :as r]
+            [crucible.outputs :as o]
+            [crucible.encoding :as encoding]))
 
+(s/def ::description string?)
 
+(s/def ::element (s/cat ::type #{:parameter
+                                 :resource
+                                 :output}
+                        ::specification (s/or :parameter ::p/parameter
+                                              :resource ::r/resource
+                                              :output ::o/output)))
 
-(defmulti encode-element (fn [_ [type & _]] type))
+(s/def ::elements (s/map-of keyword? ::element))
 
-(defmethod encode-element :default
-  [template-map [type spec]]
-  (prn type spec))
+(s/def ::template (s/cat :description ::description
+                         :elements ::elements))
 
-(defmethod encode-element :parameter
-  [template-map [_ spec]]
-  (encode-parameter nil spec))
+(defn conform-or-throw [spec input]
+  (let [parsed (s/conform spec input)]
+    (if (= parsed ::s/invalid)
+      (throw (ex-info "Invalid input" (s/explain-data spec input)))
+      parsed)))
 
-(s/defn ^:always-validate element-type->cf-type :- OutputTemplateSectionKey
-  [type :- InputTemplateElementType]
-  (-> type
-      name
-      (str "s")
-      ->key))
+(defn template [description & {:as elements}]
+  (conform-or-throw ::template [description elements]))
 
-(defn place-encoded-element
-  [m k [type & _ :as v]]
-  (if (= k :description) (assoc m "Description" v)
-      (assoc-in m [(element-type->cf-type type) (->key k)] (encode-element m v))))
+(defn parameter [& {:keys [type]
+                    :or {type ::p/string}
+                    :as options}] 
+  [:parameter (assoc options ::p/type type)])
 
-(s/defn make-template
-  [& element-seq] :- OutputTemplate
-  (let [{:as elements} element-seq]
-    (reduce-kv place-encoded-element
-               {"AWSTemplateFormatVersion" ""}
-               elements)))
+(defn resource [{:as options}]
+  [:resource options])
+
+(defn output [& {:keys [value description]}]
+  [:output {::o/description description
+            ::o/value value}])
+
+(defn xref [& options]
+  (vec options))
+
+(defn encode [template]
+  (encoding/encode template))

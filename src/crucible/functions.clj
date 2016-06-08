@@ -1,6 +1,6 @@
-(ns crucible.spec.functions
+(ns crucible.functions
   (:require [clojure.spec :as s]
-            [crucible.spec.values :as values]))
+            [crucible.values :as values]))
 
 (defmulti function-type :fn/type)
 

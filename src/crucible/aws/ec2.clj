@@ -1,7 +1,7 @@
-(ns crucible.spec.aws.ec2
+(ns crucible.aws.ec2
   (:require [clojure.spec :as s]
-            [crucible.spec.resources :as r]
-            [crucible.spec.values :as v]))
+            [crucible.resources :as r]
+            [crucible.values :as v]))
 
 (defn ec2 [suffix] (str "AWS::EC2::" suffix))
 

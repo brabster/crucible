@@ -1,13 +1,10 @@
 (ns crucible.outputs
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [crucible.values :refer [convert-value]]))
+  (:require [clojure.spec :as s]
+            [crucible.values :as v]))
 
-(defn encode-output
-  ([template value]
-   (encode-output template value nil))
-  ([template value description]
-   (->> {"Description" description
-         "Value" (convert-value template value)}
-        seq
-        (filter (fn [[k v]] ((complement nil?) v)))
-        (into {}))))
+(s/def ::description string?)
+
+(s/def ::value ::v/value)
+
+(s/def ::output (s/keys :req [::value]
+                        :opt [::description]))
