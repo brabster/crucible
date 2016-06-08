@@ -38,3 +38,6 @@
 (defn output [& {:keys [value description]}]
   [:output {::o/description description
             ::o/value value}])
+
+(defn xref [& options]
+  (vec options))
