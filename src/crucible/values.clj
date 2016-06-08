@@ -1,26 +1,62 @@
 (ns crucible.values
   (:require [clojure.spec :as s]
+            [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.pseudo :as pseudo]))
 
 (s/def ::ref keyword?)
 (s/def ::att keyword?)
-
-(defmulti function-type ::type)
-
-(s/def ::fn (s/multi-spec function-type ::type))
-
-(s/def ::xref (s/cat :ref keyword? :att (s/? keyword?)))
-
-(s/def ::value (s/or :string string?
-                     :xref ::xref
-                     :pseudo ::pseudo/parameter
-                     :function ::fn))
-
-
 (s/def ::delimiter string?)
 (s/def ::values (s/+ ::value))
-
 (s/def ::index (s/and pos? integer?))
+
+(defmulti value-type ::type)
+(defmulti encode-value ::type)
+
+(s/def ::value (s/multi-spec value-type ::type))
+
+(defmethod value-type ::xref [_]
+  (s/keys :req [::type ::ref]
+          :opt [::att]))
+
+(defmethod encode-value ::xref [{:keys [::ref ::att]}]
+  (if att
+    {"Fn::GetAtt" [ref att]}
+    {"Ref" ref}))
+
+(defmethod value-type ::pseudo [_]
+  (s/keys :req [::type ::param]))
+
+(defmethod encode-value ::pseudo [{:keys [::param]}]
+  {"Ref" (-> param name ->PascalCase str)})
+
+(defmethod value-type ::string [_]
+  (s/keys :req [::type ::value]))
+
+(defmethod encode-value ::string [{:keys [::value]}]
+  (str value))
+
+(defmethod value-type ::join [_]
+  (s/keys :req [::type ::values]
+          :opt [::delimiter]))
+
+(defmethod encode-value ::join [{:keys [::delimiter ::values]}]
+  {"Fn::Join" [(or delimiter "") (vec (map encode-value values))]})
+
+(defmethod value-type ::select [_]
+  (s/keys :req [::type ::values ::index]))
+
+(defmethod encode-value ::select [{:keys [::index ::values]}]
+  {"Fn::Select" [(str index) (vec (map encode-value values))]})
+
+(defn xref
+  ([ref]
+   {::type ::xref ::ref ref})
+  ([ref att]
+   {::type ::xref ::ref ref ::att att}))
+
+(defn pseudo [param]
+  {::type ::pseudo
+   ::param param})
 
 (defn join
   ([values]
@@ -30,14 +66,7 @@
     ::values values
     ::delimiter delimiter}))
 
-(defmethod function-type ::join [_]
-  (s/keys :req [::values]
-          :opt [::delimiter]))
-
 (defn select [index values]
   {::type ::select
    ::index index
    ::values values})
-
-(defmethod function-type ::select [_]
-  (s/keys :req [::values ::index]))
