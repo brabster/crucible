@@ -1,5 +1,6 @@
 (ns crucible.template-test
   (:require [crucible.template :refer [template parameter resource output xref encode]]
+            [crucible.functions :as fn]
             [crucible.resources :as res]
             [crucible.aws.ec2 :as ec2]))
 
@@ -13,4 +14,5 @@
                  :my-eip (resource (ec2/eip {::ec2/domain "vpc"}
                                             {::res/deletion-policy ::res/retain}))
                  :my-eip-assoc (resource (ec2/eip-association {::ec2/allocation-id "foo"}))
-                 :vpc-id (output :description "the vpc id" :value (xref :my-vpc-id))))
+                 :vpc-id (output :description "the vpc id"
+                                 :value (fn/join "-" ["foo" (xref :my-vpc-cidr :arn)]))))

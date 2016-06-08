@@ -1,19 +1,32 @@
 (ns crucible.functions
   (:require [clojure.spec :as s]
-            [crucible.values :as values]))
+            [crucible.values :as v]))
 
-(defmulti function-type :fn/type)
+(defmulti function-type ::type)
+
+(s/def ::fn (s/multi-spec function-type ::type))
 
 (s/def ::delimiter string?)
-(s/def ::values (s/* :value/value))
+(s/def ::values (s/+ ::v/value))
 
 (s/def ::index (s/and pos? integer?))
 
-(defmethod function-type :fn/join [_]
-  (s/keys :req [:fn/values]
-          :opt [:fn/delimiter]))
+(defn join
+  ([values]
+   (join "" values))
+  ([delimiter values]
+   {::type ::join
+    ::values values
+    ::delimiter delimiter}))
 
-(defmethod function-type :fn/select [_]
-  (s/keys :req [:fn/values :fn/index]))
+(defmethod function-type ::join [_]
+  (s/keys :req [::values]
+          :opt [::delimiter]))
 
-(s/def :fn/fn (s/multi-spec function-type :fn/type))
+(defn select [index values]
+  {::type ::select
+   ::index index
+   ::values values})
+
+(defmethod function-type ::select [_]
+  (s/keys :req [::values ::index]))
