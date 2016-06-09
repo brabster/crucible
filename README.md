@@ -47,7 +47,7 @@ I don't like the repetition when writing a template, eg `:resources {:foo (resou
 
 (def simple (template :description "A simple sample template"
                       :my-vpc-cidr (parameter {:type :string})
-                      :my-vpc (resource (ec2/vpc :cidr-block (xref :my-vpc-cidr)))
+                      :my-vpc (ec2/vpc :cidr-block (xref :my-vpc-cidr))
                       :vpc (output (join "/" ["foo" (xref :my-vpc)]))))
 ```
 
