@@ -1,6 +1,6 @@
 (ns crucible.values
   (:require [clojure.spec :as s]
-            [camel-snake-kebab.core :refer [->PascalCase]]
+            [crucible.encoding.keys :as keys]
             [crucible.pseudo :as pseudo]))
 
 (s/def ::ref keyword?)
@@ -12,6 +12,8 @@
 (defmulti value-type ::type)
 (defmulti encode-value ::type)
 
+(defmethod encode-value :default [x] x)
+
 (s/def ::value (s/multi-spec value-type ::type))
 
 (defmethod value-type ::xref [_]
@@ -20,20 +22,17 @@
 
 (defmethod encode-value ::xref [{:keys [::ref ::att]}]
   (if att
-    {"Fn::GetAtt" [ref att]}
-    {"Ref" ref}))
+    {"Fn::GetAtt" [(keys/->key ref) (keys/->key att)]}
+    {"Ref" (keys/->key ref)}))
 
 (defmethod value-type ::pseudo [_]
   (s/keys :req [::type ::param]))
 
+(defmethod keys/->key :notification-arns [_]
+  "NotificationARNs")
+
 (defmethod encode-value ::pseudo [{:keys [::param]}]
-  {"Ref" (-> param name ->PascalCase str)})
-
-(defmethod value-type ::string [_]
-  (s/keys :req [::type ::value]))
-
-(defmethod encode-value ::string [{:keys [::value]}]
-  (str value))
+  {"Ref" (str "AWS::" (-> param name keyword keys/->key))})
 
 (defmethod value-type ::join [_]
   (s/keys :req [::type ::values]
@@ -56,7 +55,7 @@
 
 (defn pseudo [param]
   {::type ::pseudo
-   ::param param})
+   ::param (keyword "crucible.pseudo" (name param))})
 
 (defn join
   ([values]

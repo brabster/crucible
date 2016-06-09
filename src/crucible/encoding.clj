@@ -1,17 +1,10 @@
 (ns crucible.encoding
   (:require [clojure.walk :as walk]
-            [camel-snake-kebab.core :refer [->PascalCase]]
-            [cheshire.core :as json]))
-
-(defmulti ->key
-  "Add methods to override default PascalCase encoding where needed, usually for capitalisation"
-  identity)
+            [cheshire.core :as json]
+            [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :aws-template-format-version [kw]
   "AWSTemplateFormatVersion")
-
-(defmethod ->key :default [kw]
-  (-> kw name ->PascalCase))
 
 (defn validate-element [elements-map element]
   element)
