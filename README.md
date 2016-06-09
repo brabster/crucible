@@ -47,7 +47,7 @@ I don't like the repetition when writing a template, eg `:resources {:foo (resou
 
 (def simple (template :description "A simple sample template"
                       :my-vpc-cidr (parameter {:type :string})
-                      :my-vpc (resource (ec2/vpc :cidr-block (xref :my-vpc-cidr)))
+                      :my-vpc (ec2/vpc :cidr-block (xref :my-vpc-cidr))
                       :vpc (output (join "/" ["foo" (xref :my-vpc)]))))
 ```
 I'd also like to make it easier to implement resource definitions without needing to modify this project, and I'd like to add `clojure.spec` to ensure that the user-provided data is valid before encoding. Current state of work is on [feature/rewrite-with-spec](/brabster/crucible/tree/feature/rewrite-with-spec).
