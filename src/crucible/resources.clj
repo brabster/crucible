@@ -37,18 +37,17 @@
                                  (assoc m k v)
                                  m))
 
+(def invalid? (complement s/valid?))
+
 (defn resource-factory [type props-spec]
   (if-not (s/valid? ::type type)
     (throw (ex-info "Invalid resource name" (s/explain-data ::type type)))
     (fn [& [props policies]]
-      (if-not (and (s/valid? props-spec props)
-                   (s/valid? ::policies policies))
-        (throw (ex-info "Invalid resource properties" (s/explain-data ::type type)))
-        (-> {::type type
-             ::properties props}
-            (assoc-when ((complement nil?) policies) ::policies policies))))))
-
-
-
-
-
+      (cond
+        (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
+                                                    (s/explain-data ::t)))
+        (invalid? ::policies policies) (throw (ex-info "Invalid resource policies"
+                                                       (s/explain-data ::t)))
+        :else (-> {::type type
+                   ::properties props}
+                  (assoc-when ((complement nil?) policies) ::policies policies))))))
