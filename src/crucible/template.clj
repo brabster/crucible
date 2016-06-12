@@ -1,5 +1,6 @@
 (ns crucible.template
   (:require [clojure.spec :as s]
+            [crucible.values :as v]
             [crucible.parameters :as p]
             [crucible.resources :as r]
             [crucible.outputs :as o]
@@ -7,17 +8,13 @@
 
 (s/def ::description string?)
 
-(s/def ::element (s/cat ::type #{:parameter
-                                 :resource
-                                 :output}
-                        ::specification (s/or :parameter ::p/parameter
-                                              :resource ::r/resource
-                                              :output ::o/output)))
-
-(s/def ::elements (s/map-of keyword? ::element))
+(s/def ::element (s/cat :type #{:parameter
+                                :resource
+                                :output}
+                        :specification ::s/any))
 
 (s/def ::template (s/cat :description ::description
-                         :elements ::elements))
+                         :elements (s/nilable (s/map-of keyword? ::element))))
 
 (defn conform-or-throw [spec input]
   (let [parsed (s/conform spec input)]
@@ -36,12 +33,13 @@
 (defn resource [{:as options}]
   [:resource options])
 
-(defn output [& {:keys [value description]}]
+(defn output 
+  [value & [description]]
   [:output {::o/description description
             ::o/value value}])
 
 (defn xref [& options]
-  (vec options))
+  (apply v/xref options))
 
 (defn encode [template]
   (encoding/encode template))
