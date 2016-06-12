@@ -14,7 +14,7 @@
 
 (defmethod properties-type ::generic [_] ::generic)
 
-(s/def ::properties (s/multi-spec properties-type ::props-type))
+(s/def ::properties ::s/any)
 
 (s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9]+" %)))
 
