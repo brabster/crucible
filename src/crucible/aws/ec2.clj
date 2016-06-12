@@ -47,7 +47,7 @@
 
 (s/def ::internet-gateway (s/keys :opt [::r/tags]))
 
-(s/def ::internet-gateway map?)
+(s/def ::internet-gateway (s/nilable map?))
 
 (def internet-gateway (r/resource-factory (ec2 "InternetGateway") ::internet-gateway))
 
