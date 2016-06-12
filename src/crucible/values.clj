@@ -14,11 +14,12 @@
 
 (defmethod encode-value :default [x] x)
 
+(s/def ::xref (s/keys :req [::type ::ref]
+                      :opt [::att]))
+
 (s/def ::value (s/multi-spec value-type ::type))
 
-(defmethod value-type ::xref [_]
-  (s/keys :req [::type ::ref]
-          :opt [::att]))
+(defmethod value-type ::xref [_] ::xref)
 
 (defmethod encode-value ::xref [{:keys [::ref ::att]}]
   (if att
