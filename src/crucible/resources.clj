@@ -43,11 +43,12 @@
   (if-not (s/valid? ::type type)
     (throw (ex-info "Invalid resource name" (s/explain-data ::type type)))
     (fn [& [props policies]]
-      (cond
-        (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
-                                                    (s/explain-data ::t)))
-        (invalid? ::policies policies) (throw (ex-info "Invalid resource policies"
-                                                       (s/explain-data ::t)))
-        :else (-> {::type type
-                   ::properties props}
-                  (assoc-when ((complement nil?) policies) ::policies policies))))))
+      [:resource
+       (cond
+         (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
+                                                     (s/explain-data props-spec props)))
+         (invalid? ::policies policies) (throw (ex-info "Invalid resource policies"
+                                                        (s/explain-data ::policies policies)))
+         :else (-> {::type type
+                    ::properties props}
+                   (assoc-when ((complement nil?) policies) ::policies policies)))])))
