@@ -1,6 +1,7 @@
 (ns crucible.encoding
   (:require [clojure.walk :as walk]
             [cheshire.core :as json]
+            [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :aws-template-format-version [kw]
@@ -13,8 +14,22 @@
 
 (defn unqualify-keyword [kw] (-> kw name keyword))
 
-(defmethod rewrite-element-data :default [element]
-  (walk/postwalk (fn [x] (if (keyword? x) (unqualify-keyword x) x)) element))
+(defmethod rewrite-element-data :default
+  [[_ element]]
+  (walk/postwalk
+   (fn [x]
+     (cond
+       (:crucible.values/type x) (crucible.values/encode-value x)
+       (keyword? x) (-> x unqualify-keyword ->PascalCase)
+       :else x))
+   element))
+
+(defmethod rewrite-element-data :resource
+  [[_ element]]
+  (walk/postwalk
+   (fn [x]
+     (if (keyword? x) (-> x unqualify-keyword ->PascalCase) x))
+   element))
 
 (defn rewrite-element [[key [type data]]]
   [key [type (rewrite-element-data [type data])]])
