@@ -1,6 +1,8 @@
 (ns crucible.encoding.template_test
   (:require [clojure.test :refer :all]
-            [crucible.template :refer [template parameter]]
+            [crucible.encoding :refer [encode]]
+            [crucible.template :refer [template parameter output xref]]
+            [crucible.values :refer [join]]
             [crucible.parameters :as param]
             [crucible.aws.ec2 :as ec2]))
 
@@ -8,26 +10,38 @@
 (def vpc-cf {"Type" "AWS::EC2::VPC"
              "Properties" {"CidrBlock" "10.0.0.0/16"}})
 
-#_(deftest template-resource-with-policies-test
-    (testing "template with resource with deletion policy"
-      (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-              "Resources" {"MyVpc" {"Type" "AWS::EC2::VPC"
-                                    "Properties" {"CidrBlock" "10.0.0.0/16"}
-                                    "DeletionPolicy" "Retain"}}}
-             (make-template {:resources
-                             {:my-vpc (resource vpc-crucible :deletion-policy "Retain")}})))))
+(deftest template-resource-with-policies-test
+  (testing "template with resource with deletion policy"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyVpc" {"Type" "AWS::EC2::VPC"
+                                  "Properties" {"CidrBlock" "10.0.0.0/16"}
+                                  "DeletionPolicy" "Retain"}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
+                                        {::param/deletion-policy ::param/retain}))))))))
 
-#_(deftest template-resources-test
-    (testing "template with single resource"
-      (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-              "Resources" {"MyVpc" vpc-cf}}
-             (make-template {:resources {:my-vpc (resource vpc-crucible)}}))))
+(deftest template-resources-test
+  (testing "template with single resource"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyVpc" vpc-cf}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-vpc vpc-crucible))))))
 
-    (testing "template with multiple resources"
-      (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-              "Resources" {"MyVpc" vpc-cf "MyOtherVpc" vpc-cf}}
-             (make-template {:resources {:my-vpc (resource vpc-crucible)
-                                         :my-other-vpc (resource vpc-crucible)}})))))
+  (testing "template with multiple resources"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyVpc" vpc-cf "MyOtherVpc" vpc-cf}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-vpc vpc-crucible
+                       :my-other-vpc vpc-crucible)))))))
 
 (deftest template-parameters-test
   (testing "template with single parameter"
@@ -62,13 +76,32 @@
                        :my-param (parameter)
                        :my-resource vpc-crucible)))))))
 
-#_(deftest template-resources-and-outputs-test
-    (testing "template with resource and output"
-      (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-              "Resources" {"MyResource" vpc-cf}
-              "Outputs" {"MyOutput" {"Value" {"Ref" "MyResource"}}}}
-             (template {:resources {:my-resource (resource vpc-crucible)}
-                        :outputs {:my-output [:ref :my-resource]}})))))
+(deftest template-resources-and-outputs-test
+  (testing "template with resource and output"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description"  "t"
+            "Resources" {"MyResource" vpc-cf}
+            "Outputs" {"MyOutput" {"Value" {"Ref" "MyResource"}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-resource vpc-crucible
+                       :my-output (output (xref :my-resource)))))))))
+
+(deftest template-value-fns-test
+  (testing "template with value functions"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description"  "t"
+            "Parameters" {"Foo" {"Type" "String"}}
+            "Resources" {"MyResource" {"Type" "AWS::EC2::VPC"
+                                       "Properties"
+                                       {"CidrBlock" {"Fn::Join" ["-" [{"Ref" "Foo"} "bar"]]}}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :foo (parameter)
+                       :my-resource (ec2/vpc {::ec2/cidr-block
+                                              (join "-" [(xref :foo) "bar"])}))))))))
 
 #_(deftest resource-reference-validation-test
     (testing "reference non-existent parameter from resource property throws"

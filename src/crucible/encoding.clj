@@ -16,7 +16,7 @@
 
 (defmethod rewrite-element-data :default
   [[_ element]]
-  (walk/postwalk
+  (walk/prewalk
    (fn [x]
      (cond
        (:crucible.values/type x) (crucible.values/encode-value x)
@@ -26,9 +26,16 @@
 
 (defmethod rewrite-element-data :resource
   [[_ element]]
-  (walk/postwalk
+  (walk/prewalk
    (fn [x]
-     (if (keyword? x) (-> x unqualify-keyword ->PascalCase) x))
+     (prn x)
+     (cond
+       (:crucible.resources/policies x) (-> x
+                                            (merge (:crucible.resources/policies x))
+                                            (dissoc :crucible.resources/policies))
+       (:crucible.values/type x) (crucible.values/encode-value x)
+       (keyword? x) (-> x unqualify-keyword ->PascalCase)
+       :else x))
    element))
 
 (defn rewrite-element [[key [type data]]]
