@@ -28,7 +28,6 @@
   [[_ element]]
   (walk/prewalk
    (fn [x]
-     (prn x)
      (cond
        (:crucible.resources/policies x) (-> x
                                             (merge (:crucible.resources/policies x))

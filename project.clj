@@ -20,4 +20,5 @@
   :main ^:skip-aot crucible.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[org.clojure/test.check "0.9.0"]]}})
+             :dev {:resource-paths ["test-resources"]
+                   :dependencies [[org.clojure/test.check "0.9.0"]]}})
