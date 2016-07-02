@@ -17,7 +17,6 @@
                               :username :env/clojars_username
                               :password :env/clojars_password
                               :sign-releases false}]] 
-  :main ^:skip-aot crucible.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :dev {:resource-paths ["test-resources"]
