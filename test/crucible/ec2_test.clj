@@ -6,8 +6,8 @@
 
 (deftest vpc-test
   (testing "minimal spec"
-    (is (s/valid? ::r/resource (ec2/vpc {::ec2/cidr-block "1.2.3.4/24"})))))
+    (is (s/valid? ::r/resource (second (ec2/vpc {::ec2/cidr-block "1.2.3.4/24"}))))))
 
 (deftest igw-test
   (testing "minimal spec"
-    (is (s/valid? ::r/resource (ec2/internet-gateway {})))))
+    (is (s/valid? ::r/resource (second (ec2/internet-gateway {}))))))

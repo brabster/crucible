@@ -37,8 +37,8 @@
        :else x))
    element))
 
-(defn rewrite-element [[key [type data]]]
-  [key [type (rewrite-element-data [type data])]])
+(defn rewrite-element [[key {:keys [type specification]}]]
+  [key [type (rewrite-element-data [type specification])]])
 
 (defn element-type->cf-section [type]
   (-> type
