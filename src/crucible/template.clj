@@ -35,8 +35,9 @@
 
 (defn output 
   [value & [description]]
-  [:output {::o/description description
-            ::o/value value}])
+  [:output (-> description
+               (when {::o/description description})
+               (assoc ::o/value value))])
 
 (defn xref [& options]
   (apply v/xref options))
