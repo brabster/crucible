@@ -22,14 +22,7 @@
             (encode
              (template "t"
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
-                                        {::param/deletion-policy ::param/retain})
-                       :my-table (ddb/table {::ddb/attribute-definitions [{::ddb/attribute-name "foo"
-                                                                           ::ddb/attribute-type "S"}]
-                                             ::ddb/key-schema [{::ddb/attribute-name "foo"
-                                                                ::ddb/key-type "HASH"}]
-                                             ::ddb/provisioned-throughput
-                                             {::ddb/read-capacity-units "20"
-                                              ::ddb/write-capacity-units (xref :my-vpc)}}))))))))
+                                        {::param/deletion-policy ::param/retain}))))))))
 
 (deftest template-resources-test
   (testing "template with single resource"

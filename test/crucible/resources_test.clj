@@ -17,13 +17,17 @@
   (testing "exception thrown if type does not look like a valid AWS resource type"
     (is (thrown? Exception (r/resource-factory "bob" ::foo))))
 
+  (s/def ::foo ::s/any)
+
   (testing "factory function places type in ::type key"
     (let [type "AWS::Bob"]
-      (is (-> type
-              (r/resource-factory ::foo)
-              (apply {})
-              ::r/type
-              (= type))))))
+      (is (= type
+             (-> type
+                 (r/resource-factory ::foo)
+                 (apply {})
+                 second
+                 ::r/type))))))
+
 (deftest resource-factory-validation
   (let [type "Custom::MyResource"
         spec (s/keys :req [::foo])
@@ -33,6 +37,6 @@
       (is (thrown? Exception (my-resource {}))))
 
     (testing "resource factory constructs element on valid props"
-      (is (= {::r/type type
-              ::r/properties {::foo ::bar}}
+      (is (= [:resource {::r/type type
+                         ::r/properties {::foo ::bar}}]
              (my-resource {::foo ::bar}))))))
