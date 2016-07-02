@@ -1,5 +1,9 @@
 language: clojure
 
+cache:
+  directories:
+    - $HOME/.m2
+
 script: 
  - lein do clean, check, kibit, eastwood
  - lein ancient
