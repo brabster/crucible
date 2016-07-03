@@ -1,4 +1,4 @@
-(ns crucible.ec2-test
+(ns crucible.aws.ec2-test
   (:require  [clojure.test :refer :all]
              [crucible.aws.ec2 :as ec2]
              [crucible.resources :as res]
