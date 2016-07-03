@@ -1,57 +1,37 @@
 (ns crucible.parameters
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [crucible.values :refer [convert-value]]))
+  (:require [clojure.spec :as s]))
 
-(defn encode-key
-  [k]
-  (name (->PascalCase k)))
+(s/def ::type #{::string ::number})
 
-(defmulti encode-kv (fn [[k _]] k))
+(s/def ::description string?)
 
-(defmethod encode-kv :type
-  [[k type]]
-  [(encode-key k) (name (->PascalCase type))])
+(s/def ::constraint-description string?)
 
-(defmethod encode-kv :description
-  [[k desc]]
-  [(encode-key k) (str desc)])
+(s/def ::allowed-values (s/+ string?))
 
-(defmethod encode-kv :allowed-values
-  [[k allowed-values]]
-  [(encode-key k) allowed-values])
+(s/def ::allowed-pattern (partial instance? java.util.regex.Pattern))
 
-(defmethod encode-kv :default-value
-  [[k default-value]]
-  [(encode-key :default) (str default-value)])
+(s/def ::default string?)
 
-(defmethod encode-kv :no-echo
-  [[k no-echo?]]
-  [(encode-key k) (str no-echo?)])
+(s/def ::no-echo #{true})
 
-(defmethod encode-kv :constraint-description
-  [[k constraint-description]]
-  [(encode-key k) (str constraint-description)])
+(s/def ::max-value (s/and number? pos?))
 
-(defmethod encode-kv :allowed-pattern
-  [[k pattern]]
-  [(encode-key k) (str pattern)])
+(s/def ::min-value ::max-value)
 
-(defmethod encode-kv :min-value
-  [[k n]]
-  [(encode-key k) (str n)])
+(s/def ::max-length (s/and integer? pos?))
 
-(defmethod encode-kv :max-value
-  [[k n]]
-  [(encode-key k) (str n)])
+(s/def ::min-length ::max-length)
 
-(defmethod encode-kv :min-length
-  [[k n]]
-  [(encode-key k) (str n)])
-
-(defmethod encode-kv :max-length
-  [[k n]]
-  [(encode-key k) (str n)])
-
-(defn encode-parameter
-  [_ spec]
-  (into {} (map encode-kv (seq spec))))
+(s/def ::parameter
+  (s/keys :req [::type]
+          :opt [::description
+                ::allowed-values
+                ::allowed-pattern
+                ::constraint-description
+                ::default
+                ::no-echo
+                ::min-value
+                ::max-value
+                ::min-length
+                ::max-length]))

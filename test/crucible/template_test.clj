@@ -1,79 +1,85 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.template :refer :all]
+            [crucible.template :refer [template parameter resource output xref encode]]
             [crucible.parameters :as param]
-            [crucible.resources :refer [resource]]
-            [crucible.resources.aws.ec2 :as ec2]))
+            [crucible.outputs :as out]
+            [crucible.values :as v]
+            [crucible.resources :as res]
+            [crucible.aws.ec2 :as ec2]))
 
-(def vpc-crucible (ec2/vpc :cidr-block "10.0.0.0/16"))
-(def vpc-cf {"Type" "AWS::EC2::VPC"
-             "Properties" {"CidrBlock" "10.0.0.0/16"}})
+(deftest minimal-template
+  (is (= {:description "t"
+          :elements
+          {:igw {:type :resource
+                 :specification #::res{:type "AWS::EC2::InternetGateway"
+                                       :properties nil}}}}
+         (template "t" :igw (ec2/internet-gateway)))))
 
-(deftest template-resource-with-policies-test
-  (testing "template with resource with deletion policy"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Resources" {"MyVpc" {"Type" "AWS::EC2::VPC"
-                                  "Properties" {"CidrBlock" "10.0.0.0/16"}
-                                  "DeletionPolicy" "Retain"}}}
-           (make-template {:resources
-                           {:my-vpc (resource vpc-crucible :deletion-policy "Retain")}})))))
+(deftest two-element-template
+  (is (= {:description "t"
+          :elements
+          {:vpc {:type :resource
+                 :specification #::res{:type "AWS::EC2::VPC"
+                                       :properties
+                                       #::ec2{:cidr-block "1.2.3.4/24"}}}
+           :subnet {:type :resource
+                    :specification #::res{:type "AWS::EC2::Subnet"
+                                          :properties
+                                          #::ec2{:cidr-block "1.2.3.4/16"
+                                                 :vpc-id
+                                                 #::v{:type ::v/xref,
+                                                      :ref :foo}}}}}}
+         (template "t"
+                   :vpc (ec2/vpc {::ec2/cidr-block "1.2.3.4/24"})
+                   :subnet (ec2/subnet {::ec2/cidr-block "1.2.3.4/16"
+                                        ::ec2/vpc-id (xref :foo)})))))
 
-(deftest template-resources-test
-  (testing "template with single resource"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Resources" {"MyVpc" vpc-cf}}
-           (make-template {:resources {:my-vpc (resource vpc-crucible)}}))))
+(deftest template-with-param
+  (is (= {:description "t"
+          :elements {:vpc-cidr {:type :parameter
+                                :specification #::param{:type ::param/string}}
+                     :vpc {:type :resource
+                           :specification #::res{:type "AWS::EC2::VPC"
+                                                 :properties {::ec2/cidr-block
+                                                              {::v/type ::v/xref
+                                                               ::v/ref :vpc-cidr}}}}}}
+         (template "t"
+                   :vpc-cidr (parameter)
+                   :vpc (ec2/vpc {::ec2/cidr-block (xref :vpc-cidr)})))))
 
-  (testing "template with multiple resources"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Resources" {"MyVpc" vpc-cf "MyOtherVpc" vpc-cf}}
-           (make-template {:resources {:my-vpc (resource vpc-crucible)
-                                       :my-other-vpc (resource vpc-crucible)}})))))
+(deftest template-with-output
+  (is (= {:description "t",
+          :elements
+          {:vpc-id
+           {:type :output
+            :specification #::out{:description "the vpc id",
+                                  :value #::v{:type ::v/xref,
+                                              :ref :vpc}}},
+           :vpc
+           {:type :resource
+            :specification #::res{:type "AWS::EC2::VPC",
+                                  :properties {::ec2/cidr-block
+                                               #::v{:type ::v/xref,
+                                                    :ref :vpc-cidr}}}}}}
+         (template "t"
+                   :vpc (ec2/vpc {::ec2/cidr-block (xref :vpc-cidr)})
+                   :vpc-id (output (xref :vpc) "the vpc id")))))
 
-(deftest template-parameters-test
-  (testing "template with single parameter"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Parameters" {"MyParam" {"Type" "String"}}}
-           (make-template {:parameters {:my-param {:type :string}}}))))
-
-  (testing "template with multiple parameters"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Parameters" {"MyParam" {"Type" "String"}
-                          "MyOtherParam" {"Type" "Number"}}}
-           (make-template {:parameters {:my-param {:type :string}
-                                        :my-other-param {:type :number}}})))))
-
-(deftest template-resources-and-parameters-test
-  (testing "template with parameter and resource"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Parameters" {"MyParam" {"Type" "String"}}
-            "Resources" {"MyResource" vpc-cf}}
-           (make-template {:parameters {:my-param {:type :string}}
-                           :resources {:my-resource (resource vpc-crucible)}})))))
-
-(deftest template-resources-and-outputs-test
-  (testing "template with resource and output"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
-            "Resources" {"MyResource" vpc-cf}
-            "Outputs" {"MyOutput" {"Value" {"Ref" "MyResource"}}}}
-           (make-template {:resources {:my-resource (resource vpc-crucible)}
-                           :outputs {:my-output [:ref :my-resource]}})))))
-
-(deftest resource-reference-validation-test
-  (testing "reference non-existent parameter from resource property throws"
-    (is (thrown? AssertionError (make-template {:resources
-                                                {:my-resource
-                                                 {:name "Custom::Test"
-                                                  :properties {:test [:ref :foo]}}}})))))
-
-(deftest references-match-template-keys
-  (testing "references in values match template keys"
-    (let [t (make-template {:parameters {:foo nil}
-                            :resources {:bar {:name "Custom::Test"
-                                              :properties {:baz [:ref :foo]}}}})]
-      (is (contains? (get t "Parameters") (get-in t ["Resources"
-                                                     "Bar"
-                                                     "Properties"
-                                                     "Baz"
-                                                     "Ref"]))))))
-
+(deftest join-fn-in-value-position
+  (is (= {:description "t",
+          :elements
+          {:vpc-cidr
+           {:type :parameter
+            :specification #::param{:type ::param/string}},
+           :vpc
+           {:type :resource
+            :specification #::res{:type "AWS::EC2::VPC",
+                                  :properties
+                                  {::ec2/cidr-block
+                                   #::v{:type ::v/join,
+                                        :values ["foo" #::v{:type ::v/xref,
+                                                            :ref :vpc-cidr}],
+                                        :delimiter "-"}}}}}}
+         (template "t"
+                   :vpc-cidr (parameter)
+                   :vpc (ec2/vpc {::ec2/cidr-block (v/join "-" ["foo" (xref :vpc-cidr)])})))))

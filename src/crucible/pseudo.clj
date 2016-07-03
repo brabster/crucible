@@ -1,26 +1,17 @@
 (ns crucible.pseudo
-  "Psuedo Parameters http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html")
+  (:require [clojure.spec :as s]))
 
-(defn- ps [type]
-  [:pseudo type])
+(s/def ::parameter (s/cat :pseudo #{:pseudo}
+                          :type (s/alt ::account-id
+                                       ::notification-arns
+                                       ::no-value
+                                       ::region
+                                       ::stack-id
+                                       ::stack-name)))
 
-(def account-id
-  (ps :account-id))
-
-(def region
-  (ps :region))
-
-(def notification-arns
-  (ps :notification-arns))
-
-(def no-value
-  (ps :no-value))
-
-(def stack-id
-  (ps :stack-id))
-
-(def stack-name
-  (ps :stack-name))
-
-
-
+(def account-id [:pseudo ::account-id])
+(def notification-arns [:pseudo ::notification-arns])
+(def no-value [:pseudo ::no-value])
+(def region [:pseudo ::region])
+(def stack-id [:pseudo ::stack-id])
+(def stack-name [:pseudo ::stack-name])

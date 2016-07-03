@@ -1,49 +1,54 @@
 (ns crucible.resources
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [crucible.values :refer [convert-value]]))
+  (:require [clojure.spec :as s]
+            [crucible.values :as v]))
 
-(defn resource
-  [spec & {:as properties}]
-  (merge spec properties))
+(s/def ::props-type keyword?)
 
-(defn generic-resource
-  [resource-type props]
-  {:name resource-type
-   :properties props})
+(s/def ::resource-property-value (s/or :value ::v/value
+                                       :values ::v/values
+                                       :map-vector (s/+ map?)))
 
-(defn encode-key
-  [k]
-  (name (->PascalCase k)))
+(defmulti properties-type ::props-type)
 
-(defn encode-policy
-  [policy]
-  (if policy
-    (if (map? policy) (reduce-kv (fn [m k v] (assoc m (encode-key k) v)) {} policy)
-        (encode-key policy))))
+(s/def ::generic (s/map-of keyword? ::resource-property-value))
 
-(declare encode-resource-properties)
+(defmethod properties-type ::generic [_] ::generic)
 
-(defn encode-value
-  [template v]
-  (cond (map? v) (encode-resource-properties template v)
-        (and (vector? v)
-             (not (keyword? (first v)))) (vec (map (partial encode-resource-properties template) v))
-        :else (convert-value template v)))
+(s/def ::properties ::s/any)
 
-(defn encode-resource-properties
-  [template properties]
-  (if (string? properties)
-    properties
-    (into {} (map (fn [[k v]] (when v [(encode-key k) (encode-value template v)])) (seq properties)))))
+(s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9]+" %)))
 
-(defn encode-resource
-  [template {:keys [name properties creation-policy deletion-policy update-policy depends-on]}]
-  (->> {"Type" name
-        "CreationPolicy" (encode-policy creation-policy)
-        "UpdatePolicy" (encode-policy update-policy)
-        "DeletionPolicy" (encode-policy deletion-policy)
-        "DependsOn" (convert-value template depends-on)
-        "Properties" (encode-resource-properties template properties)}
-       seq
-       (filter (fn [[k v]] ((complement nil?) v)))
-       (into {})))
+(s/def ::deletion-policy #{::retain ::delete ::snapshot})
+
+(s/def ::depends-on string?)
+
+(s/def ::policies (s/nilable (s/keys :opt [::deletion-policy
+                                           ::depends-on])))
+
+(s/def ::resource (s/keys :req [::type ::properties]
+                          :opt [::policies]))
+
+(s/def ::key string?)
+(s/def ::value string?)
+(s/def ::tag (s/keys :req [::key ::value]))
+(s/def ::tags (s/* ::tag))
+
+(defn- assoc-when [m test k v] (if test
+                                 (assoc m k v)
+                                 m))
+
+(def invalid? (complement s/valid?))
+
+(defn resource-factory [type props-spec]
+  (if-not (s/valid? ::type type)
+    (throw (ex-info "Invalid resource name" (s/explain-data ::type type)))
+    (fn [& [props policies]]
+      [:resource
+       (cond
+         (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
+                                                     (s/explain-data props-spec props)))
+         (invalid? ::policies policies) (throw (ex-info "Invalid resource policies"
+                                                        (s/explain-data ::policies policies)))
+         :else (-> {::type type
+                    ::properties props}
+                   (assoc-when ((complement nil?) policies) ::policies policies)))])))

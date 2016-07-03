@@ -5,9 +5,9 @@ cache:
     - $HOME/.m2
 
 script: 
- - lein do clean, check, kibit, eastwood
+ - lein do clean, check
  - lein ancient
- - lein do cloverage, test
+ - lein do cloverage
 
 after_success:
-        "lein deploy"
+  "lein deploy"

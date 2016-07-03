@@ -1,47 +1,41 @@
 (ns crucible.resources-test
-  (:require [clojure.test :refer :all]
-            [crucible.resources :refer :all]
-            [crucible.resources.aws.ec2 :refer [eip]]))
+  (:require [crucible.resources :as res]
+            [clojure.test :refer :all]
+            [clojure.spec :as s]))
 
-(deftest test-resources
+(deftest resource-property-type
+  (testing "single value is valid"
+    (is (s/valid? ::res/resource-property-value "foo")))
 
-  (testing "minimal custom resource"
-    (is (= {"Type" "Custom::MyResource"
-            "Properties" {"ServiceToken" "arn:123"}}
-           (encode-resource {}
-                            (resource {:name "Custom::MyResource"
-                                       :properties {:service-token "arn:123"}})))))
+  (testing "multiple values vector is valid"
+    (is (s/valid? ::res/resource-property-value ["foo" "foo"])))
 
-  (testing "minimal standard resource"
-    (is (= {"Type" "AWS::EC2::EIP"
-            "Properties" {"InstanceId" "i-123"
-                          "Domain" "vpc"}}
-           (encode-resource {}
-                            (resource (eip :instance-id "i-123" :domain "vpc"))))))
-  
-  (testing "resource with policies"
-    (is (= {"Type" "AWS::EC2::EIP"
-            "DeletionPolicy" "Retain"
-            "Properties" {"InstanceId" "i-123"
-                          "Domain" "vpc"}}
-           (encode-resource {}
-                            (resource (eip :instance-id "i-123" :domain "vpc")
-                                      :deletion-policy :retain)))))
-  (testing "resource with complex values"
-    (is (= {"Type" "AWS::EC2::EIP"
-            "DependsOn" {"Ref" "Foo"}
-            "Properties" {"InstanceId" "i-123"
-                          "Domain" {"Fn::Join" ["" ["v" "p" "c"]]}}}
-           (encode-resource {:parameters {:foo nil}}
-                            (resource (eip :instance-id "i-123"
-                                           :domain [:fn
-                                                    [:join
-                                                     {:delimiter ""
-                                                      :values ["v" "p" "c"]}]])
-                                      :depends-on [:ref :foo]))))))
+  (testing "vector of maps is valid"
+    (is (s/valid? ::res/resource-property-value [{} {} {}]))))
 
+(deftest resource-factory
+  (testing "exception thrown if type does not look like a valid AWS resource type"
+    (is (thrown? Exception (res/resource-factory "bob" ::foo))))
 
+  (s/def ::foo ::s/any)
 
+  (testing "factory function places type in ::type key"
+    (let [type "AWS::Bob"]
+      (is (= type
+             (-> type
+                 (res/resource-factory ::foo)
+                 (apply {})
+                 second
+                 ::res/type))))))
 
+(deftest resource-factory-validation
+  (let [type "Custom::MyResource"
+        spec (s/keys :req [::foo])
+        my-resource (res/resource-factory type spec)]
 
+    (testing "resource factory throws on invalid props"
+      (is (thrown? Exception (my-resource {}))))
 
+    (testing "resource factory constructs element on valid props"
+      (is (= [:resource #::res{:type type :properties {::foo ::bar}}]
+             (my-resource {::foo ::bar}))))))

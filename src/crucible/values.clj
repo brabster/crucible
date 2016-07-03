@@ -1,59 +1,83 @@
 (ns crucible.values
-  (:require [camel-snake-kebab.core :refer [->PascalCase]]
-            [crucible.template-key :refer [->key]]))
+  (:require [clojure.spec :as s]
+            [crucible.encoding.keys :as keys]))
 
-(declare convert-value)
+(s/def ::ref keyword?)
+(s/def ::att keyword?)
+(s/def ::delimiter string?)
+(s/def ::values (s/+ ::value))
+(s/def ::index (s/and pos? integer?))
 
-(defn convert-fn-join
-  [template spec]
-  {"Fn::Join" [(:delimiter spec) (vec (map #(convert-value template %) (:values spec)))]})
+(defmulti value-type (fn [x] (or (::type x) (class x))))
 
-(defn convert-fn-select
-  [template spec]
-  {"Fn::Select" [(:index spec) (vec (map #(convert-value template %) (:values spec)))]})
+(s/def ::xref (s/keys :req [::type ::ref]
+                      :opt [::att]))
 
-(defn convert-fn
-  [template f]
-  (let [type (first f)
-        spec (rest f)]
-    (cond (= type :join) (apply convert-fn-join template spec)
-          (= type :select) (apply convert-fn-select template spec))))
+(s/def ::value (s/multi-spec value-type ::type))
 
-(defn convert-pseudo
-  [type]
-  (cond (= type :account-id) {"Ref" "AWS::AccountId"}
-        (= type :region) {"Ref" "AWS::Region"}
-        (= type :notification-arns) {"Ref" "AWS::NotificationARNs"}
-        (= type :no-value) {"Ref" "AWS::NoValue"}
-        (= type :stack-id) {"Ref" "AWS::StackId"}
-        (= type :stack-name) {"Ref" "AWS::StackName"}))
+(defmethod value-type java.lang.String [_] string?)
 
-(defn referenceable?
-  [template r]
-  {:pre [(map? template)]}
-  (let [candidates (merge (:parameters template) (:resources template))]
-    (contains? candidates r)))
+(defmethod value-type ::xref [_] ::xref)
 
-(defn convert-ref
-  ([template r]
-   {:pre [(referenceable? template r)]}
-   {"Ref" (->key r)})
-  ([template r att]
-   {:pre [(referenceable? template r)]}
-   {"Fn::GetAtt" [(->key r) (->key att)]}))
+(s/def ::pseudo (s/keys :req [::type ::param]))
 
-(defn encode-key
-  [k]
-  (name (->PascalCase k)))
+(defmethod value-type ::pseudo [_] ::pseudo)
 
-(defn convert-value
-  [template v]
-  (cond (nil? v) nil
-        (string? v) v
-        :else (let [type (first v)
-                    spec (rest v)]
-                (cond (= type :fn) (apply convert-fn template spec)
-                      (= type :pseudo) (apply convert-pseudo spec)
-                      (= type :ref) (apply convert-ref template spec)
-                      :else {(encode-key type) (first spec)}))))
+(s/def ::join (s/keys :req [::type ::values]
+                      :opt [::delimiter]))
 
+(defmethod value-type ::join [_] ::join)
+
+(s/def ::select (s/keys :req [::type ::values ::index]))
+
+(defmethod value-type ::select [_] ::select)
+
+
+
+
+(defmulti encode-value ::type)
+
+(defmethod encode-value :default [x] x)
+
+(defmethod encode-value ::xref [{:keys [::ref ::att]}]
+  (if att
+    {"Fn::GetAtt" [(keys/->key ref) (keys/->key att)]}
+    {"Ref" (keys/->key ref)}))
+
+(defmethod keys/->key :notification-arns [_]
+  "NotificationARNs")
+
+(defmethod encode-value ::pseudo [{:keys [::param]}]
+  {"Ref" (str "AWS::" (-> param name keyword keys/->key))})
+
+(defmethod encode-value ::join [{:keys [::delimiter ::values]}]
+  {"Fn::Join" [(or delimiter "") (vec (map encode-value values))]})
+
+(defmethod encode-value ::select [{:keys [::index ::values]}]
+  {"Fn::Select" [(str index) (vec (map encode-value values))]})
+
+
+
+
+(defn xref
+  ([ref]
+   {::type ::xref ::ref ref})
+  ([ref att]
+   {::type ::xref ::ref ref ::att att}))
+
+(defn pseudo [param]
+  {::type ::pseudo
+   ::param (keyword "crucible.pseudo" (name param))})
+
+(defn join
+  ([values]
+   (join "" values))
+  ([delimiter values]
+   {::type ::join
+    ::values values
+    ::delimiter delimiter}))
+
+(defn select [index values]
+  {::type ::select
+   ::index index
+   ::values values})
