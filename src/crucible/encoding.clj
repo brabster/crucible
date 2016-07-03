@@ -4,10 +4,10 @@
             [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.encoding.keys :refer [->key]]))
 
-(defmethod ->key :aws-template-format-version [kw]
+(defmethod ->key :aws-template-format-version [_]
   "AWSTemplateFormatVersion")
 
-(defn validate-element [elements-map element]
+(defn validate-element [_ element]
   element)
 
 (defmulti rewrite-element-data (fn [[type _]] type))
