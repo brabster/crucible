@@ -1,7 +1,6 @@
 (ns crucible.values
   (:require [clojure.spec :as s]
-            [crucible.encoding.keys :as keys]
-            [crucible.pseudo :as pseudo]))
+            [crucible.encoding.keys :as keys]))
 
 (s/def ::ref keyword?)
 (s/def ::att keyword?)
