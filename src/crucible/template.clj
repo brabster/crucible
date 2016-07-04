@@ -18,7 +18,7 @@
                          :elements (s/nilable (s/map-of keyword? ::element))))
 
 (defn template "Make a template structure with the given description and elements"
-  [description & elements]
+  [description & {:as elements}]
   (let [input [description elements]
         spec ::template
         parsed (s/conform spec input)]
