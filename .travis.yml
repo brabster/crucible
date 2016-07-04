@@ -9,5 +9,8 @@ script:
  - lein ancient
  - lein do cloverage
 
-after_success:
-  "lein deploy"
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: master
