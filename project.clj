@@ -19,6 +19,6 @@
                               :sign-releases false}]] 
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha8"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
              :dev {:resource-paths ["test-resources"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}})
