@@ -1,6 +1,8 @@
 (ns crucible.encoding
   (:require [clojure.walk :as walk]
             [cheshire.core :as json]
+            [crucible.values :as v]
+            [crucible.resources :as r]
             [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.encoding.keys :refer [->key]]))
 
@@ -19,7 +21,7 @@
   (walk/prewalk
    (fn [x]
      (cond
-       (:crucible.values/type x) (crucible.values/encode-value x)
+       (::v/type x) (v/encode-value x)
        (keyword? x) (-> x unqualify-keyword ->PascalCase)
        :else x))
    element))
@@ -29,10 +31,10 @@
   (walk/prewalk
    (fn [x]
      (cond
-       (:crucible.resources/policies x) (-> x
-                                            (merge (:crucible.resources/policies x))
-                                            (dissoc :crucible.resources/policies))
-       (:crucible.values/type x) (crucible.values/encode-value x)
+       (::r/policies x) (-> x
+                            (merge (::r/policies x))
+                            (dissoc ::r/policies))
+       (::v/type x) (v/encode-value x)
        (keyword? x) (-> x unqualify-keyword ->PascalCase)
        :else x))
    element))
