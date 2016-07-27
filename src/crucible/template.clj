@@ -12,7 +12,7 @@
 (s/def ::element (s/cat :type #{:parameter
                                 :resource
                                 :output}
-                        :specification ::s/any))
+                        :specification any?))
 
 (s/def ::template (s/cat :description ::description
                          :elements (s/nilable (s/map-of keyword? ::element))))

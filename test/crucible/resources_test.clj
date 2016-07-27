@@ -17,7 +17,7 @@
   (testing "exception thrown if type does not look like a valid AWS resource type"
     (is (thrown? Exception (res/resource-factory "bob" ::foo))))
 
-  (s/def ::foo ::s/any)
+  (s/def ::foo any?)
 
   (testing "factory function places type in ::type key"
     (let [type "AWS::Bob"]
