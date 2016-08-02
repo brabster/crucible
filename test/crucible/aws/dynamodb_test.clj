@@ -36,7 +36,7 @@
 
 (deftest doc-example-test
   (testing "encode"
-    (is (= (json/decode (slurp (io/resource "dynamodb-sample.json")))
+    (is (= (json/decode (slurp (io/resource "aws/dynamodb/complex-table.json")))
            (json/decode
             (enc/encode
              (t/template
