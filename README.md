@@ -6,8 +6,9 @@ Create better cloudformation templates with Clojure
 
 ## Installation
 
-Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 4+
+Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 10+ (breaking changes in spec around alpha 9)
 
+0.9.2-SNAPSHOT currently includes the latest changes.
 ![](https://clojars.org/crucible/latest-version.svg)
 
 ## Examples
@@ -36,6 +37,41 @@ repl> (clojure.pprint/pprint simple)
                "Properties" {"CidrBlock" {"Ref" "MyVpcCidr"}}}},
  "Outputs" {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}}
 ```
+
+## Resource Types
+
+* AWS::EC2::* partial coverage
+* AWS::DynamoDB::Table
+* AWS::CloudWatch::Alarm
+* AWS::Lambda::Function (underway)
+* AWS::Lambda::EventSourceMapping (underway)
+* AWS::IAM::Role (underway)
+* Custom::* custom resources (underway)
+
+## Writing your own resource type
+
+The quickest way is to use `crucible.resources/resource-factory`, eg.
+
+```clojure
+(ns crucible.aws.ec2
+  (:require [clojure.spec :as s]
+            [crucible.resources :as r]
+            [crucible.values :as v]))
+
+(s/def ::cidr-block ::v/value)
+
+(s/def ::vpc (s/keys :req [::cidr-block]
+                     :opt [::enable-dns-support
+                           ::enable-dns-hostnames
+                           ::instance-tenancy
+                           ::r/tags]))
+
+(def vpc (r/resource-factory "AWS::EC2::VPC" ::vpc))
+```
+
+## Helping Out
+
+Any help appreciated! Happy to receive any issues, pull requests, etc.
 
 ## License
 
