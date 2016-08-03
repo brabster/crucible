@@ -1,4 +1,4 @@
-(ns aws.custom-resource
+(ns crucible.aws.custom-resource
   (:require [crucible.resources :refer [resource-factory]]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]

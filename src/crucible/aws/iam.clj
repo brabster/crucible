@@ -1,4 +1,4 @@
-(ns aws.iam
+(ns crucible.aws.iam
   (:require [crucible.resources :refer [resource-factory]]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]

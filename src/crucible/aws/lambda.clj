@@ -1,4 +1,4 @@
-(ns aws.lambda
+(ns crucible.aws.lambda
   (:require [crucible.resources :refer [resource-factory]]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]
