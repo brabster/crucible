@@ -46,10 +46,10 @@ repl> (clojure.pprint/pprint simple)
 * AWS::EC2::* partial coverage
 * AWS::DynamoDB::Table
 * AWS::CloudWatch::Alarm
-* AWS::Lambda::Function (underway)
-* AWS::Lambda::EventSourceMapping (underway)
-* AWS::IAM::Role (underway)
-* Custom::* custom resources (underway)
+* AWS::Lambda::Function
+* AWS::Lambda::EventSourceMapping
+* AWS::IAM::Role (basic support for Lambda applications)
+* Custom::* custom resources
 
 ## Writing your own resource type
 
