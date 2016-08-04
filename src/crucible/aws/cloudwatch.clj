@@ -42,11 +42,40 @@
 (s/def ::period (spec-or-ref string? #_(s/and pos-int?
                                               #(= 0 (mod % 60)))))
 
-(s/def ::statistic (spec-or-ref #{"SampleCount" "Average" "Sum" "Minimum" "Maximum"}))
+(s/def ::statistic (spec-or-ref #{"SampleCount"
+                                  "Average"
+                                  "Sum"
+                                  "Minimum"
+                                  "Maximum"}))
 
 (s/def ::threshold (spec-or-ref string? #_number?))
 
-(s/def ::unit (spec-or-ref #{"Seconds" "Microseconds" "Milliseconds" "Bytes" "Kilobytes" "Megabytes" "Gigabytes" "Terabytes" "Bits" "Kilobits" "Megabits" "Gigabits" "Terabits" "Percent" "Count" "Bytes/Second" "Kilobytes/Second" "Megabytes/Second" "Gigabytes/Second" "Terabytes/Second" "Bits/Second" "Kilobits/Second" "Megabits/Second" "Gigabits/Second" "Terabits/Second" "Count/Second" "None"}))
+(s/def ::unit (spec-or-ref #{"Seconds"
+                             "Microseconds"
+                             "Milliseconds"
+                             "Bytes" "Kilobytes"
+                             "Megabytes"
+                             "Gigabytes"
+                             "Terabytes"
+                             "Bits"
+                             "Kilobits"
+                             "Megabits"
+                             "Gigabits"
+                             "Terabits"
+                             "Percent"
+                             "Count"
+                             "Bytes/Second"
+                             "Kilobytes/Second"
+                             "Megabytes/Second"
+                             "Gigabytes/Second"
+                             "Terabytes/Second"
+                             "Bits/Second"
+                             "Kilobits/Second"
+                             "Megabits/Second"
+                             "Gigabits/Second"
+                             "Terabits/Second"
+                             "Count/Second"
+                             "None"}))
 
 (s/def ::alarm (s/keys :req [::comparison-operator
                              ::evaluation-periods
