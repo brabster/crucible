@@ -57,7 +57,11 @@
   {"Fn::Select" [(str index) (vec (map encode-value values))]})
 
 
-
+(defmacro spec-or-ref
+  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
+  [spec]
+  `(s/or :literal ~spec
+         :reference ::value))
 
 (defn xref
   ([ref]

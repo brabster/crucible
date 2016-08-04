@@ -49,6 +49,7 @@ repl> (clojure.pprint/pprint simple)
 * AWS::Lambda::Function
 * AWS::Lambda::EventSourceMapping
 * AWS::IAM::Role (basic support for Lambda applications)
+* AWS::S3::Bucket
 * Custom::* custom resources
 
 ## Writing your own resource type
