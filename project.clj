@@ -5,18 +5,22 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[camel-snake-kebab "0.4.0"]
                  [cheshire "5.6.3"]]
-  :plugins [[lein-ancient "0.6.10"]
-            [lein-kibit "0.1.2"]
+  :exclusions [org.clojure/clojure]
+  :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
+            [lein-ancient "0.6.10"]
+            [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
+                                             org.clojure/tools.cli]]
             [jonase/eastwood "0.2.3"]
             [lein-cloverage "1.0.6"]
-            [lein-marginalia "0.9.0"]]
+            [lein-marginalia "0.9.0" :exclusions [org.clojure/clojure
+                                                  org.clojure/tools.cli]]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                                :username :env/clojars_username
                                :password :env/clojars_password}]
                  ["releases" {:url "https://clojars.org/repo"
                               :username :env/clojars_username
                               :password :env/clojars_password
-                              :sign-releases false}]] 
+                              :sign-releases false}]]
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
