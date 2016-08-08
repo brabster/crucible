@@ -22,7 +22,7 @@
                                 "Date"
                             ],
                             "Id": "myCORSRuleId1",
-                            "MaxAge": "3600"
+                            "MaxAge": 3600
                         },
                         {
                             "AllowedHeaders": [
@@ -41,7 +41,7 @@
                                 "Date"
                             ],
                             "Id": "myCORSRuleId2",
-                            "MaxAge": "1800"
+                            "MaxAge": 1800
                         }
                     ]
                 }

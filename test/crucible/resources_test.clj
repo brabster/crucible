@@ -1,30 +1,28 @@
 (ns crucible.resources-test
   (:require [crucible.resources :as res]
+            [crucible.values :as v]
             [clojure.test :refer :all]
             [clojure.spec :as s]))
 
 (deftest resource-property-type
-  (testing "single value is valid"
-    (is (s/valid? ::res/resource-property-value "foo")))
+  (testing "single ref is valid"
+    (is (s/valid? ::res/resource-property-value (v/xref :foo))))
 
-  (testing "multiple values vector is valid"
-    (is (s/valid? ::res/resource-property-value ["foo" "foo"])))
-
-  (testing "vector of maps is valid"
-    (is (s/valid? ::res/resource-property-value [{} {} {}]))))
+  (testing "function is valid"
+    (is (s/valid? ::res/resource-property-value (v/join "-" ["foo"])))))
 
 (deftest resource-factory
   (testing "exception thrown if type does not look like a valid AWS resource type"
     (is (thrown? Exception (res/resource-factory "bob" ::foo))))
 
-  (s/def ::foo any?)
+  (s/def ::foo (s/keys))
 
   (testing "factory function places type in ::type key"
     (let [type "AWS::Bob"]
       (is (= type
              (-> type
                  (res/resource-factory ::foo)
-                 (apply {})
+                 (apply [{}])
                  second
                  ::res/type))))))
 
@@ -37,5 +35,5 @@
       (is (thrown? Exception (my-resource {}))))
 
     (testing "resource factory constructs element on valid props"
-      (is (= [:resource #::res{:type type :properties {::foo ::bar}}]
-             (my-resource {::foo ::bar}))))))
+      (is (= [:resource #::res{:type type :properties {::foo {}}}]
+             (my-resource {::foo {}}))))))

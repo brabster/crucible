@@ -3,20 +3,20 @@
             [crucible.values :as v]
             [clojure.spec :as s]))
 
-(s/def ::table-name ::v/value)
+(s/def ::table-name (v/spec-or-ref string?))
 
-(s/def ::attribute-name string?)
+(s/def ::attribute-name (v/spec-or-ref string?))
 
-(s/def ::attribute-type #{"S" "N" "B"})
+(s/def ::attribute-type (v/spec-or-ref #{"S" "N" "B"}))
 
 (s/def ::attribute-definition (s/keys :req [::attribute-name
                                             ::attribute-type]))
 
 (s/def ::attribute-definitions (s/* ::attribute-definition))
 
-(s/def ::index-name string?)
+(s/def ::index-name (v/spec-or-ref string?))
 
-(s/def ::key-type #{"HASH" "RANGE"})
+(s/def ::key-type (v/spec-or-ref #{"HASH" "RANGE"}))
 
 (s/def ::hash-key (s/keys :req [::attribute-name
                                 ::key-type]))
@@ -27,14 +27,14 @@
 (s/def ::key-schema (s/cat :hash ::hash-key
                            :range (s/? ::range-key)))
 
-(s/def ::non-key-attributes (s/* string?))
+(s/def ::non-key-attributes (s/* (v/spec-or-ref string?)))
 
-(s/def ::projection-type #{"KEYS_ONLY" "INCLUDE" "ALL"})
+(s/def ::projection-type (v/spec-or-ref #{"KEYS_ONLY" "INCLUDE" "ALL"}))
 
 (s/def ::projection (s/keys :opt [::non-key-attributes
                                   ::projection-type]))
 
-(s/def ::capacity-units ::v/value)
+(s/def ::capacity-units (v/spec-or-ref string?))
 
 (s/def ::read-capacity-units ::capacity-units)
 
@@ -56,10 +56,10 @@
 
 (s/def ::local-secondary-indexes (s/* ::local-secondary-index))
 
-(s/def ::stream-view-type #{"KEYS_ONLY"
-                            "NEW_IMAGE"
-                            "OLD_IMAGE"
-                            "NEW_AND_OLD_IMAGES"})
+(s/def ::stream-view-type (v/spec-or-ref #{"KEYS_ONLY"
+                                           "NEW_IMAGE"
+                                           "OLD_IMAGE"
+                                           "NEW_AND_OLD_IMAGES"}))
 
 (s/def ::stream-specification (s/keys :req [::stream-view-type]))
 

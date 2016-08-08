@@ -77,8 +77,8 @@
                                   :properties
                                   {::ec2/cidr-block
                                    #::v{:type ::v/join,
-                                        :values ["foo" #::v{:type ::v/xref,
-                                                            :ref :vpc-cidr}],
+                                        :fn-values ["foo" #::v{:type ::v/xref,
+                                                               :ref :vpc-cidr}],
                                         :delimiter "-"}}}}}}
          (template "t"
                    :vpc-cidr (parameter)
