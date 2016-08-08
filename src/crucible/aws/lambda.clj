@@ -15,24 +15,24 @@
 (s/def ::vpc-config (s/keys :req [::security-group-ids]
                             :opt [::subnet-ids]))
 
-(s/def ::timeout (s/spec-or-ref (s/and pos-int? #(<= % (* 5 60)))))
+(s/def ::timeout (v/spec-or-ref (s/and pos-int? #(<= % (* 5 60)))))
 
 (s/def ::runtime #{"nodejs" "nodejs4.3" "java8" "python2.7"})
 
-(s/def ::role (s/spec-or-ref string?))
+(s/def ::role (v/spec-or-ref string?))
 
-(s/def ::memory-size (s/spec-or-ref (s/and #(-> % (mod 64) (= 0)) #(<= 128 % 1536))))
+(s/def ::memory-size (v/spec-or-ref (s/and #(-> % (mod 64) (= 0)) #(<= 128 % 1536))))
 
-(s/def ::handler (s/spec-or-ref string?))
+(s/def ::handler (v/spec-or-ref string?))
 
-(s/def ::function-name (s/spec-or-ref string?))
+(s/def ::function-name (v/spec-or-ref string?))
 
-(s/def ::description (s/spec-or-ref string?))
+(s/def ::description (v/spec-or-ref string?))
 
-(s/def ::s3-bucket (s/spec-or-ref string?))
-(s/def ::s3-key (s/spec-or-ref string?))
-(s/def ::s3-object-version (s/spec-or-ref string?))
-(s/def ::zip-file (s/spec-or-ref string?))
+(s/def ::s3-bucket (v/spec-or-ref string?))
+(s/def ::s3-key (v/spec-or-ref string?))
+(s/def ::s3-object-version (v/spec-or-ref string?))
+(s/def ::zip-file (v/spec-or-ref string?))
 
 (s/def ::code (s/keys ::opt [::s3-bucket
                              ::s3-key
@@ -51,13 +51,13 @@
 
 (def function (resource-factory "AWS::Lambda::Function" ::function))
 
-(s/def ::batch-size (s/spec-or-ref (s/and pos-int? #(< % 10000))))
+(s/def ::batch-size (v/spec-or-ref (s/and pos-int? #(< % 10000))))
 
-(s/def ::enabled (s/spec-or-ref boolean?))
+(s/def ::enabled (v/spec-or-ref boolean?))
 
-(s/def ::event-source-arn (s/spec-or-ref string?))
+(s/def ::event-source-arn (v/spec-or-ref string?))
 
-(s/def ::starting-postition (s/spec-or-ref #{"TRIM_HORIZON" "LATEST"}))
+(s/def ::starting-postition (v/spec-or-ref #{"TRIM_HORIZON" "LATEST"}))
 
 (s/def ::event-source-mapping (s/keys :req [::event-source-arn
                                             ::function-name
