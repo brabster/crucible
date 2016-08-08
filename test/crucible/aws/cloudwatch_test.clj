@@ -6,7 +6,7 @@
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
 
-(deftest minimal-clouwatch-test
+(deftest minimal-cloudwatch-test
   (testing "encode"
     (is (= (json/decode (slurp (io/resource "aws/cloudwatch/alarm.json")))
            (json/decode
