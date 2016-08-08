@@ -22,7 +22,7 @@
                                                          :allowed-origins ["*"]
                                                          :exposed-headers ["Date"]
                                                          :id "myCORSRuleId1"
-                                                         :max-age "3600"}
+                                                         :max-age 3600}
                                                   #::s3 {:allowed-headers ["x-amz-*"]
                                                          :allowed-methods ["DELETE"]
                                                          :allowed-origins ["http://www.example1.com"
@@ -31,4 +31,4 @@
                                                                            "Server"
                                                                            "Date"]
                                                          :id "myCORSRuleId2"
-                                                         :max-age "1800"}]}}))))))))
+                                                         :max-age 1800}]}}))))))))

@@ -4,9 +4,7 @@
 
 (s/def ::props-type keyword?)
 
-(s/def ::resource-property-value (s/or :value ::v/value
-                                       :values ::v/values
-                                       :map-vector (s/+ map?)))
+(s/def ::resource-property-value any?)
 
 (defmulti properties-type ::props-type)
 

@@ -60,7 +60,7 @@
 (s/def ::max-age (v/spec-or-ref pos-int?))
 
 (s/def ::id (v/spec-or-ref (s/and string?
-                                  #(< 256 (count %)))))
+                                  #(< (count %) 256))))
 
 (s/def ::exposed-headers (s/coll-of (v/spec-or-ref string?) :kind vector?))
 

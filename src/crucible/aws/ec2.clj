@@ -5,7 +5,7 @@
 
 (defn ec2 [suffix] (str "AWS::EC2::" suffix))
 
-(s/def ::cidr-block ::v/value)
+(s/def ::cidr-block (v/spec-or-ref string?))
 
 (s/def ::vpc (s/keys :req [::cidr-block]
                      :opt [::enable-dns-support
@@ -15,9 +15,9 @@
 
 (def vpc (r/resource-factory (ec2 "VPC") ::vpc))
 
-(s/def ::vpc-id ::v/value)
-(s/def ::availability-zone ::v/value)
-(s/def ::map-public-ip-on-launch ::v/value)
+(s/def ::vpc-id (v/spec-or-ref string?))
+(s/def ::availability-zone (v/spec-or-ref string?))
+(s/def ::map-public-ip-on-launch (v/spec-or-ref string?))
 
 (s/def ::subnet (s/keys :req [::vpc-id ::cidr-block]
                         :opt [::availability-zone
@@ -45,13 +45,9 @@
 
 (def eip-association (r/resource-factory (ec2 "EIPAssociation") ::eip-association))
 
-(s/def ::internet-gateway (s/keys :opt [::r/tags]))
-
-(s/def ::internet-gateway (s/nilable map?))
+(s/def ::internet-gateway (s/? (s/keys :opt [::r/tags])))
 
 (def internet-gateway (r/resource-factory (ec2 "InternetGateway") ::internet-gateway))
-
-(s/def ::vpc-id ::v/value)
 
 (s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
                                         :opt [::internet-gateway-id
