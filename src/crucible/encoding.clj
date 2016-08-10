@@ -3,7 +3,6 @@
             [cheshire.core :as json]
             [crucible.values :as v]
             [crucible.resources :as r]
-            [camel-snake-kebab.core :refer [->PascalCase]]
             [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :aws-template-format-version [_]
@@ -22,7 +21,7 @@
    (fn [x]
      (cond
        (::v/type x) (v/encode-value x)
-       (keyword? x) (-> x unqualify-keyword ->PascalCase)
+       (keyword? x) (-> x unqualify-keyword ->key)
        :else x))
    element))
 
@@ -35,7 +34,7 @@
                             (merge (::r/policies x))
                             (dissoc ::r/policies))
        (::v/type x) (v/encode-value x)
-       (keyword? x) (-> x unqualify-keyword ->PascalCase)
+       (keyword? x) (-> x unqualify-keyword ->key)
        :else x))
    element))
 
