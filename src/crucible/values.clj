@@ -6,6 +6,13 @@
 (s/def ::att keyword?)
 (s/def ::delimiter string?)
 
+(s/def ::param #{::account-id
+                 ::notification-arns
+                 ::no-value
+                 ::region
+                 ::stack-id
+                 ::stack-name})
+
 (defmulti value-type ::type)
 
 (s/def ::value (s/multi-spec value-type ::type))
@@ -74,7 +81,14 @@
 
 (defn pseudo [param]
   {::type ::pseudo
-   ::param (keyword "crucible.pseudo" (name param))})
+   ::param param})
+
+(def account-id (pseudo ::account-id))
+(def notification-arns (pseudo ::notification-arns))
+(def no-value (pseudo ::no-value))
+(def region (pseudo ::region))
+(def stack-id (pseudo ::stack-id))
+(def stack-name (pseudo ::stack-name))
 
 (defn join
   ([values]
