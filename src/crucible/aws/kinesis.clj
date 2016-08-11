@@ -1,4 +1,4 @@
-(ns aws.kinesis
+(ns crucible.aws.kinesis
   (require [clojure.spec :as s]
            [crucible.values :as v]
            [crucible.resources :as r]
