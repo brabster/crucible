@@ -50,6 +50,8 @@ repl> (clojure.pprint/pprint simple)
 * AWS::Lambda::EventSourceMapping
 * AWS::IAM::Role (basic support for Lambda applications)
 * AWS::S3::Bucket
+* AWS::CloudFormation::Stack
+* AWS::Kinesis::Stream
 * Custom::* custom resources
 
 ## Writing your own resource type
