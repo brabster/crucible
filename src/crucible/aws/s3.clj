@@ -1,16 +1,12 @@
 (ns crucible.aws.s3
-  (:require [crucible.resources :as r]
-            [crucible.values :as v]
-            [crucible.encoding.keys :refer [->key]]
+  (:require [crucible.resources :refer [spec-or-ref resource-factory]]
             [clojure.spec :as s]))
-
-(defmethod ->key ::s3-key [_] "S3Key")
 
 (s/def ::arn string?)
 
-(s/def ::value (v/spec-or-ref string?))
+(s/def ::value (spec-or-ref string?))
 
-(s/def ::name (v/spec-or-ref #{"prefix" "suffix"}))
+(s/def ::name (spec-or-ref #{"prefix" "suffix"}))
 
 (s/def ::rule (s/keys :req [::name ::value]))
 
@@ -20,17 +16,17 @@
 
 (s/def ::filter (s/keys :req [::s3-key]))
 
-(s/def ::event (v/spec-or-ref #{"s3:ObjectCreated:*"
-                                "s3:ObjectCreated:Put"
-                                "s3:ObjectCreated:Post"
-                                "s3:ObjectCreated:Copy"
-                                "s3:ObjectCreated:CompleteMultipartUpload"
-                                "s3:ObjectRemoved:*"
-                                "s3:ObjectRemoved:Delete"
-                                "s3:ObjectRemoved:DeleteMarkerCreated"
-                                "s3:ReducedRedundancyLostObject"}))
+(s/def ::event (spec-or-ref #{"s3:ObjectCreated:*"
+                              "s3:ObjectCreated:Put"
+                              "s3:ObjectCreated:Post"
+                              "s3:ObjectCreated:Copy"
+                              "s3:ObjectCreated:CompleteMultipartUpload"
+                              "s3:ObjectRemoved:*"
+                              "s3:ObjectRemoved:Delete"
+                              "s3:ObjectRemoved:DeleteMarkerCreated"
+                              "s3:ReducedRedundancyLostObject"}))
 
-(s/def ::topic (v/spec-or-ref ::arn))
+(s/def ::topic (spec-or-ref ::arn))
 
 (s/def ::topic-configuration (s/keys :req [::event
                                            ::topic]
@@ -38,7 +34,7 @@
 
 (s/def ::topic-configurations (s/coll-of ::topic-configuration :kind vector?))
 
-(s/def ::queue (v/spec-or-ref ::arn))
+(s/def ::queue (spec-or-ref ::arn))
 
 (s/def ::queue-configuration (s/keys :req [::event
                                            ::queue]
@@ -49,7 +45,7 @@
 (s/def ::lambda-configuration (s/keys :req [::event
                                             ::function]
                                       :opt [::filter]))
-(s/def ::function (v/spec-or-ref ::arn))
+(s/def ::function (spec-or-ref ::arn))
 
 (s/def ::lambda-configurations (s/coll-of ::lambda-configuration :kind vector?))
 
@@ -57,18 +53,18 @@
                                                   ::queue-configurations
                                                   ::topic-configurations]))
 
-(s/def ::max-age (v/spec-or-ref pos-int?))
+(s/def ::max-age (spec-or-ref pos-int?))
 
-(s/def ::id (v/spec-or-ref (s/and string?
-                                  #(< (count %) 256))))
+(s/def ::id (spec-or-ref (s/and string?
+                                #(< (count %) 256))))
 
-(s/def ::exposed-headers (s/coll-of (v/spec-or-ref string?) :kind vector?))
+(s/def ::exposed-headers (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::allowed-origins (s/coll-of (v/spec-or-ref string?) :kind vector?))
+(s/def ::allowed-origins (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::allowed-headers (s/coll-of (v/spec-or-ref string?) :kind vector?))
+(s/def ::allowed-headers (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::allowed-methods (s/coll-of (v/spec-or-ref #{"GET" "PUT" "HEAD" "POST" "DELETE"}) :kind vector))
+(s/def ::allowed-methods (s/coll-of (spec-or-ref #{"GET" "PUT" "HEAD" "POST" "DELETE"}) :kind vector))
 
 (s/def ::cors-rule (s/keys :req [::allowed-methods
                                  ::allowed-origins]
@@ -81,8 +77,8 @@
 
 (s/def ::cors-configuration (s/keys :req [::cors-rules]))
 
-(s/def ::bucket-name (v/spec-or-ref (s/and string?
-                                           #(re-matches #"[a-z0-9-.]+" %))))
+(s/def ::bucket-name (spec-or-ref (s/and string?
+                                         #(re-matches #"[a-z0-9-.]+" %))))
 
 (s/def ::access-control #{"AuthenticatedRead"
                           "AwsExecRead"
@@ -100,8 +96,8 @@
                               ::logging-configuration
                               ::notification-configuration
                               ::replication-configuration
-                              ::r/tags
+                              :crucible.resources/tags
                               ::versioning-configuration
                               ::website-configuration]))
 
-(def bucket (r/resource-factory "AWS::S3::Bucket" ::bucket))
+(def bucket (resource-factory "AWS::S3::Bucket" ::bucket))

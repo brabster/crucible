@@ -1,6 +1,5 @@
 (ns crucible.resources
-  (:require [clojure.spec :as s]
-            [crucible.values :as v]))
+  (:require [clojure.spec :as s]))
 
 (s/def ::props-type keyword?)
 
@@ -50,3 +49,9 @@
          :else (-> {::type type
                     ::properties props}
                    (assoc-when ((complement nil?) policies) ::policies policies)))])))
+
+(defmacro spec-or-ref
+  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
+  [spec]
+  `(s/or :literal ~spec
+         :reference :crucible.values/value))

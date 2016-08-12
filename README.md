@@ -18,10 +18,8 @@ The next major release will assemble a more convenient API, so may involve break
 
 ```clojure
 (ns crucible.examples-test
-  (:require  [clojure.test :refer :all]
-             [crucible.template :refer [template parameter resource output xref encode]]
-             [crucible.values :refer [join]]
-             [crucible.aws.ec2 :as ec2]))
+  (:require [crucible.core :refer [template parameter resource output xref encode join]]
+            [crucible.aws.ec2 :as ec2]))
 
 (def simple (template "A simple sample template"
                       :my-vpc-cidr (parameter)

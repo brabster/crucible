@@ -1,5 +1,6 @@
 (ns crucible.values
   (:require [clojure.spec :as s]
+            [crucible.resources :refer [spec-or-ref]]
             [crucible.encoding.keys :as keys]))
 
 (s/def ::ref keyword?)
@@ -23,12 +24,6 @@
 
 (s/def ::xref (s/keys :req [::type ::ref]
                       :opt [::att]))
-
-(defmacro spec-or-ref
-  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
-  [spec]
-  `(s/or :literal ~spec
-         :reference ::value))
 
 (defmethod value-type ::xref [_] ::xref)
 
