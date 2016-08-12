@@ -1,8 +1,7 @@
 (ns crucible.encoding.template_test
   (:require [clojure.test :refer :all]
             [crucible.encoding :refer [encode]]
-            [crucible.template :refer [template parameter output xref]]
-            [crucible.values :refer [join pseudo]]
+            [crucible.core :refer [template parameter output xref join notification-arns]]
             [crucible.parameters :as param]
             [crucible.aws.ec2 :as ec2]
             [crucible.aws.dynamodb :as ddb]
@@ -115,7 +114,7 @@
            (cheshire.core/decode
             (encode
              (template "t"
-                       :my-resource (ec2/vpc {::ec2/cidr-block v/notification-arns}))))))))
+                       :my-resource (ec2/vpc {::ec2/cidr-block notification-arns}))))))))
 
 #_(deftest resource-reference-validation-test
     (testing "reference non-existent parameter from resource property throws"

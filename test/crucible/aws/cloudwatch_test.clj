@@ -1,7 +1,6 @@
 (ns crucible.aws.cloudwatch-test
   (:require [crucible.aws.cloudwatch :as cw]
-            [crucible.template :as t]
-            [crucible.encoding :as enc]
+            [crucible.core :as cru]
             [cheshire.core :as json]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
@@ -10,8 +9,8 @@
   (testing "encode"
     (is (= (json/decode (slurp (io/resource "aws/cloudwatch/alarm.json")))
            (json/decode
-            (enc/encode
-             (t/template
+            (cru/encode
+             (cru/template
               "sample"
               :cpu-alarm-high (cw/alarm #::cw{:alarm-description "Scale-up if CPU is greater than 90% for 10 minutes"
                                               :metric-name "CPUUtilization"
@@ -20,7 +19,7 @@
                                               :period "300"
                                               :evaluation-periods "2"
                                               :threshold "90"
-                                              :alarm-actions [(t/xref :web-server-scale-up-policy)]
+                                              :alarm-actions [(cru/xref :web-server-scale-up-policy)]
                                               :dimensions [#::cw{:name "AutoScalingGroupName"
-                                                                 :value (t/xref :web-server-group)}]
+                                                                 :value (cru/xref :web-server-group)}]
                                               :comparison-operator "GreaterThanThreshold"}))))))))

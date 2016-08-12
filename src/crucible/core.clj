@@ -1,4 +1,4 @@
-(ns crucible.template
+(ns crucible.core
   "Commonly used template construction functions"
   (:require [clojure.spec :as s]
             [crucible.values :as v]
@@ -17,7 +17,8 @@
 (s/def ::template (s/cat :description ::description
                          :elements (s/nilable (s/map-of keyword? ::element))))
 
-(defn template "Make a template structure with the given description and elements"
+(defn template
+  "Make a template structure with the given description and elements"
   [description & {:as elements}]
   (let [input [description elements]
         spec ::template
@@ -26,24 +27,52 @@
       (throw (ex-info "Invalid input" (s/explain-data spec input)))
       parsed)))
 
-(defn parameter "Make a template parameter element"
+(defn parameter
+  "Make a template parameter element"
   [& {:keys [type] :or {type ::p/string} :as options}]
   [:parameter (assoc options ::p/type type)])
 
-(defn resource "Make a template resource element"
+(defn resource
+  "Make a template resource element"
   [options]
   [:resource options])
 
-(defn output "Make a template output with the value and an optional description"
+(defn output
+  "Make a template output with the value and an optional description"
   [value & [description]]
   [:output (-> description
                (when {::o/description description})
                (assoc ::o/value value))])
 
-(defn xref "Cross-reference another template element"
-  [& options]
-  (apply v/xref options))
+(defn xref "Cross-reference another template element, optionally
+  specifying a resource attribute. Produces Ref and Fn::GetAtt."
+  ([ref]
+   (v/xref ref))
+  ([ref att]
+   (v/xref ref att)))
 
-(defn encode "Encode a template into JSON for use by CloudFormation"
+(defn join
+  "Join values at template application time with an optional
+  delimiter. See Fn::Join."
+  ([values]
+   (join "" values))
+  ([delimiter values]
+   (v/join delimiter values)))
+
+(defn select
+  "Select a value from a list at template application time. See
+  Fn::Select"
+  [index values]
+  (v/select index values))
+
+(defn encode
+  "Encode a template into JSON for use by CloudFormation"
   [template]
   (encoding/encode template))
+
+(def account-id (v/pseudo ::v/account-id))
+(def notification-arns (v/pseudo ::v/notification-arns))
+(def no-value (v/pseudo ::v/no-value))
+(def region (v/pseudo ::v/region))
+(def stack-id (v/pseudo ::v/stack-id))
+(def stack-name (v/pseudo ::v/stack-name))

@@ -1,6 +1,6 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.template :refer [template parameter resource output xref encode]]
+            [crucible.core :refer [template parameter resource output xref encode]]
             [crucible.parameters :as param]
             [crucible.outputs :as out]
             [crucible.values :as v]

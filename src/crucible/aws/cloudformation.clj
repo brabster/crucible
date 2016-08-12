@@ -1,8 +1,7 @@
 (ns crucible.aws.cloudformation
   (:require [clojure.spec :as s]
-            [crucible.resources :refer [resource-factory]]
-            [crucible.encoding.keys :refer [->key]]
-            [crucible.values :refer [spec-or-ref]]))
+            [crucible.resources :refer [resource-factory spec-or-ref]]
+            [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :template-url [_] "TemplateURL")
 

@@ -1,7 +1,6 @@
 (ns crucible.aws.s3-test
-  (:require [crucible.aws.s3 :as s3]
-            [crucible.template :as t]
-            [crucible.encoding :as enc]
+  (:require [crucible.core :as cru]
+            [crucible.aws.s3 :as s3]
             [cheshire.core :as json]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
@@ -10,8 +9,8 @@
   (testing "encode"
     (is (= (json/decode (slurp (io/resource "aws/s3/s3-cors.json")))
            (json/decode
-            (enc/encode
-             (t/template
+            (cru/encode
+             (cru/template
               "sample"
               :bucket
               (s3/bucket

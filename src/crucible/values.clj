@@ -1,5 +1,6 @@
 (ns crucible.values
   (:require [clojure.spec :as s]
+            [crucible.resources :refer [spec-or-ref]]
             [crucible.encoding.keys :as keys]))
 
 (s/def ::ref keyword?)
@@ -23,12 +24,6 @@
 
 (s/def ::xref (s/keys :req [::type ::ref]
                       :opt [::att]))
-
-(defmacro spec-or-ref
-  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
-  [spec]
-  `(s/or :literal ~spec
-         :reference ::value))
 
 (defmethod value-type ::xref [_] ::xref)
 
@@ -83,20 +78,11 @@
   {::type ::pseudo
    ::param param})
 
-(def account-id (pseudo ::account-id))
-(def notification-arns (pseudo ::notification-arns))
-(def no-value (pseudo ::no-value))
-(def region (pseudo ::region))
-(def stack-id (pseudo ::stack-id))
-(def stack-name (pseudo ::stack-name))
-
 (defn join
-  ([values]
-   (join "" values))
-  ([delimiter values]
-   {::type ::join
-    ::fn-values values
-    ::delimiter delimiter}))
+  [delimiter values]
+  {::type ::join
+   ::fn-values values
+   ::delimiter delimiter})
 
 (defn select [index values]
   {::type ::select
