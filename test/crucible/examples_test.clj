@@ -14,8 +14,8 @@
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Description" "A simple sample template"
             "Parameters" {"MyVpcCidr" {"Type" "String"}}
-            "Resources" {"MyVpc"b
-                         {"Type" "AWS::EC2::VPC",
-                          "Properties" {"CidrBlock" {"Ref" "MyVpcCidr"}}}},
+            "Resources" {"MyVpc"
+                         {"Type" "AWS::EC2::VPC"
+                          "Properties" {"CidrBlock" {"Ref" "MyVpcCidr"}}}}
             "Outputs" {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}}
            (json/decode (encode simple))))))
