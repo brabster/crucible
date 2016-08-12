@@ -1,8 +1,7 @@
 (ns crucible.aws.kinesis
   (require [clojure.spec :as s]
            [crucible.values :as v]
-           [crucible.resources :as r]
-           [crucible.template :as t]))
+           [crucible.resources :as r]))
 
 (s/def ::shard-count (v/spec-or-ref pos-int?))
 

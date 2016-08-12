@@ -1,7 +1,6 @@
 (ns crucible.encoding.keys-test
   (:require [crucible.encoding.keys :as keys]
-            [crucible.template :as t]
-            [crucible.encoding :as enc]
+            [crucible.core :as cru]
             [crucible.resources :as r]
             [clojure.test :refer :all]
             [clojure.spec :as s]))
@@ -20,13 +19,13 @@
             "Description" "t"
             "Parameters" {testing-123-translation {"Type" "String"}}}
            (cheshire.core/decode
-            (enc/encode
-             (t/template "t"
-                         :testing-123 (t/parameter)))))))
+            (cru/encode
+             (cru/template "t"
+                           :testing-123 (cru/parameter)))))))
 
   (testing "->key in element properties position translates"
     (is (get-in (cheshire.core/decode
-                 (enc/encode
-                  (t/template "t"
-                              :foo (test-resource {::testing-123 "foo"}))))
+                 (cru/encode
+                  (cru/template "t"
+                                :foo (test-resource {::testing-123 "foo"}))))
                 ["Resources" "Foo" "Properties" "Testing123Foo"]))))

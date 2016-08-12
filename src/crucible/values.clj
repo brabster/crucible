@@ -83,20 +83,11 @@
   {::type ::pseudo
    ::param param})
 
-(def account-id (pseudo ::account-id))
-(def notification-arns (pseudo ::notification-arns))
-(def no-value (pseudo ::no-value))
-(def region (pseudo ::region))
-(def stack-id (pseudo ::stack-id))
-(def stack-name (pseudo ::stack-name))
-
 (defn join
-  ([values]
-   (join "" values))
-  ([delimiter values]
-   {::type ::join
-    ::fn-values values
-    ::delimiter delimiter}))
+  [delimiter values]
+  {::type ::join
+   ::fn-values values
+   ::delimiter delimiter})
 
 (defn select [index values]
   {::type ::select

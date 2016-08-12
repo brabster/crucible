@@ -1,7 +1,6 @@
 (ns crucible.aws.dynamodb-test
   (:require [crucible.aws.dynamodb :as ddb]
-            [crucible.template :as t]
-            [crucible.encoding :as enc]
+            [crucible.core :as cru]
             [cheshire.core :as json]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
@@ -22,24 +21,24 @@
                 "WriteCapacityUnits" {"Ref" "Param"}}}}},
             "Parameters" {"Param" {"Type" "String"}}}
            (json/decode
-            (enc/encode
-             (t/template
+            (cru/encode
+             (cru/template
               "minimal"
-              :param (t/parameter)
+              :param (cru/parameter)
               :table (ddb/table #::ddb{:attribute-definitions [#::ddb{:attribute-name "foo"
                                                                       :attribute-type "S"}]
                                        :key-schema [#::ddb{:attribute-name "foo"
                                                            :key-type "HASH"}]
                                        :provisioned-throughput
                                        #::ddb{:read-capacity-units "20"
-                                              :write-capacity-units (t/xref :param)}}))))))))
+                                              :write-capacity-units (cru/xref :param)}}))))))))
 
 (deftest doc-example-test
   (testing "encode"
     (is (= (json/decode (slurp (io/resource "aws/dynamodb/complex-table.json")))
            (json/decode
-            (enc/encode
-             (t/template
+            (cru/encode
+             (cru/template
               "sample"
               :My-dynamo-db-table
               (ddb/table
