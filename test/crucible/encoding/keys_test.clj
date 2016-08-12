@@ -12,7 +12,7 @@
 
 (s/def ::foo (s/keys :req [::testing-123]))
 
-(def test (r/resource-factory "Test::Test" ::foo))
+(def test-resource (r/resource-factory "Test::Test" ::foo))
 
 (deftest ->key-translates-on-encode-template
   (testing "->key in element key position translates"
@@ -28,5 +28,5 @@
     (is (get-in (cheshire.core/decode
                  (enc/encode
                   (t/template "t"
-                              :foo (test {::testing-123 "foo"}))))
+                              :foo (test-resource {::testing-123 "foo"}))))
                 ["Resources" "Foo" "Properties" "Testing123Foo"]))))
