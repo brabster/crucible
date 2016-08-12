@@ -1,15 +1,14 @@
 (ns crucible.aws.kinesis
   (require [clojure.spec :as s]
-           [crucible.values :as v]
-           [crucible.resources :as r]))
+           [crucible.resources :refer [spec-or-ref resource-factory]]))
 
-(s/def ::shard-count (v/spec-or-ref pos-int?))
+(s/def ::shard-count (spec-or-ref pos-int?))
 
-(s/def ::name (v/spec-or-ref string?))
+(s/def ::name (spec-or-ref string?))
 
 (s/def ::stream (s/keys :req [::shard-count]
                         :opt [::name
-                              ::v/tags]))
+                              :crucible.resourcs/tags]))
 
-(def stream (r/resource-factory "AWS::Kinesis::Stream" ::stream))
+(def stream (resource-factory "AWS::Kinesis::Stream" ::stream))
 
