@@ -12,8 +12,6 @@ Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 10+ (
 
 ![](https://clojars.org/crucible/latest-version.svg)
 
-The next major release will assemble a more convenient API, so may involve breaking changes.
-
 ## Examples
 
 ```clojure
@@ -39,7 +37,28 @@ repl> (clojure.pprint/pprint simple)
  "Outputs" {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}}
 ```
 
+### Parameter Options
+
+See `crucible.parameters` namespace, required as `param` in this example:
+
+```clojure
+:my-vpc-cidr (parameter ::param/type ::param/string
+                        ::param/allowed-values ["10.0.0.0/24" "10.0.0.0/16"])
+```
+
+### Resource Policies
+
+See `crucible.policies` namespace, required as `policies` in this example:
+
+```clojure
+:my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}
+                 (policies/deletion ::policies/retain)
+                 (policies/depends-on :my-vpc-cidr))
+```
+
 ## Resource Types
+
+Examples of resource type usage can be found in the tests.
 
 * AWS::EC2::* partial coverage
 * AWS::DynamoDB::Table
