@@ -12,8 +12,6 @@ Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 10+ (
 
 ![](https://clojars.org/crucible/latest-version.svg)
 
-The next major release will assemble a more convenient API, so may involve breaking changes.
-
 ## Examples
 
 ```clojure
