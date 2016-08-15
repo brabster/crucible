@@ -106,6 +106,20 @@ Crucible uses camel-snake-kebab's `->PascalCase` function to convert Clojure map
 
 Note, these translations take place during the final JSON encoding step and do not see keyword namespacing.
 
+## CLI Support
+
+(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template-path, this function reads the Clojure code at template-path, finds the last defined var, evaluates and encodes it to JSON, then spits the result out the location defined by output-path.
+
+An example of use with Leiningen aliases:
+
+```clojure
+:aliases {"build-template" ["run" "-m" crucible.encoding.main
+                            "target/cf/my-template.json"
+                            "src/my_template.clj"]}
+```
+
+This functionality is intended to bootstrap basic use-cases for manual and build-server use of Crucible. Unsure at the moment what more advanced cases look like.
+
 ## Helping Out
 
 Any help appreciated! Happy to receive any issues, pull requests, etc.

@@ -22,6 +22,7 @@
                               :password :env/clojars_password
                               :sign-releases false}]]
   :target-path "target/%s"
+  :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
              :dev {:resource-paths ["test-resources"]
