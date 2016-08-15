@@ -39,7 +39,7 @@ repl> (clojure.pprint/pprint simple)
 
 ### Parameter Options
 
-See `crucible.parameters namespace, required as `param` in this example:
+See `crucible.parameters` namespace, required as `param` in this example:
 
 ```clojure
 :my-vpc-cidr (parameter ::param/type ::param/string
@@ -48,7 +48,7 @@ See `crucible.parameters namespace, required as `param` in this example:
 
 ### Resource Policies
 
-See `crucible.policies namespace, required as `policies` in this example:
+See `crucible.policies` namespace, required as `policies` in this example:
 
 ```clojure
 :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}
