@@ -17,7 +17,7 @@
 (s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9]+" %)))
 
 (s/def ::resource (s/keys :req [::type ::properties]
-                          :opt [::policies]))
+                          :opt [::policies/policies]))
 
 (s/def ::key string?)
 (s/def ::value string?)
@@ -30,19 +30,20 @@
 
 (def invalid? (complement s/valid?))
 
+(s/def ::policy-list (s/* ::policies/policy))
+
 (defn resource-factory [type props-spec]
   (if-not (s/valid? ::type type)
     (throw (ex-info "Invalid resource name" (s/explain-data ::type type)))
-    (fn [& [props policies]]
+    (fn [& [props & policies]]
       [:resource
        (cond
          (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
                                                      (s/explain-data props-spec props)))
-         (invalid? ::policies/policies policies) (throw (ex-info "Invalid resource policies"
-                                                                 (s/explain-data ::policies/policies policies)))
+
          :else (-> {::type type
                     ::properties props}
-                   (assoc-when ((complement nil?) policies) ::policies/policies policies)))])))
+                   (merge (into {} (s/conform ::policy-list policies)))))])))
 
 (defmacro spec-or-ref
   "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."

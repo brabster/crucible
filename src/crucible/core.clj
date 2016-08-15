@@ -29,7 +29,9 @@
 
 (defn parameter
   "Make a template parameter element"
-  [& {:keys [type] :or {type ::p/string} :as options}]
+  [& {:keys [::p/type]
+      :or {type ::p/string}
+      :as options}]
   [:parameter (assoc options ::p/type type)])
 
 (defn resource

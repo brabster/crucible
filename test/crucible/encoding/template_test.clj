@@ -1,11 +1,13 @@
-(ns crucible.encoding.template_test
+(ns crucible.encoding.template-test
   (:require [clojure.test :refer :all]
-            [crucible.encoding :refer [encode]]
-            [crucible.core :refer [template parameter output xref join notification-arns]]
-            [crucible.policies :as pol]
-            [crucible.aws.ec2 :as ec2]
-            [crucible.aws.dynamodb :as ddb]
-            [crucible.values :as v]))
+            [crucible
+             [encoding :refer [encode]]
+             [core :refer [template parameter output xref join notification-arns]]
+             [policies :as pol]
+             [parameters :as param]]
+            [crucible.aws
+             [ec2 :as ec2]
+             [dynamodb :as ddb]]))
 
 (def vpc-crucible (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}))
 (def vpc-cf {"Type" "AWS::EC2::VPC"
@@ -22,7 +24,7 @@
             (encode
              (template "t"
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
-                                        {::pol/deletion-policy ::pol/retain}))))))))
+                                        (pol/deletion ::pol/retain)))))))))
 
 (deftest template-resources-test
   (testing "template with single resource"
@@ -63,7 +65,7 @@
             (encode
              (template "t"
                        :my-param (parameter)
-                       :my-other-param (parameter :type ::param/number))))))))
+                       :my-other-param (parameter ::param/type ::param/number))))))))
 
 (deftest template-resources-and-parameters-test
   (testing "template with parameter and resource"
