@@ -1,5 +1,6 @@
 (ns crucible.resources
-  (:require [clojure.spec :as s]))
+  (:require [clojure.spec :as s]
+            [crucible.policies :as policies]))
 
 (s/def ::props-type keyword?)
 
@@ -14,13 +15,6 @@
 (s/def ::properties any?)
 
 (s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9]+" %)))
-
-(s/def ::deletion-policy #{::retain ::delete ::snapshot})
-
-(s/def ::depends-on string?)
-
-(s/def ::policies (s/nilable (s/keys :opt [::deletion-policy
-                                           ::depends-on])))
 
 (s/def ::resource (s/keys :req [::type ::properties]
                           :opt [::policies]))
@@ -44,11 +38,11 @@
        (cond
          (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
                                                      (s/explain-data props-spec props)))
-         (invalid? ::policies policies) (throw (ex-info "Invalid resource policies"
-                                                        (s/explain-data ::policies policies)))
+         (invalid? ::policies/policies policies) (throw (ex-info "Invalid resource policies"
+                                                                 (s/explain-data ::policies/policies policies)))
          :else (-> {::type type
                     ::properties props}
-                   (assoc-when ((complement nil?) policies) ::policies policies)))])))
+                   (assoc-when ((complement nil?) policies) ::policies/policies policies)))])))
 
 (defmacro spec-or-ref
   "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."

@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [crucible.encoding :refer [encode]]
             [crucible.core :refer [template parameter output xref join notification-arns]]
-            [crucible.parameters :as param]
+            [crucible.policies :as pol]
             [crucible.aws.ec2 :as ec2]
             [crucible.aws.dynamodb :as ddb]
             [crucible.values :as v]))
@@ -22,7 +22,7 @@
             (encode
              (template "t"
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
-                                        {::param/deletion-policy ::param/retain}))))))))
+                                        {::pol/deletion-policy ::pol/retain}))))))))
 
 (deftest template-resources-test
   (testing "template with single resource"
