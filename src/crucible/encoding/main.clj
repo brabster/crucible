@@ -7,15 +7,32 @@
             [clojure.spec :as s]
             [clojure.spec.test :as stest]))
 
-(s/fdef -main
-        :args (s/cat :template-require string?
-                     :output-path string?))
+(defn- write-templates [output-path [var-sym template]]
+  (let [output-file (str output-path "/" var-sym ".json")]
+    (io/make-parents output-file)
+    (spit output-file template)
+    output-file))
+
+(defn write-template-vars [vars ns output-path]
+  (->> vars
+       (filter (fn [[k v]] (-> v deref meta :crucible.core/template)))
+       (map (fn [[k v]] [k (-> v deref crucible.encoding/encode)]))
+       (map (partial write-templates (str output-path "/" ns)))
+       (reduce (fn [_ f] (println "Created template:" f)) [])))
 
 (defn -main
-  "Write the template defined by the last form in template-require to the output-path. Parameter output-path is a string describing the path to the file we will generate. Parameter template-require is a string describing the path to the target template."
-  [& [template-path output-path]]
-  (let [template (load-file template-path)]
-    (io/make-parents output-path)
-    (spit output-path (encode @template))))
-
-(stest/instrument `-main)
+  "Write the templates defined in the namespaces to the output path."
+  [& args]
+  (let [{:keys [template-namespaces output-path]}
+        (s/conform (s/cat :template-namespaces (s/+ (s/or :sym symbol?
+                                                          :str string?))
+                          :output-path string?) args)
+        template-namespace-symbols (map #(if (= (first %) :str)
+                                           (symbol (second %))
+                                           (second %)) template-namespaces)]
+    (doseq [ns template-namespace-symbols]
+      (require ns :reload-all)
+      (-> ns
+          ns-publics
+          seq
+          (write-template-vars ns output-path)))))

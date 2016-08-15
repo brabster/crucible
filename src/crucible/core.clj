@@ -25,7 +25,7 @@
         parsed (s/conform spec input)]
     (if (= parsed ::s/invalid)
       (throw (ex-info "Invalid input" (s/explain-data spec input)))
-      parsed)))
+      (with-meta parsed {::template true}))))
 
 (defn parameter
   "Make a template parameter element"
