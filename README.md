@@ -108,14 +108,14 @@ Note, these translations take place during the final JSON encoding step and do n
 
 ## CLI Support
 
-(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template-path, this function reads the Clojure code at template-path, finds the last defined var, evaluates and encodes it to JSON, then spits the result out the location defined by output-path.
+(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template namespace, this function requires the namespace, finds any templates defined as top-level vars (using a metadata item added by `crucible.core/template`, evaluates and encodes them to JSON, then spits the result out the location defined by output-path named for the var name.
 
 An example of use with Leiningen aliases:
 
 ```clojure
 :aliases {"build-template" ["run" "-m" crucible.encoding.main
-                            "src/my_template.clj"
-                            "target/cf/my-template.json"]}
+                            my.templates.template
+                            "target/cf"]}
 ```
 
 This functionality is intended to bootstrap basic use-cases for manual and build-server use of Crucible. Unsure at the moment what more advanced cases look like.
