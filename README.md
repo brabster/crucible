@@ -75,9 +75,13 @@ The quickest way is to use `crucible.resources/resource-factory`, eg.
 
 ## Overriding JSON Keys
 
-Crucible uses camel-snake-kebab's `->PascalCase` function to convert Clojure map keys into JSON map keys. That takes care of most translations between Clojure-style `:keyword-key` and JSON/CloudFormation-style "KeywordKey". To handle the occasional mistranslation, typically due to capitalisation, `clojure.encoding.keys` exposes a `->key` multimethod, allowing overriding of the translation. For example, this problem occurs in AWS::CloudFormation::Stack, where a required key is "TemplateURL". The following overrides the natural translation of :template-url -> TemplateUrl.
+Crucible uses camel-snake-kebab's `->PascalCase` function to convert Clojure map keys into JSON map keys. That takes care of most translations between Clojure-style `:keyword-key` and JSON/CloudFormation-style `KeywordKey`. To handle the occasional mistranslation, typically due to capitalisation, `clojure.encoding.keys` exposes a `->key` multimethod, allowing overriding of the translation. For example, this problem occurs in AWS::CloudFormation::Stack, where a required key is "TemplateURL". The following overrides the natural translation of :template-url -> TemplateUrl.
 
 ```clojure
+
+(ns crucible.aws.cloudformation
+  (:require [crucible.encoding.keys :refer [->key]]))
+
 (defmethod ->key :template-url [_] "TemplateURL")
 ```
 
