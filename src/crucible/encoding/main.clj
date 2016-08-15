@@ -8,12 +8,12 @@
             [clojure.spec.test :as stest]))
 
 (s/fdef -main
-        :args (s/cat :output-path string?
-                     :template-require string?))
+        :args (s/cat :template-require string?
+                     :output-path string?))
 
 (defn -main
   "Write the template defined by the last form in template-require to the output-path. Parameter output-path is a string describing the path to the file we will generate. Parameter template-require is a string describing the path to the target template."
-  [& [output-path template-path]]
+  [& [template-path output-path]]
   (let [template (load-file template-path)]
     (io/make-parents output-path)
     (spit output-path (encode @template))))
