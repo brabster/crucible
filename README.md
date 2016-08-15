@@ -114,8 +114,8 @@ An example of use with Leiningen aliases:
 
 ```clojure
 :aliases {"build-template" ["run" "-m" crucible.encoding.main
-                            "target/cf/my-template.json"
-                            "src/my_template.clj"]}
+                            "src/my_template.clj"
+                            "target/cf/my-template.json"]}
 ```
 
 This functionality is intended to bootstrap basic use-cases for manual and build-server use of Crucible. Unsure at the moment what more advanced cases look like.
