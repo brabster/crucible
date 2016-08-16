@@ -8,9 +8,6 @@
 (defmethod ->key :aws-template-format-version [_]
   "AWSTemplateFormatVersion")
 
-(defn validate-element [_ element]
-  element)
-
 (defmulti rewrite-element-data (fn [[type _]] type))
 
 (defn unqualify-keyword [kw] (-> kw name keyword))
@@ -55,7 +52,6 @@
 (defn elements->template [elements-map empty-template]
   (->> elements-map
        seq
-       (map (partial validate-element elements-map))
        (map rewrite-element)
        (reduce assemble-template empty-template)))
 

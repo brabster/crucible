@@ -12,6 +12,8 @@
             (cru/encode
              (cru/template
               "sample"
+              :web-server-scale-up-policy (cru/parameter)
+              :web-server-group (cru/parameter)
               :cpu-alarm-high (cw/alarm #::cw{:alarm-description "Scale-up if CPU is greater than 90% for 10 minutes"
                                               :metric-name "CPUUtilization"
                                               :namespace "AWS/EC2"
