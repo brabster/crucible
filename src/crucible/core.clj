@@ -1,6 +1,7 @@
 (ns crucible.core
   "Commonly used template construction functions"
   (:require [clojure.spec :as s]
+            [clojure.walk :as walk]
             [crucible.values :as v]
             [crucible.parameters :as p]
             [crucible.resources :as r]
@@ -17,6 +18,18 @@
 (s/def ::template (s/cat :description ::description
                          :elements (s/nilable (s/map-of keyword? ::element))))
 
+(defn validate [template]
+  (walk/prewalk
+   (fn [x]
+     (cond
+       (and (vector? x)
+            (= 2 (count x))
+            (= ::v/ref (first x))) (if-not (contains? (:elements template) (second x))
+                                     (throw (ex-info "Missing reference" {:ref (second x)}))
+                                     x)
+       :else x))
+   template))
+
 (defn template
   "Make a template structure with the given description and elements"
   [description & {:as elements}]
@@ -25,7 +38,9 @@
         parsed (s/conform spec input)]
     (if (= parsed ::s/invalid)
       (throw (ex-info "Invalid input" (s/explain-data spec input)))
-      (with-meta parsed {::template true}))))
+      (-> parsed
+          validate
+          (with-meta {::template true})))))
 
 (defn parameter
   "Make a template parameter element"

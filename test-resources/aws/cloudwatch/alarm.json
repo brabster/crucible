@@ -1,6 +1,10 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
     "Description": "sample",
+    "Parameters": {
+        "WebServerScaleUpPolicy": {"Type": "String"},
+        "WebServerGroup": {"Type": "String"}
+    },
     "Resources": {
         "CpuAlarmHigh": {
             "Type": "AWS::CloudWatch::Alarm",

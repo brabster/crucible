@@ -118,20 +118,6 @@
              (template "t"
                        :my-resource (ec2/vpc {::ec2/cidr-block notification-arns}))))))))
 
-#_(deftest resource-reference-validation-test
-    (testing "reference non-existent parameter from resource property throws"
-      (is (thrown? AssertionError (make-template {:resources
-                                                  {:my-resource
-                                                   {:name "Custom::Test"
-                                                    :properties {:test [:ref :foo]}}}})))))
-
-#_(deftest references-match-template-keys
-    (testing "references in values match template keys"
-      (let [t (make-template {:parameters {:foo nil}
-                              :resources {:bar {:name "Custom::Test"
-                                                :properties {:baz [:ref :foo]}}}})]
-        (is (contains? (get t "Parameters") (get-in t ["Resources"
-                                                       "Bar"
-                                                       "Properties"
-                                                       "Baz"
-                                                       "Ref"]))))))
+(deftest resource-reference-validation-test
+  (testing "reference non-existent parameter from resource property throws"
+    (is (thrown? Exception (template "t" :my-resource (ec2/vpc {::ec2/cidr-block (xref :foo)}))))))
