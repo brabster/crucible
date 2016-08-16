@@ -108,7 +108,7 @@ Note, these translations take place during the final JSON encoding step and do n
 
 ## CLI Support
 
-(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template namespace, this function requires the namespace, finds any templates defined as top-level vars (using a metadata item added by `crucible.core/template`, evaluates and encodes them to JSON, then spits the result out the location defined by output-path named for the var name.
+(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template namespace, this function requires the namespace, finds any templates defined as top-level vars (using a metadata item added by `crucible.core/template`), evaluates and encodes them to JSON, then spits the result out the location defined by output-path named for the var name.
 
 An example of use with Leiningen aliases:
 
