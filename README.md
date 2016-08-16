@@ -2,7 +2,7 @@
 
 Create better cloudformation templates with Clojure
 
-[![Travis Build](https://travis-ci.org/brabster/crucible.svg?branch=master)](https://travis-ci.org/brabster/crucible)
+[![Travis Build](https://travis-ci.org/brabster/crucible.svg?branch=master)](https://travis-ci.org/brabster/crucible) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/290/badge)](https://bestpractices.coreinfrastructure.org/projects/290)
 
 ## Installation
 
@@ -105,6 +105,20 @@ Crucible uses camel-snake-kebab's `->PascalCase` function to convert Clojure map
 ```
 
 Note, these translations take place during the final JSON encoding step and do not see keyword namespacing.
+
+## CLI Support
+
+(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template namespace, this function requires the namespace, finds any templates defined as top-level vars (using a metadata item added by `crucible.core/template`), evaluates and encodes them to JSON, then spits the result out the location defined by output-path named for the var name.
+
+An example of use with Leiningen aliases:
+
+```clojure
+:aliases {"build-template" ["run" "-m" crucible.encoding.main
+                            my.templates.template
+                            "target/cf"]}
+```
+
+This functionality is intended to bootstrap basic use-cases for manual and build-server use of Crucible. Unsure at the moment what more advanced cases look like.
 
 ## Helping Out
 

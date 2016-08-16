@@ -7,6 +7,12 @@
             [crucible.resources :as res]
             [crucible.aws.ec2 :as ec2]))
 
+(deftest template-metadata-tag
+  (is (true? (-> "t"
+                 template
+                 meta
+                 :crucible.core/template))))
+
 (deftest minimal-template
   (is (= {:description "t"
           :elements
