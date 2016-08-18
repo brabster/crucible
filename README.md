@@ -8,7 +8,7 @@ Create better cloudformation templates with Clojure
 
 Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 10+ (breaking changes in spec around alpha 9)
 
-![](https://clojars.org/crucible/latest-version.svg)
+![Clojars Latest Version](https://clojars.org/crucible/latest-version.svg)
 
 ## Examples
 
