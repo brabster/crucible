@@ -1,6 +1,6 @@
 (ns crucible.aws.ec2
   (:require [clojure.spec :as s]
-            [crucible.resources :refer [spec-or-ref resource-factory]]))
+            [crucible.resources :refer [spec-or-ref resource-factory] :as res]))
 
 (defn ec2 [suffix] (str "AWS::EC2::" suffix))
 
@@ -51,3 +51,46 @@
 (s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
                                         :opt [::internet-gateway-id
                                               ::vpn-gateway-id]))
+
+(s/def ::group-description (spec-or-ref string?))
+
+(s/def ::cidr-ip (spec-or-ref string?))
+(def highest-port 65535)
+(def lowest-port 1)
+(s/def ::port (spec-or-ref (s/and integer?
+                                  #(<= lowest-port % highest-port))))
+
+(s/def ::from-port ::port)
+(s/def ::to-port ::port)
+
+(def protocols-all -1)
+(s/def ::ip-protocol (spec-or-ref (s/or :int (s/and integer?
+                                                    #(<= -1 %))
+                                        :str #{"tcp" "udp" "icmp"})))
+
+(s/def ::security-group-id (spec-or-ref string?))
+
+(s/def ::source-security-group-id ::security-group-id)
+(s/def ::source-security-group-name (spec-or-ref string?))
+(s/def ::source-security-group-owner-id (spec-or-ref string?))
+
+(s/def ::security-group-ingress (s/* (s/keys :req [::ip-protocol]
+                                             :opt [::cidr-ip
+                                                   ::from-port
+                                                   ::to-port
+                                                   ::source-security-group-id
+                                                   ::source-security-group-name
+                                                   ::source-security-group-owner-id])))
+
+(s/def ::destination-security-group-id ::security-group-id)
+
+(s/def ::security-group-egress (s/* (s/keys :req [::ip-protocol]
+                                            :opt [::from-port
+                                                  ::to-port
+                                                  ::destination-security-group-id])))
+
+(def security-group (resource-factory (ec2 "SecurityGroup") (s/keys :req [::group-description]
+                                                                    :opt [::security-group-ingress
+                                                                          ::security-group-egress
+                                                                          ::res/tags
+                                                                          ::vpc-id])))
