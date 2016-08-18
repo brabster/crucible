@@ -61,3 +61,21 @@
 
 (def event-source-mapping (resource-factory "AWS::Lambda::EventSourceMapping" ::event-source-mapping))
 
+(s/def ::action (spec-or-ref string?))
+
+(s/def ::function-name (spec-or-ref string?))
+
+(s/def ::principal (spec-or-ref string?))
+
+(s/def ::source-account (spec-or-ref string?))
+
+(s/def ::source-arn (spec-or-ref string?))
+
+(s/def ::permission (s/keys :req [::action
+                                  ::function-name
+                                  ::principal]
+                            :opt [::source-account
+                                  ::source-arn]))
+
+(def permission (resource-factory "AWS::Lambda::Permission" ::permission))
+
