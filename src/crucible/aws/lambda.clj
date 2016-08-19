@@ -2,9 +2,9 @@
   (:require [crucible.resources :refer [resource-factory spec-or-ref]]
             [clojure.spec :as s]))
 
-(s/def ::subnet-id (spec-or-ref string?))
+(s/def ::subnet-id (s/* (spec-or-ref string?)))
 
-(s/def ::security-group-ids (spec-or-ref string?))
+(s/def ::security-group-ids (s/* (spec-or-ref string?)))
 
 (s/def ::vpc-config (s/keys :req [::security-group-ids]
                             :opt [::subnet-ids]))
