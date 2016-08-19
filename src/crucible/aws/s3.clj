@@ -1,5 +1,6 @@
 (ns crucible.aws.s3
   (:require [crucible.resources :refer [spec-or-ref resource-factory]]
+            [crucible.aws.iam :as iam]
             [clojure.spec :as s]))
 
 (s/def ::arn string?)
@@ -89,15 +90,18 @@
                           "PublicRead"
                           "PublicReadWrite"})
 
-(s/def ::bucket (s/keys :opt [::bucket-name
-                              ::access-control
-                              ::cors-configuration
-                              ::lifecycle-configuration
-                              ::logging-configuration
-                              ::notification-configuration
-                              ::replication-configuration
-                              :crucible.resources/tags
-                              ::versioning-configuration
-                              ::website-configuration]))
+(def bucket (resource-factory "AWS::S3::Bucket" (s/keys :opt [::bucket-name
+                                                              ::access-control
+                                                              ::cors-configuration
+                                                              ::lifecycle-configuration
+                                                              ::logging-configuration
+                                                              ::notification-configuration
+                                                              ::replication-configuration
+                                                              :crucible.resources/tags
+                                                              ::versioning-configuration
+                                                              ::website-configuration])))
 
-(def bucket (resource-factory "AWS::S3::Bucket" ::bucket))
+(s/def ::bucket (spec-or-ref string?))
+
+(def bucket-policy (resource-factory "AWS::S3::BucketPolicy" (s/keys :req [::bucket
+                                                                           ::iam/policy-document])))
