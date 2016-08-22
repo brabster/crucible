@@ -106,17 +106,15 @@ Note, these translations take place during the final JSON encoding step and do n
 
 ## CLI Support
 
-(Very) basic CLI support is provided in the `crucible.encoding.main/-main` function. Given an output-path and a template namespace, this function requires the namespace, finds any templates defined as top-level vars (using a metadata item added by `crucible.core/template`), evaluates and encodes them to JSON, then spits the result out the location defined by output-path named for the var name.
+Basic CLI support, intended for use with Leiningen, is provided in the `crucible.encoding.main/-main` function. Running this function will reload the namespaces available in the project, then enumerate any vars that have a metadata tag provided by the `crucible.core/template` function. These vars are then encoded into CloudFormation templates and exported to the local filesystem. They can then be used directly or uploaded to S3 for use with CloudFormation.
+
+Flag `-h` for help. Templates are exported to `target/templates` by default, override with `-o output-dir`. Namespaces are converted to filesystem locations by replacing `.` characters with `/` characters.
 
 An example of use with Leiningen aliases:
 
 ```clojure
-:aliases {"build-template" ["run" "-m" crucible.encoding.main
-                            my.templates.template
-                            "target/cf"]}
+:aliases {"build-template" ["run" "-m" crucible.encoding.main]} 
 ```
-
-This functionality is intended to bootstrap basic use-cases for manual and build-server use of Crucible. Unsure at the moment what more advanced cases look like.
 
 ## Helping Out
 

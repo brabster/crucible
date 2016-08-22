@@ -3,36 +3,51 @@
   ad-hoc manual use and build tooling."
   (:gen-class)
   (:require [crucible.encoding :refer [encode]]
+            [clojure.string :as string]
+            [clojure.tools.namespace.repl :as ns-repl]
+            [clojure.tools.cli :refer [parse-opts]]
             [clojure.java.io :as io]
             [clojure.spec :as s]
             [clojure.spec.test :as stest]))
 
-(defn- write-templates [output-path [var-sym template]]
-  (let [output-file (str output-path "/" var-sym ".json")]
+(defn template-var->write-location [tvar]
+  (let [template-ns (ns-name (:ns (meta tvar)))
+        template-name (:name (meta tvar))]
+    (str (string/replace template-ns #"[.]" "/")
+         "/"
+         template-name
+         ".json")))
+
+(defn write-template [output-location template-var]
+  (let [output-file (str output-location "/" (template-var->write-location template-var))
+        template (encode @template-var)]
     (io/make-parents output-file)
     (spit output-file template)
     output-file))
 
-(defn write-template-vars [vars ns output-path]
-  (->> vars
-       (filter (fn [[k v]] (-> v deref meta :crucible.core/template)))
-       (map (fn [[k v]] [k (-> v deref crucible.encoding/encode)]))
-       (map (partial write-templates (str output-path "/" ns)))
-       (reduce (fn [_ f] (println "Created template:" f)) [])))
+(defn find-templates []
+  (ns-repl/refresh)
+  (mapcat #(->> %
+                ns-publics
+                seq
+                (filter (fn [[k v]] (-> v deref meta :crucible.core/template)))
+                (map (fn [[_ template-var]] template-var)))
+          (all-ns)))
+
+(def cli-options [["-o" "--output-directory DIRECTORY" "Output Directory"
+                   :default "target/templates"]
+                  ["-h" "--help"]])
+
+(defn exit [status msg]
+  (println msg)
+  (System/exit status))
 
 (defn -main
   "Write the templates defined in the namespaces to the output path."
   [& args]
-  (let [{:keys [template-namespaces output-path]}
-        (s/conform (s/cat :template-namespaces (s/+ (s/or :sym symbol?
-                                                          :str string?))
-                          :output-path string?) args)
-        template-namespace-symbols (map #(if (= (first %) :str)
-                                           (symbol (second %))
-                                           (second %)) template-namespaces)]
-    (doseq [ns template-namespace-symbols]
-      (require ns :reload-all)
-      (-> ns
-          ns-publics
-          seq
-          (write-template-vars ns output-path)))))
+  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
+    (cond
+      (:help options) (exit 0 summary)
+      errors (exit 1 errors))
+    (doseq [template-var (find-templates)]
+      (println "Created template:" (write-template (:output-directory options) template-var)))))
