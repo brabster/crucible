@@ -1,10 +1,12 @@
-(defproject crucible "0.9.3-SNAPSHOT"
+(defproject crucible "0.10.0-SNAPSHOT"
   :description "AWS Cloudformation templates in Clojure"
   :url "http://github.com/brabster/crucible"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[camel-snake-kebab "0.4.0"]
-                 [cheshire "5.6.3"]]
+                 [cheshire "5.6.3"]
+                 [org.clojure/tools.namespace "0.2.11"]
+                 [org.clojure/tools.cli "0.3.5"]]
   :exclusions [org.clojure/clojure]
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
