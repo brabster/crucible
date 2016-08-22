@@ -36,7 +36,6 @@
 
 (def cli-options [["-o" "--output-directory DIRECTORY" "Output Directory"
                    :default "target/templates"]
-                  ["-v" "--verbose"]
                   ["-h" "--help"]])
 
 (defn exit [status msg]
