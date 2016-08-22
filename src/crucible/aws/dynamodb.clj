@@ -1,5 +1,5 @@
 (ns crucible.aws.dynamodb
-  (:require [crucible.resources :refer [spec-or-ref resource-factory]]
+  (:require [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec :as s]))
 
 (s/def ::table-name (spec-or-ref string?))
@@ -70,4 +70,4 @@
                              ::global-secondary-indexes
                              ::local-secondary-indexes]))
 
-(def table (resource-factory "AWS::DynamoDB::Table" ::table))
+(defresource table "AWS::DynamoDB::Table" ::table)

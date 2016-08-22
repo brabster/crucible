@@ -50,3 +50,8 @@
   [spec]
   `(s/or :literal ~spec
          :reference :crucible.values/value))
+
+(defmacro defresource
+  "Adds a resource factory function to the namespace"
+  [symbol type props-spec]
+  `(def ~symbol (with-meta (resource-factory ~type ~props-spec) {:doc (str "Resource factory for " ~type)})))

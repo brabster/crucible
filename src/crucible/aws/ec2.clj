@@ -1,6 +1,7 @@
 (ns crucible.aws.ec2
   (:require [clojure.spec :as s]
-            [crucible.resources :refer [spec-or-ref resource-factory] :as res]))
+            [crucible.resources :refer [spec-or-ref defresource] :as res]
+            [crucible.aws.ec2 :as ec2]))
 
 (defn ec2 [suffix] (str "AWS::EC2::" suffix))
 
@@ -10,9 +11,9 @@
                      :opt [::enable-dns-support
                            ::enable-dns-hostnames
                            ::instance-tenancy
-                           :crucible.resources/tags]))
+                           ::res/tags]))
 
-(def vpc (resource-factory (ec2 "VPC") ::vpc))
+(defresource vpc (ec2 "VPC") ::vpc)
 
 (s/def ::vpc-id (spec-or-ref string?))
 (s/def ::availability-zone (spec-or-ref string?))
@@ -23,14 +24,14 @@
                               ::map-public-ip-on-launch
                               ::tags]))
 
-(def subnet (resource-factory (ec2 "Subnet") ::subnet))
+(defresource subnet (ec2 "Subnet") ::subnet)
 
 (s/def ::domain #{"vpc"})
 (s/def ::instance-id string?)
 
 (s/def ::eip (s/keys :opt [::domain ::instance-id]))
 
-(def eip (resource-factory (ec2 "EIP") ::eip))
+(defresource eip (ec2 "EIP") ::eip)
 
 (s/def ::allocation-id string?)
 (s/def ::eip string?)
@@ -42,11 +43,9 @@
                                        ::network-interface-id
                                        ::private-ip-address]))
 
-(def eip-association (resource-factory (ec2 "EIPAssociation") ::eip-association))
+(defresource eip-association (ec2 "EIPAssociation") ::eip-association)
 
-(s/def ::internet-gateway (s/? (s/keys :opt [::tags])))
-
-(def internet-gateway (resource-factory (ec2 "InternetGateway") ::internet-gateway))
+(defresource internet-gateway (ec2 "InternetGateway") (s/? (s/keys :opt [::tags])))
 
 (s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
                                         :opt [::internet-gateway-id
@@ -89,8 +88,10 @@
                                                   ::to-port
                                                   ::destination-security-group-id])))
 
-(def security-group (resource-factory (ec2 "SecurityGroup") (s/keys :req [::group-description]
-                                                                    :opt [::security-group-ingress
-                                                                          ::security-group-egress
-                                                                          ::res/tags
-                                                                          ::vpc-id])))
+(s/def ::security-group (s/keys :req [::group-description]
+                                :opt [::security-group-ingress
+                                      ::security-group-egress
+                                      ::res/tags
+                                      ::vpc-id]))
+
+(defresource security-group (ec2 "SecurityGroup") ::security-group)

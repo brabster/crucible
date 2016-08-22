@@ -2,7 +2,7 @@
   "AWS Custom Resources have a type that is defined by the client,
   prefixed with 'Custom::'. Clients must therefore specify this name
   when using the resource."
-  (:require [crucible.resources :refer [resource-factory spec-or-ref]]
+  (:require [crucible.resources :refer [spec-or-ref resource-factory]]
             [crucible.encoding.keys :refer [->key]]
             [clojure.spec :as s]))
 
