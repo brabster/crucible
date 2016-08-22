@@ -110,10 +110,14 @@ Basic CLI support, intended for use with Leiningen, is provided in the `crucible
 
 Flag `-h` for help. Templates are exported to `target/templates` by default, override with `-o output-dir`. Namespaces are converted to filesystem locations by replacing `.` characters with `/` characters.
 
-An example of use with Leiningen aliases:
+I create a templates directory within my project and then add it as a source-path and crucible as a dependency to the dev profile. Then I can work at the repl, write tests for my templates and use this tooling without having my template code or crucible mixed with my source code.
+
+An example of use with Leiningen aliases: add these to your `project.clj`, then run `lein templates` to have templates present in `templates` directory encoded and placed in `target/templates`.
 
 ```clojure
-:aliases {"build-template" ["run" "-m" crucible.encoding.main]} 
+:aliases {"templates" ["run" "-m" crucible.encoding.main]} 
+:profiles {:dev {:source-paths ["templates"]
+                 :dependencies [[crucible "0.10.0-SNAPSHOT"]]}}
 ```
 
 ## Helping Out
