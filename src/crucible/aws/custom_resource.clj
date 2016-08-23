@@ -9,8 +9,10 @@
 (s/def ::service-token (spec-or-ref string?))
 
 (defn resource
-  "Define a custom resource named for the argument, optionally pass parameters directly"
-  ([name parameters]
+  "Define an AWS Custom::ResourceName named for the resource-name
+  argument. Optionally pass parameters directly, for example where the
+  definition will not be reused."
+  ([resource-name parameters]
    ((resource name) parameters))
-  ([name]
+  ([resource-name]
    (resource-factory (str "Custom::" (->key name)) (s/keys ::req [::service-token]))))

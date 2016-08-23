@@ -1,4 +1,5 @@
 (ns crucible.aws.iam
+  "Resources in AWS::IAM::*"
   (:require [crucible.resources :refer [resource-factory spec-or-ref]]
             [crucible.encoding.keys :refer [->key]]
             [clojure.spec :as s]))
@@ -25,7 +26,11 @@
                             ::path
                             ::policies]))
 
-(defn lambda-access-role [& statements]
+(defn lambda-access-role
+  "Create an AWS::IAM::Role that the Lambda service can assume with
+  appropriate CloudWatch log access and the additional access
+  statements provided."
+  [& statements]
   ((resource-factory "AWS::IAM::Role" ::role)
    {::assume-role-policy-document {::version "2012-10-17"
                                    ::statement [{::effect "Allow"

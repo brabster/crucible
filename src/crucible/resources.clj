@@ -52,6 +52,6 @@
          :reference :crucible.values/value))
 
 (defmacro defresource
-  "Adds a resource factory function to the namespace"
-  [symbol type props-spec]
-  `(def ~symbol (with-meta (resource-factory ~type ~props-spec) {:doc (str "Resource factory for " ~type)})))
+  "Adds a resource factory function to the namespace, documenting the AWS type"
+  [sym type props-spec]
+  `(def ~(with-meta sym {:doc (str "CloudFormation Type: " type)}) (resource-factory ~type ~props-spec)))

@@ -1,4 +1,5 @@
 (ns crucible.aws.cloudformation
+  "Resources in AWS::CloudFormation::*"
   (:require [clojure.spec :as s]
             [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.encoding.keys :refer [->key]]))

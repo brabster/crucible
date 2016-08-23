@@ -1,4 +1,5 @@
 (ns crucible.aws.s3
+  "Resources in AWS::S3::*"
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.aws.iam :as iam]
             [clojure.spec :as s]))

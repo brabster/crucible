@@ -1,4 +1,5 @@
 (ns crucible.aws.cloudwatch
+  "Resources in AWS::CloudWatch::*"
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]

@@ -1,4 +1,5 @@
 (ns crucible.aws.dynamodb
+  "Resources in AWS::DynamoDB::*"
   (:require [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec :as s]))
 
