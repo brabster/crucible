@@ -13,6 +13,6 @@
   argument. Optionally pass parameters directly, for example where the
   definition will not be reused."
   ([resource-name parameters]
-   ((resource name) parameters))
+   ((resource resource-name) parameters))
   ([resource-name]
-   (resource-factory (str "Custom::" (->key name)) (s/keys ::req [::service-token]))))
+   (resource-factory (str "Custom::" (->key resource-name)) (s/keys ::req [::service-token]))))
