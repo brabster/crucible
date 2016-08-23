@@ -37,3 +37,12 @@
     (testing "resource factory constructs element on valid props"
       (is (= [:resource #::res{:type type :properties {::foo {}}}]
              (my-resource {::foo {}}))))))
+
+(s/def ::meta-test-resource-spec any?)
+(res/defresource meta-test-resource "AWS::Meta::Test" ::meta-test-resource-spec)
+
+(deftest documentation-meta-test
+  (testing "documentation is added"
+    (is (-> #'meta-test-resource meta :doc)))
+  (testing "documentation mentions AWS type"
+    (is (.contains (-> #'meta-test-resource meta :doc) "AWS::Meta::Test"))))
