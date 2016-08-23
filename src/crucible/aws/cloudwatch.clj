@@ -1,12 +1,9 @@
 (ns crucible.aws.cloudwatch
-  (:require [crucible.resources :as r]
+  "Resources in AWS::CloudWatch::*"
+  (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]
             [clojure.spec :as s]))
-
-(defmacro spec-or-ref [spec]
-  `(s/or :compiled ~spec
-         :runtime ::v/value))
 
 (defmethod ->key ::ok-actions [_] "OKActions")
 
@@ -93,4 +90,4 @@
                              ::ok-actions
                              ::unit]))
 
-(def alarm (r/resource-factory "AWS::CloudWatch::Alarm" ::alarm))
+(defresource alarm "AWS::CloudWatch::Alarm" ::alarm)

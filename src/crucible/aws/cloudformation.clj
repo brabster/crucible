@@ -1,6 +1,7 @@
 (ns crucible.aws.cloudformation
+  "Resources in AWS::CloudFormation::*"
   (:require [clojure.spec :as s]
-            [crucible.resources :refer [resource-factory spec-or-ref]]
+            [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :template-url [_] "TemplateURL")
@@ -11,5 +12,5 @@
 
 (s/def ::stack (s/keys ::req [::template-url ::parameters]))
 
-(def stack (resource-factory "AWS::CloudFormation::Stack" ::stack))
+(defresource stack "AWS::CloudFormation::Stack" ::stack)
 

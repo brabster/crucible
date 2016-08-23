@@ -1,5 +1,6 @@
 (ns crucible.aws.s3
-  (:require [crucible.resources :refer [spec-or-ref resource-factory]]
+  "Resources in AWS::S3::*"
+  (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.aws.iam :as iam]
             [clojure.spec :as s]))
 
@@ -90,18 +91,22 @@
                           "PublicRead"
                           "PublicReadWrite"})
 
-(def bucket (resource-factory "AWS::S3::Bucket" (s/keys :opt [::bucket-name
-                                                              ::access-control
-                                                              ::cors-configuration
-                                                              ::lifecycle-configuration
-                                                              ::logging-configuration
-                                                              ::notification-configuration
-                                                              ::replication-configuration
-                                                              :crucible.resources/tags
-                                                              ::versioning-configuration
-                                                              ::website-configuration])))
+(s/def ::s3-bucket (s/keys :opt [::bucket-name
+                                 ::access-control
+                                 ::cors-configuration
+                                 ::lifecycle-configuration
+                                 ::logging-configuration
+                                 ::notification-configuration
+                                 ::replication-configuration
+                                 ::res/tags
+                                 ::versioning-configuration
+                                 ::website-configuration]))
+
+(defresource bucket "AWS::S3::Bucket" ::s3-bucket)
 
 (s/def ::bucket (spec-or-ref string?))
 
-(def bucket-policy (resource-factory "AWS::S3::BucketPolicy" (s/keys :req [::bucket
-                                                                           ::iam/policy-document])))
+(s/def ::bucket-policy (s/keys :req [::bucket
+                                     ::iam/policy-document]))
+
+(defresource bucket-policy "AWS::S3::BucketPolicy" ::bucket-policy)

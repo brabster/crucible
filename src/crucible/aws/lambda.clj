@@ -1,5 +1,5 @@
 (ns crucible.aws.lambda
-  (:require [crucible.resources :refer [resource-factory spec-or-ref]]
+  (:require [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec :as s]))
 
 (s/def ::subnet-id (s/* (spec-or-ref string?)))
@@ -43,7 +43,7 @@
                                 ::runtime
                                 ::vpc-config]))
 
-(def function (resource-factory "AWS::Lambda::Function" ::function))
+(defresource function "AWS::Lambda::Function" ::function)
 
 (s/def ::batch-size (spec-or-ref (s/and pos-int? #(< % 10000))))
 
@@ -59,7 +59,7 @@
                                       :opt [::batch-size
                                             ::enabled]))
 
-(def event-source-mapping (resource-factory "AWS::Lambda::EventSourceMapping" ::event-source-mapping))
+(defresource event-source-mapping "AWS::Lambda::EventSourceMapping" ::event-source-mapping)
 
 (s/def ::action (spec-or-ref string?))
 
@@ -77,5 +77,5 @@
                             :opt [::source-account
                                   ::source-arn]))
 
-(def permission (resource-factory "AWS::Lambda::Permission" ::permission))
+(defresource permission "AWS::Lambda::Permission" ::permission)
 

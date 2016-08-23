@@ -50,3 +50,8 @@
   [spec]
   `(s/or :literal ~spec
          :reference :crucible.values/value))
+
+(defmacro defresource
+  "Adds a resource factory function to the namespace, documenting the AWS type"
+  [sym type props-spec]
+  `(def ~(vary-meta sym assoc :doc (str "CloudFormation Type " type)) (resource-factory ~type ~props-spec)))
