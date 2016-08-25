@@ -74,15 +74,17 @@ Examples of resource type usage can be found in the tests.
 
 ## Writing your own resource type
 
-The quickest way is to use `crucible.resources/resource-factory`, eg.
+The easiest way is to use `defresource` and `spec-or-ref` from the `crucible.resources` namespace, eg.
 
 ```clojure
 (ns crucible.aws.ec2
-  (:require [clojure.spec :as s]
-            [crucible.resources :as r]
-            [crucible.values :as v]))
+  "Resources in AWS::EC2::*"
+  (:require [crucible.resources :refer [spec-or-ref defresource]]
+            [clojure.spec :as s]))
 
-(s/def ::cidr-block ::v/value)
+;; spec-or-ref applies your spec if a literal value is given, but also
+allows a parameter or function to be given instead of a literal.
+(s/def ::cidr-block (spec-or-ref string?))
 
 (s/def ::vpc (s/keys :req [::cidr-block]
                      :opt [::enable-dns-support
@@ -90,12 +92,23 @@ The quickest way is to use `crucible.resources/resource-factory`, eg.
                            ::instance-tenancy
                            ::r/tags]))
 
-(def vpc (r/resource-factory "AWS::EC2::VPC" ::vpc))
+(defresource  vpc "AWS::EC2::VPC" ::vpc)
 ```
+
+Pull requests to add or enhance resource types available in Crucible will be welcomed. If it's a standard AWS type please place it in the `crucible.aws` namespace and use `defresource` as it documents the resource type for you. At lest one test for the update would be great!
 
 ## Overriding JSON Keys
 
-Crucible uses camel-snake-kebab's `->PascalCase` function to convert Clojure map keys into JSON map keys. That takes care of most translations between Clojure-style `:keyword-key` and JSON/CloudFormation-style `KeywordKey`. To handle the occasional mistranslation, typically due to capitalisation, `clojure.encoding.keys` exposes a `->key` multimethod, allowing overriding of the translation. For example, this problem occurs in AWS::CloudFormation::Stack, where a required key is `TemplateURL`. The following overrides the natural translation of `:template-url` to `TemplateUrl`.
+Crucible uses camel-snake-kebab's `->PascalCase` function to convert
+Clojure map keys into JSON map keys. That takes care of most
+translations between Clojure-style `:keyword-key` and
+JSON/CloudFormation-style `KeywordKey`. To handle the occasional
+mistranslation, typically due to capitalisation,
+`clojure.encoding.keys` exposes a `->key` multimethod, allowing
+overriding of the translation. For example, this problem occurs in
+AWS::CloudFormation::Stack, where a required key is `TemplateURL`. The
+following overrides the natural translation of `:template-url` to
+`TemplateUrl`.
 
 ```clojure
 
