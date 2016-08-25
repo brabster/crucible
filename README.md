@@ -79,18 +79,22 @@ The easiest way is to use `defresource` and `spec-or-ref` from the `crucible.res
 ```clojure
 (ns crucible.aws.ec2
   "Resources in AWS::EC2::*"
-  (:require [crucible.resources :refer [spec-or-ref defresource]]
+  (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [clojure.spec :as s]))
 
-;; spec-or-ref applies your spec if a literal value is given, but also allows a parameter or function to be given instead of a literal.
+;; spec-or-ref applies your spec if a literal value is given,
+;; but also allows a parameter or function to be given instead of a literal.
 (s/def ::cidr-block (spec-or-ref string?))
 
+;; ::res/tags reuses the tags spec defined in the crucible/resources namespace
 (s/def ::vpc (s/keys :req [::cidr-block]
                      :opt [::enable-dns-support
                            ::enable-dns-hostnames
                            ::instance-tenancy
-                           ::r/tags]))
+                           ::res/tags]))
 
+;; creates resource factory crucible.aws.ec2/vpc with type "AWS::EC2::VPC" 
+;; and validates the data structure using the ::vpc spec
 (defresource  vpc "AWS::EC2::VPC" ::vpc)
 ```
 
