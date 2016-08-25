@@ -12,7 +12,7 @@
             "Resources" {"Firehose" {"Type" "AWS::KinesisFirehose::DeliveryStream",
                                      "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
                                                    "S3DestinationConfiguration"
-                                                          {"BucketArn" {"Ref" "Foo"},
+                                                          {"BucketARN" {"Ref" "Foo"},
                                                            "BufferingHints" {"IntervalInSeconds" 9,
                                                            "SizeInMBs" {"Ref" "Foo"}},
                                                            "CompressionFormat" "UNCOMPRESSED",
