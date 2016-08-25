@@ -17,7 +17,7 @@
                                                            "SizeInMBs" {"Ref" "Foo"}},
                                                            "CompressionFormat" "UNCOMPRESSED",
                                                            "Prefix" {"Ref" "Foo"},
-                                                           "RoleArn" {"Ref" "Foo"}}}}}}
+                                                           "RoleARN" {"Ref" "Foo"}}}}}}
            (json/decode
             (encode
              (template

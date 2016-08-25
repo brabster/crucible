@@ -13,6 +13,12 @@
 (defmethod ->key :aws-kms-key-arn [_]
   "AWSKMSKeyARN")
 
+(defmethod ->key :bucket-arn [_]
+  "BucketARN")
+
+(defmethod ->key :role-arn [_]
+  "RoleARN")
+
 (s/def ::arn (spec-or-ref string?))
 
 (s/def ::delivery-stream-name (spec-or-ref string?))
