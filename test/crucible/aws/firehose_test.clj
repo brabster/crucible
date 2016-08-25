@@ -4,7 +4,7 @@
             [cheshire.core :as json]
             [clojure.test :refer :all]))
 
-(deftest s3-bucket-policy-test
+(deftest firehose-test
   (testing "encode"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09",
             "Description" "sample",
@@ -12,12 +12,12 @@
             "Resources" {"Firehose" {"Type" "AWS::KinesisFirehose::DeliveryStream",
                                      "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
                                                    "S3DestinationConfiguration"
-                                                          {"BucketARN" {"Ref" "Foo"},
-                                                           "BufferingHints" {"IntervalInSeconds" 9,
-                                                           "SizeInMBs" {"Ref" "Foo"}},
-                                                           "CompressionFormat" "UNCOMPRESSED",
-                                                           "Prefix" {"Ref" "Foo"},
-                                                           "RoleArn" {"Ref" "Foo"}}}}}}
+                                                   {"BucketARN" {"Ref" "Foo"},
+                                                    "BufferingHints" {"IntervalInSeconds" 9,
+                                                                      "SizeInMBs" {"Ref" "Foo"}},
+                                                    "CompressionFormat" "UNCOMPRESSED",
+                                                    "Prefix" {"Ref" "Foo"},
+                                                    "RoleARN" {"Ref" "Foo"}}}}}}
            (json/decode
             (encode
              (template
