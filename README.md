@@ -82,8 +82,7 @@ The easiest way is to use `defresource` and `spec-or-ref` from the `crucible.res
   (:require [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec :as s]))
 
-;; spec-or-ref applies your spec if a literal value is given, but also
-allows a parameter or function to be given instead of a literal.
+;; spec-or-ref applies your spec if a literal value is given, but also allows a parameter or function to be given instead of a literal.
 (s/def ::cidr-block (spec-or-ref string?))
 
 (s/def ::vpc (s/keys :req [::cidr-block]
