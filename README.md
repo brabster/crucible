@@ -56,6 +56,8 @@ See `crucible.policies` namespace, required as `policies` in this example:
 
 ## Resource Types
 
+Standard AWS resource types can be found as children of the [crucible.aws](src/crucible/aws) namespace.
+
 Examples of resource type usage can be found in the tests.
 
 * AWS::EC2::* partial coverage
@@ -67,6 +69,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::S3::Bucket
 * AWS::CloudFormation::Stack
 * AWS::Kinesis::Stream
+* AWS::KinesisFirehose::DeliveryStream
 * Custom::* custom resources
 
 ## Writing your own resource type
