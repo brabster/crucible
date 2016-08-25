@@ -13,6 +13,9 @@
 (defmethod ->key :aws-kms-key-arn [_]
   "AWSKMSKeyARN")
 
+(defmethod ->key :role-arn [_]
+  "RoleARN")
+
 (defmethod ->key :bucket-arn [_]
   "BucketARN")
 
