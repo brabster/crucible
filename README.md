@@ -100,6 +100,10 @@ The easiest way is to use `defresource` and `spec-or-ref` from the `crucible.res
 
 Pull requests to add or enhance resource types available in Crucible will be welcomed. If it's a standard AWS type please place it in the `crucible.aws` namespace and use `defresource` as it documents the resource type for you. At lest one test for the update would be great!
 
+### Testing a Resource Type
+
+Although you can test a resource by testing the data structure and validity directly, testing the conversion from the crucible code to a map ready to encode as CloudFormation-valid JSON seems like a good minimal coverage. The `crucible.encoding/rewrite-element-data` function performs this encoding for any resource. Using this function avoids the noise of creating a valid template just to test that a resource encodes correectly. See [the resource tests](/test/crucible/aws) for examples.
+
 ## Overriding JSON Keys
 
 Crucible uses camel-snake-kebab's `->PascalCase` function to convert
