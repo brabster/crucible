@@ -8,9 +8,15 @@
 (defmethod ->key :aws-template-format-version [_]
   "AWSTemplateFormatVersion")
 
-(defmulti rewrite-element-data (fn [[type _]] type))
+(defmulti rewrite-element-data
+  "Convert the crucible representation of an element into a form ready
+  for JSON encoding"
+  (fn [[type _]] type))
 
-(defn unqualify-keyword [kw] (-> kw name keyword))
+(defn unqualify-keyword
+  "Remove namespace qualification from a keyword for JSON encoding"
+  [kw]
+  (-> kw name keyword))
 
 (defmethod rewrite-element-data :default
   [[_ element]]
@@ -35,29 +41,37 @@
        :else x))
    element))
 
-(defn rewrite-element [[key {:keys [type specification]}]]
+(defn- rewrite-element [[key {:keys [type specification]}]]
   [key [type (rewrite-element-data [type specification])]])
 
-(defn element-type->cf-section [type]
+(defn- element-type->cf-section [type]
   (-> type
       name
       (str "s")
       keyword))
 
-(defn assemble-template [m [k v]]
+(defn- assemble-template [m [k v]]
   (let [cf-section (element-type->cf-section (first v))
         element-data (second v)]
     (assoc-in m [cf-section k] element-data)))
 
-(defn elements->template [elements-map empty-template]
+(defn- elements->template
+  "Prepare the elements map for JSON encoding"
+  [elements-map empty-template]
   (->> elements-map
        seq
        (map rewrite-element)
        (reduce assemble-template empty-template)))
 
-(defn encode [template]
+(defn build
+  "Create a CloudFormation-compatible data structure ready for JSON encoding from the template"
+  [template]
   (-> template
       :elements
       (elements->template {:aws-template-format-version "2010-09-09"
-                           :description (or (:description template) "No description provided")})
-      (json/encode {:key-fn ->key})))
+                           :description (or (:description template) "No description provided")})))
+
+(defn encode
+  "Convert the template data structure into a JSON-encoded string"
+  [template]
+  (json/encode (build template) {:key-fn ->key}))
