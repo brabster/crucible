@@ -13,10 +13,15 @@
   for JSON encoding"
   (fn [[type _]] type))
 
-(defn unqualify-keyword
+(defn- unqualify-keyword
   "Remove namespace qualification from a keyword for JSON encoding"
   [kw]
   (-> kw name keyword))
+
+(defn convert-key
+  "Prepare key for encoding as JSON"
+  [k]
+  (-> k unqualify-keyword ->key))
 
 (defmethod rewrite-element-data :default
   [[_ element]]
@@ -24,7 +29,7 @@
    (fn [x]
      (cond
        (::v/type x) (v/encode-value x)
-       (keyword? x) (-> x unqualify-keyword ->key)
+       (keyword? x) (convert-key x)
        :else x))
    element))
 
@@ -37,18 +42,19 @@
                             (merge (::r/policies x))
                             (dissoc ::r/policies))
        (::v/type x) (v/encode-value x)
-       (keyword? x) (-> x unqualify-keyword ->key)
+       (keyword? x) (convert-key x)
        :else x))
    element))
 
 (defn- rewrite-element [[key {:keys [type specification]}]]
-  [key [type (rewrite-element-data [type specification])]])
+  [(->key key) [type (rewrite-element-data [type specification])]])
 
 (defn- element-type->cf-section [type]
   (-> type
       name
       (str "s")
-      keyword))
+      keyword
+      ->key))
 
 (defn- assemble-template [m [k v]]
   (let [cf-section (element-type->cf-section (first v))
@@ -68,10 +74,10 @@
   [template]
   (-> template
       :elements
-      (elements->template {:aws-template-format-version "2010-09-09"
-                           :description (or (:description template) "No description provided")})))
+      (elements->template {(->key :aws-template-format-version) "2010-09-09"
+                           (->key :description) (or (:description template) "No description provided")})))
 
 (defn encode
   "Convert the template data structure into a JSON-encoded string"
   [template]
-  (json/encode (build template) {:key-fn ->key}))
+  (json/encode (build template)))
