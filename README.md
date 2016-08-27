@@ -102,7 +102,7 @@ Pull requests to add or enhance resource types available in Crucible will be wel
 
 ### Testing a Resource Type
 
-Although you can test a resource by testing the data structure and validity directly, testing the conversion from the crucible code to a map ready to encode as CloudFormation-valid JSON seems like a good minimal coverage. The `crucible.encoding/rewrite-element-data` function performs this encoding for any resource. Using this function avoids the noise of creating a valid template just to test that a resource encodes correectly. See [the resource tests](/test/crucible/aws) for examples.
+Although you can test a resource by testing the data structure and validity directly, testing the conversion from the crucible code to a map ready to encode as CloudFormation-valid JSON is good minimal coverage. The default `clojure.test` behaviour does not pretty-print the `ex-data` map on validation exceptions, which makes testing and debugging validation failures painful. A custom assertion `crucible.assertion/resource=` is available to ensure any failure map is pretty-printed. See [the resource tests](/test/crucible/aws) for examples.
 
 ## Overriding JSON Keys
 
