@@ -31,7 +31,7 @@
                                              (pol/depends-on :my-vpc-cidr))
                             :vpc (output (join "/" ["foo" (xref :my-vpc)]))))
 
-(deftest example-simple
+(deftest example-more-complex
   (testing "Matches documented output"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09",
             "Description" "A more complex sample template",

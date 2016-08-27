@@ -1,7 +1,7 @@
 (ns crucible.aws.kinesis
   "Resources in AWS::Kinesis::*"
-  (require [clojure.spec :as s]
-           [crucible.resources :refer [spec-or-ref defresource]]))
+  (:require [clojure.spec :as s]
+            [crucible.resources :refer [spec-or-ref defresource]]))
 
 (s/def ::shard-count (spec-or-ref pos-int?))
 
