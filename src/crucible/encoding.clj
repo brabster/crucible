@@ -49,8 +49,8 @@
 (defn- rewrite-element [[key {:keys [type specification]}]]
   [(->key key) [type (rewrite-element-data [type specification])]])
 
-(defn- element-type->cf-section [type]
-  (-> type
+(defn- element-type->cf-section [element-type]
+  (-> element-type
       name
       (str "s")
       keyword
@@ -75,7 +75,8 @@
   (-> template
       :elements
       (elements->template {(->key :aws-template-format-version) "2010-09-09"
-                           (->key :description) (or (:description template) "No description provided")})))
+                           (->key :description) (or (:description template)
+                                                    "No description provided")})))
 
 (defn encode
   "Convert the template data structure into a JSON-encoded string"

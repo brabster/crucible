@@ -10,7 +10,7 @@ addons:
 
 
 script: 
- - lein do clean, check
+ - lein do clean, eastwood, bikeshed -m 100, check
  - lein ancient
  - lein cloverage
  

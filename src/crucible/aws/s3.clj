@@ -66,7 +66,8 @@
 
 (s/def ::allowed-headers (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::allowed-methods (s/coll-of (spec-or-ref #{"GET" "PUT" "HEAD" "POST" "DELETE"}) :kind vector))
+(s/def ::allowed-methods (s/coll-of (spec-or-ref #{"GET" "PUT" "HEAD" "POST" "DELETE"})
+                                    :kind vector))
 
 (s/def ::cors-rule (s/keys :req [::allowed-methods
                                  ::allowed-origins]

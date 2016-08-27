@@ -65,10 +65,10 @@
 
 (defn xref "Cross-reference another template element, optionally
   specifying a resource attribute. Produces Ref and Fn::GetAtt."
-  ([ref]
-   (v/xref ref))
-  ([ref att]
-   (v/xref ref att)))
+  ([xref]
+   (v/xref xref))
+  ([xref att]
+   (v/xref xref att)))
 
 (defn join
   "Join values at template application time with an optional

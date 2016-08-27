@@ -41,7 +41,8 @@
     (is (= {"Fn::Select" ["1" ["foo" "bar"]]} (encode-value (select 1 ["foo" "bar"])))))
 
   (testing "select fn select value"
-    (is (= {"Fn::Select" ["1" ["foo" {"Ref" "Blah"}]]} (encode-value (select 1 ["foo" (xref :blah)])))))
+    (is (= {"Fn::Select" ["1" ["foo" {"Ref" "Blah"}]]}
+           (encode-value (select 1 ["foo" (xref :blah)])))))
 
   (testing "property value walk"
     (is (= {"Fn::Join" ["-" [{"Ref" "Foo"} "bar" {"Ref" "AWS::AccountId"}]]}

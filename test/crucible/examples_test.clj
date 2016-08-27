@@ -25,7 +25,8 @@
 
 (def more-complex (template "A more complex sample template"
                             :my-vpc-cidr (parameter ::param/type ::param/string
-                                                    ::param/allowed-values ["10.0.0.0/24" "10.0.0.0/16"])
+                                                    ::param/allowed-values ["10.0.0.0/24"
+                                                                            "10.0.0.0/16"])
                             :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}
                                              (pol/deletion ::pol/retain)
                                              (pol/depends-on :my-vpc-cidr))

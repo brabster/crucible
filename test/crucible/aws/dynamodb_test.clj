@@ -48,31 +48,33 @@
            ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
                                          ::ddb/write-capacity-units "5"}
 
-           ::ddb/global-secondary-indexes [{::ddb/index-name "myGSI"
-                                            ::ddb/key-schema [{::ddb/attribute-name "Sales"
-                                                               ::ddb/key-type "HASH"}
-                                                              {::ddb/attribute-name "Artist"
-                                                               ::ddb/key-type "RANGE"}]
-                                            ::ddb/projection {::ddb/non-key-attributes ["Album"
-                                                                                        "NumberOfSongs"]
-                                                              ::ddb/projection-type "INCLUDE"}
-                                            ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
-                                                                          ::ddb/write-capacity-units "5"}}
-                                           {::ddb/index-name "myGSI2"
-                                            ::ddb/key-schema [{::ddb/attribute-name "NumberOfSongs"
-                                                               ::ddb/key-type "HASH"}
-                                                              {::ddb/attribute-name "Sales"
-                                                               ::ddb/key-type "RANGE"}]
-                                            ::ddb/projection {::ddb/non-key-attributes ["Album"
-                                                                                        "Artist"]
-                                                              ::ddb/projection-type "INCLUDE"}
-                                            ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
-                                                                          ::ddb/write-capacity-units "5"}}]
-           :local-secondary-indexes [{::ddb/index-name "myLSI"
-                                      ::ddb/key-schema [{::ddb/attribute-name "Album"
-                                                         ::ddb/key-type "HASH"}
-                                                        {::ddb/attribute-name "Sales"
-                                                         ::ddb/key-type "RANGE"}]
-                                      ::ddb/projection {::ddb/non-key-attributes ["Artist"
-                                                                                  "NumberOfSongs"]
-                                                        ::ddb/projection-type "INCLUDE"}}]})))))
+           ::ddb/global-secondary-indexes
+           [{::ddb/index-name "myGSI"
+             ::ddb/key-schema [{::ddb/attribute-name "Sales"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Artist"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Album"
+                                                         "NumberOfSongs"]
+                               ::ddb/projection-type "INCLUDE"}
+             ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
+                                           ::ddb/write-capacity-units "5"}}
+            {::ddb/index-name "myGSI2"
+             ::ddb/key-schema [{::ddb/attribute-name "NumberOfSongs"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Sales"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Album"
+                                                         "Artist"]
+                               ::ddb/projection-type "INCLUDE"}
+             ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
+                                           ::ddb/write-capacity-units "5"}}]
+           :local-secondary-indexes
+           [{::ddb/index-name "myLSI"
+             ::ddb/key-schema [{::ddb/attribute-name "Album"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Sales"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Artist"
+                                                         "NumberOfSongs"]
+                               ::ddb/projection-type "INCLUDE"}}]})))))

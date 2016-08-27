@@ -17,7 +17,8 @@
                                   "MemorySize" 1024
                                   "Role" {"Ref" "Foo"}
                                   "Description" {"Ref" "Foo"}
-                                  "VpcConfig" {"SecurityGroupIds" [{"Ref" "Foo"}], "SubnetIds" {"Ref" "Foo"}}
+                                  "VpcConfig" {"SecurityGroupIds" [{"Ref" "Foo"}]
+                                               "SubnetIds" {"Ref" "Foo"}}
                                   "Code" {"S3Bucket" {"Ref" "Foo"}, "S3Key" {"Ref" "Foo"}}}}
                    (l/function {::l/handler (xref :foo)
                                 ::l/function-name (xref :foo)
