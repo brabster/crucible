@@ -18,13 +18,15 @@
 
   (testing "federated identity" (is (valid ::iam/principal {::iam/federated "graph.facebook.com"})))
 
-  (testing "federated identity" (is (valid ::iam/principal {::iam/service ["ec2.amazonaws.com"
-                                                                           "datapipeline.amazonaws.com"]})))
+  (testing "federated identity"
+    (is (valid ::iam/principal {::iam/service ["ec2.amazonaws.com"
+                                               "datapipeline.amazonaws.com"]})))
 
   (testing "canonical user" (is (valid ::iam/principal {::iam/canonical-user "foo"})))
 
-  (testing "not principal" (is (valid ::iam/not-principal {::iam/service ["ec2.amazonaws.com"
-                                                                          "datapipeline.amazonaws.com"]}))))
+  (testing "not principal"
+    (is (valid ::iam/not-principal {::iam/service ["ec2.amazonaws.com"
+                                                   "datapipeline.amazonaws.com"]}))))
 
 (deftest action-tests
 
@@ -48,5 +50,6 @@
 
 (deftest condition-tests
 
-  (testing "single condition" (is (valid ::iam/condition {::iam/date-greater-than
-                                                          {"aws:CurrentTime" "2013-08-16T12:00:00Z"}}))))
+  (testing "single condition"
+    (is (valid ::iam/condition {::iam/date-greater-than
+                                {"aws:CurrentTime" "2013-08-16T12:00:00Z"}}))))
