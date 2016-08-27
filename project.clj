@@ -8,6 +8,8 @@
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.5"]]
   :exclusions [org.clojure/clojure]
+  :codox {:output-path "target/docs"
+          :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
             [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
@@ -15,8 +17,7 @@
             [jonase/eastwood "0.2.3"]
             [lein-bikeshed "0.3.0"]
             [lein-cloverage "1.0.6"]
-            [lein-marginalia "0.9.0" :exclusions [org.clojure/clojure
-                                                  org.clojure/tools.cli]]]
+            [lein-codox "0.9.6"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                                :username :env/clojars_username
                                :password :env/clojars_password}]
