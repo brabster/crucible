@@ -13,6 +13,7 @@
             [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
             [jonase/eastwood "0.2.3"]
+            [lein-bikeshed "0.3.0"]
             [lein-cloverage "1.0.6"]
             [lein-marginalia "0.9.0" :exclusions [org.clojure/clojure
                                                   org.clojure/tools.cli]]]

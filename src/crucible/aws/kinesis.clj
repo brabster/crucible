@@ -12,4 +12,3 @@
                               :crucible.resourcs/tags]))
 
 (defresource stream "AWS::Kinesis::Stream" ::stream)
-
