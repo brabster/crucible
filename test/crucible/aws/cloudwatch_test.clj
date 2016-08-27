@@ -1,27 +1,22 @@
 (ns crucible.aws.cloudwatch-test
   (:require [crucible.aws.cloudwatch :as cw]
-            [crucible.core :as cru]
+            [crucible.assertion :refer [resource=]]
+            [crucible.core :refer [parameter xref]]
             [cheshire.core :as json]
-            [clojure.test :refer :all]
+            [clojure.test :refer :all :as t]
             [clojure.java.io :as io]))
 
 (deftest minimal-cloudwatch-test
   (testing "encode"
-    (is (= (json/decode (slurp (io/resource "aws/cloudwatch/alarm.json")))
-           (json/decode
-            (cru/encode
-             (cru/template
-              "sample"
-              :web-server-scale-up-policy (cru/parameter)
-              :web-server-group (cru/parameter)
-              :cpu-alarm-high (cw/alarm #::cw{:alarm-description "Scale-up if CPU is greater than 90% for 10 minutes"
-                                              :metric-name "CPUUtilization"
-                                              :namespace "AWS/EC2"
-                                              :statistic "Average"
-                                              :period "300"
-                                              :evaluation-periods "2"
-                                              :threshold "90"
-                                              :alarm-actions [(cru/xref :web-server-scale-up-policy)]
-                                              :dimensions [#::cw{:name "AutoScalingGroupName"
-                                                                 :value (cru/xref :web-server-group)}]
-                                              :comparison-operator "GreaterThanThreshold"}))))))))
+    (is (resource= (json/decode (slurp (io/resource "aws/cloudwatch/alarm.json")))
+                   (cw/alarm {::cw/alarm-description "Scale-up if CPU is greater than 90% for 10 minutes"
+                              ::cw/metric-name "CPUUtilization"
+                              ::cw/namespace "AWS/EC2"
+                              ::cw/statistic "Average"
+                              ::cw/period "300"
+                              ::cw/evaluation-periods "2"
+                              ::cw/threshold "90"
+                              ::cw/alarm-actions [(xref :web-server-scale-up-policy)]
+                              ::cw/dimensions [{::cw/name "AutoScalingGroupName"
+                                                ::cw/value (xref :web-server-group)}]
+                              ::cw/comparison-operator "GreaterThanThreshold"})))))

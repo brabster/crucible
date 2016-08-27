@@ -1,93 +1,81 @@
 (ns crucible.aws.dynamodb-test
   (:require [crucible.aws.dynamodb :as ddb]
-            [crucible.core :as cru]
+            [crucible.assertion :refer [resource=]]
+            [crucible.core :refer [xref]]
             [cheshire.core :as json]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
 
 (deftest minimal-ddb-test
   (testing "encode"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09",
-            "Description" "minimal",
-            "Resources"
-            {"Table"
-             {"Type" "AWS::DynamoDB::Table",
-              "Properties"
-              {"AttributeDefinitions"
-               [{"AttributeName" "foo", "AttributeType" "S"}],
-               "KeySchema" [{"AttributeName" "foo", "KeyType" "HASH"}],
-               "ProvisionedThroughput"
-               {"ReadCapacityUnits" "20",
-                "WriteCapacityUnits" {"Ref" "Param"}}}}},
-            "Parameters" {"Param" {"Type" "String"}}}
-           (json/decode
-            (cru/encode
-             (cru/template
-              "minimal"
-              :param (cru/parameter)
-              :table (ddb/table #::ddb{:attribute-definitions [#::ddb{:attribute-name "foo"
-                                                                      :attribute-type "S"}]
-                                       :key-schema [#::ddb{:attribute-name "foo"
-                                                           :key-type "HASH"}]
-                                       :provisioned-throughput
-                                       #::ddb{:read-capacity-units "20"
-                                              :write-capacity-units (cru/xref :param)}}))))))))
+    (is (resource=
+         {"Type" "AWS::DynamoDB::Table",
+          "Properties"
+          {"AttributeDefinitions"
+           [{"AttributeName" "foo", "AttributeType" "S"}],
+           "KeySchema" [{"AttributeName" "foo", "KeyType" "HASH"}],
+           "ProvisionedThroughput"
+           {"ReadCapacityUnits" "20",
+            "WriteCapacityUnits" {"Ref" "Param"}}}}
+         (ddb/table #::ddb{::ddb/attribute-definitions [{::ddb/attribute-name "foo"
+                                                         ::ddb/attribute-type "S"}]
+                           ::ddb/key-schema [{::ddb/attribute-name "foo"
+                                              ::ddb/key-type "HASH"}]
+                           ::ddb/provisioned-throughput
+                           {::ddb/read-capacity-units "20"
+                            ::ddb/write-capacity-units (xref :param)}})))))
 
 (deftest doc-example-test
   (testing "encode"
-    (is (= (json/decode (slurp (io/resource "aws/dynamodb/complex-table.json")))
-           (json/decode
-            (cru/encode
-             (cru/template
-              "sample"
-              :My-dynamo-db-table
-              (ddb/table
-               #::ddb{:table-name "myTableName"
+    (is (resource=
+         (json/decode (slurp (io/resource "aws/dynamodb/complex-table.json")))
+         (ddb/table
+          {::ddb/table-name "myTableName"
 
-                      :attribute-definitions [#::ddb{:attribute-name "Album"
-                                                     :attribute-type "S"}
-                                              #::ddb{:attribute-name "Artist"
-                                                     :attribute-type "S"}
-                                              #::ddb{:attribute-name "Sales"
-                                                     :attribute-type "N"}
-                                              #::ddb{:attribute-name "NumberOfSongs"
-                                                     :attribute-type "N"}]
+           ::ddb/attribute-definitions [{::ddb/attribute-name "Album"
+                                         ::ddb/attribute-type "S"}
+                                        {::ddb/attribute-name "Artist"
+                                         ::ddb/attribute-type "S"}
+                                        {::ddb/attribute-name "Sales"
+                                         ::ddb/attribute-type "N"}
+                                        {::ddb/attribute-name "NumberOfSongs"
+                                         ::ddb/attribute-type "N"}]
 
-                      :key-schema [{::ddb/attribute-name "Album"
-                                    ::ddb/key-type "HASH"}
-                                   {::ddb/attribute-name "Artist"
-                                    ::ddb/key-type "RANGE"}]
+           ::ddb/key-schema [{::ddb/attribute-name "Album"
+                              ::ddb/key-type "HASH"}
+                             {::ddb/attribute-name "Artist"
+                              ::ddb/key-type "RANGE"}]
 
-                      :provisioned-throughput {::ddb/read-capacity-units "5"
-                                               ::ddb/write-capacity-units "5"}
+           ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
+                                         ::ddb/write-capacity-units "5"}
 
-                      :global-secondary-indexes
-                      [#::ddb{:index-name "myGSI"
-                              :key-schema [#::ddb{:attribute-name "Sales"
-                                                  :key-type "HASH"}
-                                           #::ddb{:attribute-name "Artist"
-                                                  :key-type "RANGE"}]
-                              :projection {:non-key-attributes ["Album"
-                                                                "NumberOfSongs"]
-                                           :projection-type "INCLUDE"}
-                              :provisioned-throughput #::ddb{:read-capacity-units "5"
-                                                             :write-capacity-units "5"}}
-                       #::ddb{:index-name "myGSI2"
-                              :key-schema [#::ddb{:attribute-name "NumberOfSongs"
-                                                  :key-type "HASH"}
-                                           #::ddb{:attribute-name "Sales"
-                                                  :key-type "RANGE"}]
-                              :projection #:ddb{:non-key-attributes ["Album"
-                                                                     "Artist"]
-                                                :projection-type "INCLUDE"}
-                              :provisioned-throughput #:ddb{:read-capacity-units "5"
-                                                            :write-capacity-units "5"}}]
-                      :local-secondary-indexes
-                      [#::ddb{:index-name "myLSI"
-                              :key-schema [#::ddb{:attribute-name "Album"
-                                                  :key-type "HASH"}
-                                           #::ddb{:attribute-name "Sales"
-                                                  :key-type "RANGE"}]
-                              :projection #::ddb{:non-key-attributes ["Artist"
-                                                                      "NumberOfSongs"]
-                                                 :projection-type "INCLUDE"}}]}))))))))
+           ::ddb/global-secondary-indexes
+           [{::ddb/index-name "myGSI"
+             ::ddb/key-schema [{::ddb/attribute-name "Sales"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Artist"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Album"
+                                                         "NumberOfSongs"]
+                               ::ddb/projection-type "INCLUDE"}
+             ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
+                                           ::ddb/write-capacity-units "5"}}
+            {::ddb/index-name "myGSI2"
+             ::ddb/key-schema [{::ddb/attribute-name "NumberOfSongs"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Sales"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Album"
+                                                         "Artist"]
+                               ::ddb/projection-type "INCLUDE"}
+             ::ddb/provisioned-throughput {::ddb/read-capacity-units "5"
+                                           ::ddb/write-capacity-units "5"}}]
+           :local-secondary-indexes
+           [{::ddb/index-name "myLSI"
+             ::ddb/key-schema [{::ddb/attribute-name "Album"
+                                ::ddb/key-type "HASH"}
+                               {::ddb/attribute-name "Sales"
+                                ::ddb/key-type "RANGE"}]
+             ::ddb/projection {::ddb/non-key-attributes ["Artist"
+                                                         "NumberOfSongs"]
+                               ::ddb/projection-type "INCLUDE"}}]})))))

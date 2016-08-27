@@ -1,51 +1,45 @@
 {
-    "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "sample",
-  "Resources": {
-        "Bucket": {
-            "Type": "AWS::S3::Bucket",
-            "Properties": {
-                "AccessControl": "PublicReadWrite",
-                "CorsConfiguration": {
-                    "CorsRules": [
-                        {
-                            "AllowedHeaders": [
-                                "*"
-                            ],
-                            "AllowedMethods": [
-                                "GET"
-                            ],
-                            "AllowedOrigins": [
-                                "*"
-                            ],
-                            "ExposedHeaders": [
-                                "Date"
-                            ],
-                            "Id": "myCORSRuleId1",
-                            "MaxAge": 3600
-                        },
-                        {
-                            "AllowedHeaders": [
-                                "x-amz-*"
-                            ],
-                            "AllowedMethods": [
-                                "DELETE"
-                            ],
-                            "AllowedOrigins": [
-                                "http://www.example1.com",
-                                "http://www.example2.com"
-                            ],
-                            "ExposedHeaders": [
-                                "Connection",
-                                "Server",
-                                "Date"
-                            ],
-                            "Id": "myCORSRuleId2",
-                            "MaxAge": 1800
-                        }
-                    ]
+    "Type": "AWS::S3::Bucket",
+    "Properties": {
+        "AccessControl": "PublicReadWrite",
+        "CorsConfiguration": {
+            "CorsRules": [
+                {
+                    "AllowedHeaders": [
+                        "*"
+                    ],
+                    "AllowedMethods": [
+                        "GET"
+                    ],
+                    "AllowedOrigins": [
+                        "*"
+                    ],
+                    "ExposedHeaders": [
+                        "Date"
+                    ],
+                    "Id": "myCORSRuleId1",
+                    "MaxAge": 3600
+                },
+                {
+                    "AllowedHeaders": [
+                        "x-amz-*"
+                    ],
+                    "AllowedMethods": [
+                        "DELETE"
+                    ],
+                    "AllowedOrigins": [
+                        "http://www.example1.com",
+                        "http://www.example2.com"
+                    ],
+                    "ExposedHeaders": [
+                        "Connection",
+                        "Server",
+                        "Date"
+                    ],
+                    "Id": "myCORSRuleId2",
+                    "MaxAge": 1800
                 }
-            }
+            ]
         }
     }
 }
