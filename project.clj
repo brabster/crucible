@@ -26,6 +26,12 @@
                               :password :env/clojars_password
                               :sign-releases false}]]
   :target-path "target/%s"
+  :aliases {"qa" ["do"
+                  "ancient"
+                  "check"
+                  "eastwood"
+                  ["bikeshed" "-m" "100"]
+                  "cloverage"]}
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
