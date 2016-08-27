@@ -1,5 +1,7 @@
 language: clojure
 
+lein: 2.6.1
+
 cache:
   directories:
     - $HOME/.m2
