@@ -1,6 +1,6 @@
 (ns crucible.custom-resource-test
   (:require  [clojure.test :refer :all]
-             [crucible.encoding :refer [rewrite-element-data]]
+             [crucible.assertion :refer [resource=]]
              [crucible.aws.custom-resource :as custom]
              [cheshire.core :as json]))
 
@@ -10,11 +10,11 @@
                   "Properties" {"ServiceToken" service-token}}]
 
     (testing "higher-order resource fn"
-      (is (= expected
-             (rewrite-element-data ((custom/resource "MyResource")
-                                    {::custom/service-token service-token})))))
+      (is (resource= expected
+                     ((custom/resource "MyResource")
+                      {::custom/service-token service-token}))))
 
     (testing "higher-order resource fn"
-      (is (= expected
-             (rewrite-element-data (custom/resource "MyResource"
-                                                    {::custom/service-token service-token})))))))
+      (is (resource= expected
+                     (custom/resource "MyResource"
+                                      {::custom/service-token service-token}))))))
