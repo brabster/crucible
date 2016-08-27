@@ -4,11 +4,11 @@
              [crucible.resources :as res]
              [cheshire.core :as json]
              [clojure.spec :as s]
-             [crucible.core :as cru]))
+             [crucible.core :refer [template encode parameter xref]]))
 
 (deftest vpc-test
   (testing "minimal spec"
-    (is (s/valid? ::res/resource (second (ec2/vpc #::ec2{:cidr-block "1.2.3.4/24"}))))))
+    (is (s/valid? ::res/resource (second (ec2/vpc {::ec2/cidr-block "1.2.3.4/24"}))))))
 
 (deftest igw-test
   (testing "minimal spec"
@@ -38,23 +38,23 @@
             "Parameters" {"ElasticLoadBalancer" {"Type" "String"}
                           "WebServerPort" {"Type" "String"}}}
            (json/decode
-            (cru/encode
-             (cru/template
+            (encode
+             (template
               "minimal"
-              :elastic-load-balancer (cru/parameter)
-              :web-server-port (cru/parameter)
+              :elastic-load-balancer (parameter)
+              :web-server-port (parameter)
               :my-security-group
               (ec2/security-group
-               #::ec2{:group-description "Enable SSH access and HTTP from the load balancer only"
-                      :security-group-ingress
-                      [#::ec2{:ip-protocol "tcp"
-                              :from-port 22
-                              :to-port 22
-                              :cidr-ip "0.0.0.0/0"}
-                       #::ec2{:ip-protocol "tcp"
-                              :from-port (cru/xref :web-server-port)
-                              :to-port (cru/xref :web-server-port)
-                              :source-security-group-owner-id
-                              (cru/xref :elastic-load-balancer (keyword "SourceSecurityGroup.OwnerAlias"))
-                              :source-security-group-name
-                              (cru/xref :elastic-load-balancer (keyword "SourceSecurityGroup.GroupName"))}]}))))))))
+               {::ec2/group-description "Enable SSH access and HTTP from the load balancer only"
+                ::ec2/security-group-ingress
+                [{::ec2/ip-protocol "tcp"
+                  ::ec2/from-port 22
+                  ::ec2/to-port 22
+                  ::ec2/cidr-ip "0.0.0.0/0"}
+                 {::ec2/ip-protocol "tcp"
+                  ::ec2/from-port (xref :web-server-port)
+                  ::ec2/to-port (xref :web-server-port)
+                  ::ec2/source-security-group-owner-id
+                  (xref :elastic-load-balancer (keyword "SourceSecurityGroup.OwnerAlias"))
+                  :source-security-group-name
+                  (xref :elastic-load-balancer (keyword "SourceSecurityGroup.GroupName"))}]}))))))))

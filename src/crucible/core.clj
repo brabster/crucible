@@ -18,7 +18,9 @@
 (s/def ::template (s/cat :description ::description
                          :elements (s/nilable (s/map-of keyword? ::element))))
 
-(defn validate [template]
+(defn validate
+  "Ensure the template is structurally valid, for example xref'd elements exist"
+  [template]
   (walk/prewalk
    (fn [x]
      (cond

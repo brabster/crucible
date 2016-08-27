@@ -3,11 +3,20 @@ language: clojure
 cache:
   directories:
     - $HOME/.m2
+    
+addons:
+  code_climate:
+    repo_token: 807eedc762fa97e1b640cc4715e3cdbc98eb768b86058626d78d1f14f4d8bd8e
+
 
 script: 
  - lein do clean, check
  - lein ancient
- - lein do cloverage
+ - lein cloverage
+ 
+after_script:
+  - codeclimate-test-reporter < target/coverage.txt
+
 
 deploy:
   provider: script

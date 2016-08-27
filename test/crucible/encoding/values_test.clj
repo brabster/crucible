@@ -46,23 +46,3 @@
   (testing "property value walk"
     (is (= {"Fn::Join" ["-" [{"Ref" "Foo"} "bar" {"Ref" "AWS::AccountId"}]]}
            (encode-value (join "-" [(xref :foo) "bar" (pseudo :account-id)]))))))
-
-#_(deftest referenceable-test
-
-    (testing "AssertionError if template is nil"
-      (is (thrown? AssertionError (referenceable? nil :foo))))
-
-    (testing "false if template is empty"
-      (is (false? (referenceable? {:parameters {}} :foo))))
-    
-    (testing "true if ref is a parameter"
-      (is (true? (referenceable? {:parameters {:foo nil}} :foo))))
-
-    (testing "true if ref is a resource"
-      (is (true? (referenceable? {:resources {:foo nil}} :foo))))
-
-    (testing "false if ref is an output"
-      (is (false? (referenceable? {:outputs {:foo nil}} :foo))))
-
-    (testing "false if ref not present"
-      (is (false? (referenceable? {:parameters {:bar nil}} :foo)))))
