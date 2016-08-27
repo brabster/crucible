@@ -32,6 +32,16 @@
                   "eastwood"
                   ["bikeshed" "-m" "100"]
                   "cloverage"]}
+  :release-tasks [["codox"]
+                  ["vcs" "commit"]
+                  ["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag"]
+                  ["deploy"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]]
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
