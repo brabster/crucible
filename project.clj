@@ -26,22 +26,6 @@
                               :password :env/clojars_password
                               :sign-releases false}]]
   :target-path "target/%s"
-  :aliases {"qa" ["do"
-                  "ancient"
-                  "check"
-                  "eastwood"
-                  ["bikeshed" "-m" "100"]
-                  "cloverage"]}
-  :release-tasks [["codox"]
-                  ["vcs" "commit"]
-                  ["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag" "--no-sign"]
-                  ["deploy"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]]
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha10"]]}
