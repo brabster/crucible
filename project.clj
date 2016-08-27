@@ -8,7 +8,7 @@
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.5"]]
   :exclusions [org.clojure/clojure]
-  :codox {:output-path "docs"
+  :codox {:output-path "target/docs"
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]

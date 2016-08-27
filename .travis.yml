@@ -6,10 +6,11 @@ cache:
   directories:
     - $HOME/.m2
     
-script:
- - lein clean
- - lein qa
-
+script: 
+ - lein do clean, eastwood, bikeshed -m 100, check
+ - lein ancient
+ - lein cloverage
+ 
 deploy:
   provider: script
   script: scripts/deploy.sh
