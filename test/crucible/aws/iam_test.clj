@@ -1,0 +1,52 @@
+(ns crucible.aws.iam-test
+  (:require [crucible.aws.iam :as iam]
+            [clojure.spec :as s]
+            [clojure.test :refer :all]))
+
+(defn valid [spec candidate]
+  (nil? (s/explain-data spec candidate)))
+
+(deftest principal-tests
+
+  (testing "everyone via *" (is (valid ::iam/principal "*")))
+
+  (testing "everyone via {AWS *}" (is (valid ::iam/principal {::iam/aws "*"})))
+
+  (testing "aws account" (is (valid ::iam/principal {::iam/aws "foo"})))
+
+  (testing "list of aws accounts" (is (valid ::iam/principal {::iam/aws ["foo" "bar"]})))
+
+  (testing "federated identity" (is (valid ::iam/principal {::iam/federated "graph.facebook.com"})))
+
+  (testing "federated identity" (is (valid ::iam/principal {::iam/service ["ec2.amazonaws.com"
+                                                                           "datapipeline.amazonaws.com"]})))
+
+  (testing "canonical user" (is (valid ::iam/principal {::iam/canonical-user "foo"})))
+
+  (testing "not principal" (is (valid ::iam/not-principal {::iam/service ["ec2.amazonaws.com"
+                                                                          "datapipeline.amazonaws.com"]}))))
+
+(deftest action-tests
+
+  (testing "all actions" (is (valid ::iam/action "*")))
+
+  (testing "single action" (is (valid ::iam/action "s3:PutObject")))
+
+  (testing "multiple actions" (is (valid ::iam/action ["s3:PutObject" "s3:DeleteObject"])))
+
+  (testing "not action" (is (valid ::iam/not-action "s3:PutObject"))))
+
+(deftest resource-tests
+
+  (testing "all resources" (is (valid ::iam/resource "*")))
+
+  (testing "single resource" (is (valid ::iam/resource "foo")))
+
+  (testing "multiple resources" (is (valid ::iam/resource ["foo" "bar"])))
+
+  (testing "not resource" (is (valid ::iam/not-resource "foo"))))
+
+(deftest condition-tests
+
+  (testing "single condition" (is (valid ::iam/condition {::iam/date-greater-than
+                                                          {"aws:CurrentTime" "2013-08-16T12:00:00Z"}}))))
