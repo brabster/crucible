@@ -135,7 +135,7 @@ Flag `-h` for help. Templates are exported to `target/templates` by default, ove
 
 I create a templates directory within my project and then add it as a source-path and crucible as a dependency to the dev profile. Then I can work at the repl, write tests for my templates and use this tooling without having my template code or crucible mixed with my source code.
 
-An example of use with Leiningen aliases: add these to your `project.clj`, then run `lein templates` to have templates present in `templates` directory encoded and placed in `target/templates`.
+[demo-project](demo-project) is an example of setting up a project with crucible templates defined alongside the code. The templates can see the code to verify any references they might have, but not the other way round. Run `lein templates` in the demo project to generate templates.
 
 ```clojure
 :aliases {"templates" ["run" "-m" crucible.encoding.main]} 
