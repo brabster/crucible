@@ -1,22 +1,14 @@
 language: clojure
 
+lein: 2.6.1
+
 cache:
   directories:
     - $HOME/.m2
     
-addons:
-  code_climate:
-    repo_token: 807eedc762fa97e1b640cc4715e3cdbc98eb768b86058626d78d1f14f4d8bd8e
-
-
-script: 
- - lein do clean, eastwood, bikeshed -m 100, check
- - lein ancient
- - lein cloverage
- 
-after_script:
-  - codeclimate-test-reporter < target/coverage.txt
-
+script:
+ - lein clean
+ - lein qa
 
 deploy:
   provider: script
