@@ -7,7 +7,11 @@ cache:
 script: 
  - lein do clean, check
  - lein ancient
- - lein do cloverage
+ - lein cloverage
+ 
+addons:
+  code_climate:
+    repo_token: 807eedc762fa97e1b640cc4715e3cdbc98eb768b86058626d78d1f14f4d8bd8e
 
 deploy:
   provider: script
