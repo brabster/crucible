@@ -69,10 +69,10 @@
   {"Fn::Select" [(str index) (vec (map encode-value fn-values))]})
 
 (defn xref
-  ([ref]
-   {::type ::xref ::ref ref})
-  ([ref att]
-   {::type ::xref ::ref ref ::att att}))
+  ([xref]
+   {::type ::xref ::ref xref})
+  ([xref att]
+   {::type ::xref ::ref xref ::att att}))
 
 (defn pseudo [param]
   {::type ::pseudo

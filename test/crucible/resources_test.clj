@@ -35,7 +35,7 @@
       (is (thrown? Exception (my-resource {}))))
 
     (testing "resource factory constructs element on valid props"
-      (is (= [:resource #::res{:type type :properties {::foo {}}}]
+      (is (= [:resource {::res/type type ::res/properties {::foo {}}}]
              (my-resource {::foo {}}))))))
 
 (s/def ::meta-test-resource-spec any?)

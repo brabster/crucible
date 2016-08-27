@@ -78,4 +78,3 @@
                                   ::source-arn]))
 
 (defresource permission "AWS::Lambda::Permission" ::permission)
-

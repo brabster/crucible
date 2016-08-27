@@ -13,4 +13,3 @@
 (s/def ::stack (s/keys ::req [::template-url ::parameters]))
 
 (defresource stack "AWS::CloudFormation::Stack" ::stack)
-

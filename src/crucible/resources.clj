@@ -24,24 +24,24 @@
 (s/def ::tag (s/keys :req [::key ::value]))
 (s/def ::tags (s/* ::tag))
 
-(defn- assoc-when [m test k v] (if test
-                                 (assoc m k v)
-                                 m))
+(defn- assoc-when [m condition k v] (if condition
+                                      (assoc m k v)
+                                      m))
 
 (def invalid? (complement s/valid?))
 
 (s/def ::policy-list (s/* ::policies/policy))
 
-(defn resource-factory [type props-spec]
-  (if-not (s/valid? ::type type)
-    (throw (ex-info "Invalid resource name" (s/explain-data ::type type)))
+(defn resource-factory [resource-type props-spec]
+  (if-not (s/valid? ::type resource-type)
+    (throw (ex-info "Invalid resource name" (s/explain-data ::type resource-type)))
     (fn [& [props & policies]]
       [:resource
        (cond
          (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
                                                      (s/explain-data props-spec props)))
 
-         :else (-> {::type type
+         :else (-> {::type resource-type
                     ::properties props}
                    (merge (into {} (s/conform ::policy-list policies)))))])))
 
@@ -53,5 +53,8 @@
 
 (defmacro defresource
   "Adds a resource factory function to the namespace, documenting the AWS type"
-  [sym type props-spec]
-  `(def ~(vary-meta sym assoc :doc (str "CloudFormation Type " type)) (resource-factory ~type ~props-spec)))
+  [sym resource-type props-spec]
+  `(def ~(vary-meta
+          sym
+          assoc :doc (str "CloudFormation Type " resource-type))
+     (resource-factory ~resource-type ~props-spec)))

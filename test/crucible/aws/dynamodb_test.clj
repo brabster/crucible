@@ -17,13 +17,12 @@
            "ProvisionedThroughput"
            {"ReadCapacityUnits" "20",
             "WriteCapacityUnits" {"Ref" "Param"}}}}
-         (ddb/table #::ddb{::ddb/attribute-definitions [{::ddb/attribute-name "foo"
-                                                         ::ddb/attribute-type "S"}]
-                           ::ddb/key-schema [{::ddb/attribute-name "foo"
-                                              ::ddb/key-type "HASH"}]
-                           ::ddb/provisioned-throughput
-                           {::ddb/read-capacity-units "20"
-                            ::ddb/write-capacity-units (xref :param)}})))))
+         (ddb/table {::ddb/attribute-definitions [{::ddb/attribute-name "foo"
+                                                   ::ddb/attribute-type "S"}]
+                     ::ddb/key-schema [{::ddb/attribute-name "foo"
+                                        ::ddb/key-type "HASH"}]
+                     ::ddb/provisioned-throughput {::ddb/read-capacity-units "20"
+                                                   ::ddb/write-capacity-units (xref :param)}})))))
 
 (deftest doc-example-test
   (testing "encode"

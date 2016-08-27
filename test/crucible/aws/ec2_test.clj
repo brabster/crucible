@@ -21,7 +21,8 @@
             "Resources"
             {"MySecurityGroup"
              {"Type" "AWS::EC2::SecurityGroup"
-              "Properties" {"GroupDescription" "Enable SSH access and HTTP from the load balancer only"
+              "Properties" {"GroupDescription"
+                            "Enable SSH access and HTTP from the load balancer only"
                             "SecurityGroupIngress"
                             [{"IpProtocol" "tcp"
                               "FromPort" 22
@@ -30,10 +31,12 @@
                              {"IpProtocol" "tcp"
                               "FromPort" { "Ref" "WebServerPort" }
                               "ToPort" { "Ref" "WebServerPort" }
-                              "SourceSecurityGroupOwnerId"
-                              {"Fn::GetAtt" ["ElasticLoadBalancer" "SourceSecurityGroup.OwnerAlias"]}
-                              "SourceSecurityGroupName"
-                              {"Fn::GetAtt" ["ElasticLoadBalancer" "SourceSecurityGroup.GroupName"]}}]}
+                              "SourceSecurityGroupOwnerId" {"Fn::GetAtt"
+                                                            ["ElasticLoadBalancer"
+                                                             "SourceSecurityGroup.OwnerAlias"]}
+                              "SourceSecurityGroupName" {"Fn::GetAtt"
+                                                         ["ElasticLoadBalancer"
+                                                          "SourceSecurityGroup.GroupName"]}}]}
               }}
             "Parameters" {"ElasticLoadBalancer" {"Type" "String"}
                           "WebServerPort" {"Type" "String"}}}
