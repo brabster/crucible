@@ -10,7 +10,7 @@
   (let [expected (nth form 1)
         resource (nth form 2)]
     `(let [result# (try (enc/rewrite-element-data ~resource)
-                        (catch Exception e# (ex-data e#)))]
+                        (catch ExceptionInfo e# (ex-data e#)))]
        (if (= ~expected result#)
          (test/do-report {:type :pass :expected ~expected :actual ~resource :message ~msg})
          (test/do-report {:type :fail :expected ~expected :actual result# :message ~msg})))))

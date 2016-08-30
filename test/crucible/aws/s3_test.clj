@@ -25,7 +25,7 @@
                      {::iam/statement
                       [{::iam/action ["s3:GetObject"]
                         ::iam/effect "Allow"
-                        ::iam/principal {"Service" "lambda.amazonaws.com"}
+                        ::iam/principal {::iam/service "lambda.amazonaws.com"}
                         ::iam/condition {"StringEquals" {"aws:SourceArn" (xref :foo)}}
                         ::iam/resource (xref :foo)}]}})))))
 

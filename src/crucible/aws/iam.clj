@@ -21,7 +21,8 @@
 (s/def ::fed (s/keys :req [::federated]))
 
 (s/def ::service ::single-or-list-string)
-(s/def ::svc (s/keys :req [::service]))
+(s/def ::svc (s/or :kw (s/keys :req [::service])
+                   :str (s/map-of string? ::service)))
 
 (s/def ::canonical-user ::single-or-list-string)
 (s/def ::canonical (s/keys :req [::canonical-user]))
@@ -50,7 +51,8 @@
 (s/def ::not-resource ::resource)
 
 ;;really complicated and lots of them...
-(s/def ::condition (s/map-of keyword? (s/map-of string? any?)))
+(s/def ::condition (s/map-of (s/or :str string?
+                                   :kwd keyword?) (s/map-of string? any?)))
 
 (s/def ::statement (s/* (s/keys :opt [::effect
                                       ::principal
