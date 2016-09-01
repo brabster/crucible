@@ -40,8 +40,10 @@ repl> (clojure.pprint/pprint simple)
 See `crucible.parameters` namespace, required as `param` in this example:
 
 ```clojure
-:my-vpc-cidr (parameter ::param/type ::param/string
-                        ::param/allowed-values ["10.0.0.0/24" "10.0.0.0/16"])
+:my-vpc-cidr (parameter ::param/type ::param/number
+                        ::param/description "A demonstration of parameter options"
+                        ::param/allowed-values [1 2 3]
+                        ::param/no-echo true)
 ```
 
 ### Resource Policies
