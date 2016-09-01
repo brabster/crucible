@@ -1,7 +1,19 @@
 (ns crucible.parameters
-  (:require [clojure.spec :as s]))
+  (:require [clojure.spec :as s]
+            [crucible.encoding.keys :as keys]))
 
-(s/def ::type #{::string ::number})
+(defmethod keys/->key :list-number [_] "List<Number>")
+(defmethod keys/->key :aws-ec2-az-name [_] "AWS::EC2::AvailabilityZone::Name")
+(defmethod keys/->key :aws-ec2-image-id [_] "AWS::EC2::Image::Id")
+(defmethod keys/->key :aws-ec2-instance-id [_] "AWS::EC2::Instance::Id")
+
+(s/def ::type #{::string
+                ::number
+                ::comma-delimited-list
+                ::list-number
+                ::aws-ec2-az-name
+                ::aws-ec2-image-id
+                ::aws-ec2-instance-id})
 
 (s/def ::description string?)
 
@@ -9,7 +21,7 @@
 
 (s/def ::allowed-values (s/+ string?))
 
-(s/def ::allowed-pattern (partial instance? java.util.regex.Pattern))
+(s/def ::allowed-pattern string?)
 
 (s/def ::default string?)
 
