@@ -1,4 +1,4 @@
-(defproject crucible "0.10.0-SNAPSHOT"
+(defproject crucible "0.10.0"
   :description "AWS Cloudformation templates in Clojure"
   :url "http://github.com/brabster/crucible"
   :license {:name "Eclipse Public License"
@@ -25,6 +25,12 @@
                               :username :env/clojars_username
                               :password :env/clojars_password
                               :sign-releases false}]]
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag" "--no-sign"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]]
   :target-path "target/%s"
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
