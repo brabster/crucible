@@ -30,7 +30,8 @@
                   ["vcs" "commit"]
                   ["vcs" "tag" "--no-sign"]
                   ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]]
   :target-path "target/%s"
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
