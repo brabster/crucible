@@ -35,6 +35,6 @@
   :target-path "target/%s"
   :main crucible.encoding.main
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha11"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha13"]]}
              :dev {:resource-paths ["test-resources"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}})
