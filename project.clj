@@ -34,6 +34,14 @@
                   ["vcs" "push"]]
   :target-path "target/%s"
   :main crucible.encoding.main
+  :eastwood {:include-linters [:keyword-typos
+                               :non-clojure-file
+                               :unused-fn-args
+                               :unused-locals
+                               :unused-namespaces
+                               :unused-private-vars
+                               :unused-private-vars]
+             :exclude-linters [:suspicious-expression]}
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha13"]]}
              :dev {:resource-paths ["test-resources"]
