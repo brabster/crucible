@@ -97,3 +97,12 @@
 (defn import-value [value-name]
   {::type ::import-value
    ::value-name value-name})
+
+(s/def ::sub-literal (spec-or-ref string?))
+(s/def ::sub (s/keys :req [::sub-literal]))
+
+(defmethod value-type ::sub [_] ::sub)
+
+(defn sub [string-to-interpolate]
+  {::type ::sub
+   ::sub-literal string-to-interpolate})

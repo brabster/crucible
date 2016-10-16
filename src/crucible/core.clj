@@ -90,6 +90,11 @@
   [value-name]
   (v/import-value value-name))
 
+(defn sub
+  "Interpolate values from a template string"
+  [string-to-interpolate]
+  (v/sub string-to-interpolate))
+
 (defn encode
   "Encode a template into JSON for use by CloudFormation"
   [template]

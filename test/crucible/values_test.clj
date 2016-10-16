@@ -22,3 +22,6 @@
 
 (deftest import-test
   (testing "import name" (is (s/valid? ::v/value (cru/import-value "foo")))))
+
+(deftest sub-test
+  (testing "substitution string" (is (s/valid? ::v/value (cru/sub "${foo} bar")))))

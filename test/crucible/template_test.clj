@@ -1,6 +1,6 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.core :refer [template parameter resource output xref encode]]
+            [crucible.core :refer [template parameter resource output xref encode sub]]
             [crucible.parameters :as param]
             [crucible.outputs :as out]
             [crucible.values :as v]
@@ -91,6 +91,14 @@
                    :vpc-cidr (parameter)
                    :vpc (ec2/vpc {::ec2/cidr-block (xref :vpc-cidr)})
                    :vpc-id (output (xref :vpc) "the vpc id" "foo")))))
+
+(deftest template-with-sub
+  (is (= {:description "t"
+          :elements {:test {:type :parameter
+                            :specification {::param/type ::param/string
+                                            ::param/default {::v/type ::v/sub
+                                                             ::v/sub-literal "${foo} bar"}}}}}
+         (template "t" :test (parameter ::param/default (sub "${foo} bar"))))))
 
 (deftest join-fn-in-value-position
   (is (= {:description "t"
