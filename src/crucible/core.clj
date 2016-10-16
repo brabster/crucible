@@ -85,6 +85,11 @@
   [index values]
   (v/select index values))
 
+(defn import-value
+  "Import an exported value"
+  [value-name]
+  (v/import-value value-name))
+
 (defn encode
   "Encode a template into JSON for use by CloudFormation"
   [template]

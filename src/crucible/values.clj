@@ -88,3 +88,12 @@
   {::type ::select
    ::index index
    ::fn-values values})
+
+(s/def ::value-name (spec-or-ref string?))
+(s/def ::import-value (s/keys :req [::value-name]))
+
+(defmethod value-type ::import-value [_] ::import-value)
+
+(defn import-value [value-name]
+  {::type ::import-value
+   ::value-name value-name})
