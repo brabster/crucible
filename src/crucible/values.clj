@@ -88,3 +88,21 @@
   {::type ::select
    ::index index
    ::fn-values values})
+
+(s/def ::value-name (spec-or-ref string?))
+(s/def ::import-value (s/keys :req [::value-name]))
+
+(defmethod value-type ::import-value [_] ::import-value)
+
+(defn import-value [value-name]
+  {::type ::import-value
+   ::value-name value-name})
+
+(s/def ::sub-literal (spec-or-ref string?))
+(s/def ::sub (s/keys :req [::sub-literal]))
+
+(defmethod value-type ::sub [_] ::sub)
+
+(defn sub [string-to-interpolate]
+  {::type ::sub
+   ::sub-literal string-to-interpolate})
