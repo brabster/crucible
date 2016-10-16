@@ -57,11 +57,12 @@
   [:resource options])
 
 (defn output
-  "Make a template output with the value and an optional description"
-  [value & [description]]
+  "Make a template output with the value and an optional description and export name"
+  [value & [description export-name]]
   [:output (-> description
                (when {::o/description description})
-               (assoc ::o/value value))])
+               (merge {::o/value value})
+               (merge (when export-name {::o/export {::o/export-name export-name}})))])
 
 (defn xref "Cross-reference another template element, optionally
   specifying a resource attribute. Produces Ref and Fn::GetAtt."

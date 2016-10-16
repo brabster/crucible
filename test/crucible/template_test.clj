@@ -71,6 +71,27 @@
                    :vpc (ec2/vpc {::ec2/cidr-block (xref :vpc-cidr)})
                    :vpc-id (output (xref :vpc) "the vpc id")))))
 
+(deftest template-with-exported-output
+  (is (= {:description "t"
+          :elements
+          {:vpc-cidr {:type :parameter
+                      :specification {::param/type ::param/string}}
+           :vpc-id
+           {:type :output
+            :specification {::out/description "the vpc id"
+                            ::out/value {::v/type ::v/xref
+                                         ::v/ref :vpc}
+                            ::out/export {::out/export-name "foo"}}}
+           :vpc
+           {:type :resource
+            :specification {::res/type "AWS::EC2::VPC"
+                            ::res/properties {::ec2/cidr-block {::v/type ::v/xref
+                                                                ::v/ref :vpc-cidr}}}}}}
+         (template "t"
+                   :vpc-cidr (parameter)
+                   :vpc (ec2/vpc {::ec2/cidr-block (xref :vpc-cidr)})
+                   :vpc-id (output (xref :vpc) "the vpc id" "foo")))))
+
 (deftest join-fn-in-value-position
   (is (= {:description "t"
           :elements
