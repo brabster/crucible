@@ -25,7 +25,7 @@ Crucible depends on clojure.spec, currently available in Clojure 1.9 alpha 10+ (
 ```
 
 ```clojure
-repl> (clojure.pprint/pprint simple)
+repl> (clojure.pprint/pprint (encode simple))
 {"AWSTemplateFormatVersion" "2010-09-09"
  "Description" "A simple sample template"
  "Parameters" {"MyVpcCidr" {"Type" "String"}}
@@ -37,11 +37,13 @@ repl> (clojure.pprint/pprint simple)
 
 Alternative template construction function accepts map and string arguments for building a template from partials, for example:
 
+```clojure
 (def simple (-> {:my-vpc-cidr (parameter)}
                 (assoc :igw (ec2/internet-gateway {}))
                 (assoc :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}))
                 (assoc :vpc (output (join "/" ["foo" (xref :my-vpc)])))
                 (template "A simple sample template")))
+```
 
 ### Parameter Options
 
