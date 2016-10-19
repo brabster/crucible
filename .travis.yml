@@ -7,9 +7,7 @@ cache:
     - $HOME/.m2
     
 script: 
- - lein do clean, eastwood, bikeshed -m 100, check
- - lein ancient
- - lein cloverage
+ - lein qa
  
 deploy:
   provider: script

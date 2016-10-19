@@ -35,6 +35,14 @@ repl> (clojure.pprint/pprint simple)
  "Outputs" {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}}
 ```
 
+Alternative template construction function accepts map and string arguments for building a template from partials, for example:
+
+(def simple (-> {:my-vpc-cidr (parameter)}
+                (assoc :igw (ec2/internet-gateway {}))
+                (assoc :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}))
+                (assoc :vpc (output (join "/" ["foo" (xref :my-vpc)])))
+                (template "A simple sample template")))
+
 ### Parameter Options
 
 See `crucible.parameters` namespace, required as `param` in this example:

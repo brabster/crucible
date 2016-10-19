@@ -34,6 +34,13 @@
                   ["vcs" "push"]]
   :target-path "target/%s"
   :main crucible.encoding.main
+  :aliases {"qa" ["do"
+                  ["clean"]
+                  ["check"]
+                  ["eastwood"]
+                  ["bikeshed" "-m" "100"]
+                  ["ancient"]
+                  ["cloverage"]]}
   :eastwood {:include-linters [:keyword-typos
                                :non-clojure-file
                                :unused-fn-args
