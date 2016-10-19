@@ -1,15 +1,51 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.core :refer [template parameter resource output xref encode sub]]
+            [crucible.core :refer [template parameter resource output xref encode sub join]]
             [crucible.parameters :as param]
             [crucible.outputs :as out]
             [crucible.values :as v]
             [crucible.resources :as res]
             [crucible.aws.ec2 :as ec2]))
 
+(deftest template-accepts-map-string
+  (testing "accepts template as map and string"
+    (is (= {:description "t"
+            :elements
+            {:igw
+             {:type :resource
+              :specification {::res/type "AWS::EC2::InternetGateway"
+                              ::res/properties {}}}}}
+           (template {:igw (ec2/internet-gateway {})} "t"))))
+
+  (testing "can build up template with thread macro"
+    (is (= {:description "A simple sample template"
+            :elements
+            {:my-vpc-cidr
+             {:type :parameter
+              :specification {::param/type ::param/string}}
+             :igw
+             {:type :resource
+              :specification {::res/type "AWS::EC2::InternetGateway"
+                              ::res/properties {}}}
+             :my-vpc
+             {:type :resource
+              :specification {::res/type "AWS::EC2::VPC"
+                              ::res/properties {::ec2/cidr-block {::v/type ::v/xref
+                                                                  ::v/ref :my-vpc-cidr}}}}
+             :vpc
+             {:type :output
+              :specification {::out/value {::v/type ::v/join
+                                           ::v/fn-values ["foo" {::v/type ::v/xref
+                                                                 ::v/ref :my-vpc}]
+                                           ::v/delimiter "/"}}}}}
+           (-> {:my-vpc-cidr (parameter)}
+               (assoc :igw (ec2/internet-gateway {}))
+               (assoc :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}))
+               (assoc :vpc (output (join "/" ["foo" (xref :my-vpc)])))
+               (template "A simple sample template"))))))
+
 (deftest template-metadata-tag
-  (is (true? (-> "t"
-                 template
+  (is (true? (-> (template "t" :foo (parameter))
                  meta
                  :crucible.core/template))))
 

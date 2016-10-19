@@ -34,15 +34,20 @@
 
 (defn template
   "Make a template structure with the given description and elements"
-  [description & {:as elements}]
-  (let [input [description elements]
-        spec ::template
-        parsed (s/conform spec input)]
-    (if (= parsed ::s/invalid)
-      (throw (ex-info "Invalid input" (s/explain-data spec input)))
-      (-> parsed
-          validate
-          (with-meta {::template true})))))
+  ([elements description]
+   {:pre [(map? elements)
+          (string? description)]}
+   (let [input [description elements]
+         spec ::template
+         parsed (s/conform spec input)]
+     (if (= parsed ::s/invalid)
+       (throw (ex-info "Invalid input" (s/explain-data spec input)))
+       (-> parsed
+           validate
+           (with-meta {::template true})))))
+  ([description first-key first-val & {:as  others}]
+   (let [elements (assoc others first-key first-val)]
+     (template elements description))))
 
 (defn parameter
   "Make a template parameter element"
