@@ -2,9 +2,9 @@
   (:require [clojure.spec :as s]
             [crucible.values :as v]))
 
-(s/def ::export-name ::v/value)
+(s/def ::name ::v/value)
 
-(s/def ::export (s/keys :req [::export-name]))
+(s/def ::export (s/keys :req [::name]))
 
 (s/def ::description string?)
 

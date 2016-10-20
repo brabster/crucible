@@ -117,7 +117,7 @@
             :specification {::out/description "the vpc id"
                             ::out/value {::v/type ::v/xref
                                          ::v/ref :vpc}
-                            ::out/export {::out/export-name "foo"}}}
+                            ::out/export {::out/name "foo"}}}
            :vpc
            {:type :resource
             :specification {::res/type "AWS::EC2::VPC"

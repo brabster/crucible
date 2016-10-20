@@ -67,7 +67,7 @@
   [:output (-> description
                (when {::o/description description})
                (merge {::o/value value})
-               (merge (when export-name {::o/export {::o/export-name export-name}})))])
+               (merge (when export-name {::o/export {::o/name export-name}})))])
 
 (defn xref "Cross-reference another template element, optionally
   specifying a resource attribute. Produces Ref and Fn::GetAtt."
