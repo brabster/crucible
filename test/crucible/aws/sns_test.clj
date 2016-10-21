@@ -8,10 +8,10 @@
 
 (deftest sns-topic-test
   (testing "encode"
-    (is (resource= {"Type" "AWS::SNS::Topic",
-                    "Properties"
-                    {"TopicName" "SampleTopic"}}
-                   (sns/topic {::sns/topic-name "SampleTopic"})))))
+    (is (= {"Type" "AWS::SNS::Topic",
+            "Properties"
+            {"TopicName" "SampleTopic"}}
+           (rewrite-element-data (sns/topic {::sns/topic-name "SampleTopic"}))))))
 
 
 
@@ -32,7 +32,7 @@
                 "Principal" "*"
                 "Action" "sns:Subscribe"
                 "Resource" {"Ref" "Foo"}}]}}}
-           (enc/rewrite-element-data
+           (rewrite-element-data
             (sns/topic-policy {::sns/topics [(xref :foo :arn)]
                                ::iam/policy-document
                                {::iam/statement
