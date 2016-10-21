@@ -83,6 +83,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::Kinesis::Stream
 * AWS::KinesisFirehose::DeliveryStream
 * AWS::SNS::Topic
+* AWS::SNS::TopicPolicy
 * Custom::* custom resources
 
 ## Writing your own resource type
