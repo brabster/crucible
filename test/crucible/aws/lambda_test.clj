@@ -9,28 +9,33 @@
 
 (deftest function-test
   (testing "encode"
-    (is (resource= {"Type" "AWS::Lambda::Function"
-                    "Properties" {"FunctionName" {"Ref" "Foo"}
-                                  "Timeout" 300
-                                  "Handler" {"Ref" "Foo"}
-                                  "Runtime" "java8"
-                                  "MemorySize" 1024
-                                  "Role" {"Ref" "Foo"}
-                                  "Description" {"Ref" "Foo"}
-                                  "VpcConfig" {"SecurityGroupIds" [{"Ref" "Foo"}]
-                                               "SubnetIds" {"Ref" "Foo"}}
-                                  "Code" {"S3Bucket" {"Ref" "Foo"}, "S3Key" {"Ref" "Foo"}}}}
-                   (l/function {::l/handler (xref :foo)
-                                ::l/function-name (xref :foo)
-                                ::l/description (xref :foo)
-                                ::l/memory-size 1024
-                                ::l/timeout 300
-                                ::l/runtime "java8"
-                                ::l/role (xref :foo)
-                                ::l/code {::l/s3-bucket (xref :foo)
-                                          ::l/s3-key (xref :foo)}
-                                ::l/vpc-config {::l/security-group-ids [(xref :foo)]
-                                                ::l/subnet-ids (xref :foo)}})))))
+    (is (= {"Type" "AWS::Lambda::Function"
+            "Properties" {"FunctionName" {"Ref" "Foo"}
+                          "Timeout" 300
+                          "Handler" {"Ref" "Foo"}
+                          "Runtime" "java8"
+                          "MemorySize" 1024
+                          "Role" {"Ref" "Foo"}
+                          "Description" {"Ref" "Foo"}
+                          "Environment" {"Variables" {"Foo" "Bar"
+                                                      "Bar" "Baz"}}
+                          "VpcConfig" {"SecurityGroupIds" [{"Ref" "Foo"}]
+                                       "SubnetIds" {"Ref" "Foo"}}
+                          "Code" {"S3Bucket" {"Ref" "Foo"}, "S3Key" {"Ref" "Foo"}}}}
+           (crucible.encoding/rewrite-element-data
+            (l/function {::l/handler (xref :foo)
+                         ::l/function-name (xref :foo)
+                         ::l/description (xref :foo)
+                         ::l/memory-size 1024
+                         ::l/timeout 300
+                         ::l/runtime "java8"
+                         ::l/role (xref :foo)
+                         ::l/code {::l/s3-bucket (xref :foo)
+                                   ::l/s3-key (xref :foo)}
+                         ::l/environment {::l/variables {:foo "Bar"
+                                                         "Bar" "Baz"}}
+                         ::l/vpc-config {::l/security-group-ids [(xref :foo)]
+                                         ::l/subnet-ids (xref :foo)}}))))))
 
 (deftest permission-test
   (testing "encode"

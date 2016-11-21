@@ -33,6 +33,10 @@
                              ::s3-object-version
                              ::zip-file]))
 
+(s/def ::variables (s/map-of (s/or :kw keyword? :str string?) (spec-or-ref string?)))
+
+(s/def ::environment (s/keys :req [::variables]))
+
 (s/def ::function (s/keys :req [::code
                                 ::handler
                                 ::role
@@ -41,7 +45,8 @@
                                 ::description
                                 ::memory-size
                                 ::runtime
-                                ::vpc-config]))
+                                ::vpc-config
+                                ::environment]))
 
 (defresource function "AWS::Lambda::Function" ::function)
 
