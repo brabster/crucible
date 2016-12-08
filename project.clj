@@ -25,13 +25,6 @@
                               :username :env/clojars_username
                               :password :env/clojars_password
                               :sign-releases false}]]
-  :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag" "--no-sign"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]]
   :target-path "target/%s"
   :main crucible.encoding.main
   :aliases {"qa" ["do"
