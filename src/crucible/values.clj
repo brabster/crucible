@@ -44,6 +44,18 @@
 
 (defmethod value-type ::select [_] ::select)
 
+(s/def ::map-name ::fn-value)
+
+(s/def ::top-level-key ::fn-value)
+
+(s/def ::second-level-key ::fn-value)
+
+(s/def ::find-in-map (s/keys :req [::type
+                                   ::map-name
+                                   ::top-level-key
+                                   ::second-level-key]))
+
+(defmethod value-type ::find-in-map [_] ::find-in-map)
 
 
 
@@ -68,6 +80,11 @@
 (defmethod encode-value ::select [{:keys [::index ::fn-values]}]
   {"Fn::Select" [(str index) (vec (map encode-value fn-values))]})
 
+(defmethod encode-value ::find-in-map [{:keys [::map-name
+                                               ::top-level-key
+                                               ::second-level-key]}]
+  {"Fn::FindInMap" [(str map-name) (str top-level-key) (str second-level-key)]})
+
 (defn xref
   ([xref]
    {::type ::xref ::ref xref})
@@ -88,6 +105,11 @@
   {::type ::select
    ::index index
    ::fn-values values})
+
+(defn find-in-map [map-name top-level-key second-level-key]
+  {::type ::find-in-map
+   ::top-level-key top-level-key
+   ::second-level-key second-level-key})
 
 (s/def ::value-name (spec-or-ref string?))
 (s/def ::import-value (s/keys :req [::value-name]))

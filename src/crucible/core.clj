@@ -96,6 +96,12 @@
   [index values]
   (v/select index values))
 
+(defn find-in-map
+  "Returns the value corresponding to keys in a two-level map that is declared
+   in the Mappings section"
+  [map-name top-level-key second-level-key]
+  (v/find-in-map map-name top-level-key second-level-key))
+
 (defn import-value
   "Import an exported value"
   [value-name]
