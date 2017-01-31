@@ -44,11 +44,11 @@
 
 (defmethod value-type ::select [_] ::select)
 
-(s/def ::map-name ::fn-value)
+(s/def ::map-name (spec-or-ref keyword?))
 
-(s/def ::top-level-key ::fn-value)
+(s/def ::top-level-key (spec-or-ref string?))
 
-(s/def ::second-level-key ::fn-value)
+(s/def ::second-level-key (spec-or-ref string?))
 
 (s/def ::find-in-map (s/keys :req [::type
                                    ::map-name
@@ -83,7 +83,7 @@
 (defmethod encode-value ::find-in-map [{:keys [::map-name
                                                ::top-level-key
                                                ::second-level-key]}]
-  {"Fn::FindInMap" [(str map-name) (str top-level-key) (str second-level-key)]})
+  {"Fn::FindInMap" [(keys/->key map-name) (encode-value top-level-key) (encode-value second-level-key)]})
 
 (defn xref
   ([xref]
