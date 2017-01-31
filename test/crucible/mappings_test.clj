@@ -3,7 +3,7 @@
             [crucible.encoding :as enc]
             [clojure.test :refer :all]))
 
-(deftest mappings-test
+(deftest mapping-rewrite-test
   (testing "Rewrite is a no-op"
     (is (= {"foo" {"bar" "baz"
                    "quxx" "fizz"}}
