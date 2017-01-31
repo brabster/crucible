@@ -11,6 +11,7 @@
 (s/def ::description string?)
 
 (s/def ::element (s/cat :type #{:parameter
+                                :mapping
                                 :resource
                                 :output}
                         :specification any?))
@@ -55,6 +56,11 @@
       :or {type ::p/string}
       :as options}]
   [:parameter (assoc options ::p/type type)])
+
+(defn mapping
+  "Make a template mapping element"
+  [& {:as keymaps}]
+  [:mapping keymaps])
 
 (defn resource
   "Make a template resource element"
