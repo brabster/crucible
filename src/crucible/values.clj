@@ -108,6 +108,7 @@
 
 (defn find-in-map [map-name top-level-key second-level-key]
   {::type ::find-in-map
+   ::map-name map-name
    ::top-level-key top-level-key
    ::second-level-key second-level-key})
 
