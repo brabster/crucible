@@ -5,10 +5,10 @@ lein: 2.6.1
 cache:
   directories:
     - $HOME/.m2
-    
-script: 
- - lein qa
- 
+
+script:
+ - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then lein ancient; else lein qa; fi
+
 deploy:
   provider: script
   script: scripts/deploy.sh
