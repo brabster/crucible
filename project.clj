@@ -32,7 +32,6 @@
                   ["check"]
                   ["eastwood"]
                   ["bikeshed" "-m" "100"]
-                  ["ancient"]
                   ["cloverage"]]}
   :eastwood {:include-linters [:keyword-typos
                                :non-clojure-file
