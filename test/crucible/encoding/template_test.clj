@@ -71,11 +71,13 @@
   (testing "template with single mapping"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09",
             "Description" "t",
-            "Mappings" {"MyMap" {"foo" {"bar" "baz"}}}}
+            "Mappings" {"MyMap" {"foo" {"bar" "baz"}
+                                 "fee" {"fi" "fo"}}}}
            (cheshire.core/decode
             (encode
              (template "t"
-                       :my-map (mapping "foo" {"bar" "baz"})))))))
+                       :my-map (mapping "foo" {"bar" "baz"}
+                                        "fee" {"fi" "fo"})))))))
   (testing "template with multiple mappings"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09",
             "Description" "t",
