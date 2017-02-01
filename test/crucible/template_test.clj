@@ -163,17 +163,11 @@
            :vpc
            {:type :resource,
             :specification
-            #:crucible.resources{:type "AWS::EC2::VPC",
-                                 :properties
-                                 #:crucible.aws.ec2{:cidr-block
-                                                    #:crucible.values{:type
-                                                                      :crucible.values/find-in-map,
-                                                                      :map-name
-                                                                      :cidr-map,
-                                                                      :top-level-key
-                                                                      "bar",
-                                                                      :second-level-key
-                                                                      "baz"}}}}}}
+            {::res/type "AWS::EC2::VPC"
+             ::res/properties {::ec2/cidr-block {::v/type ::v/find-in-map
+                                                 ::v/map-name :cidr-map
+                                                 ::v/top-level-key "bar"
+                                                 ::v/second-level-key "baz"}}}}}}
          (template "t"
                    :cidr-map (mapping "bar" {"baz" "10.0.0.0/24"})
                    :vpc (ec2/vpc {::ec2/cidr-block (find-in-map :cidr-map "bar" "baz")})))))
