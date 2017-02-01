@@ -83,7 +83,10 @@
 (defmethod encode-value ::find-in-map [{:keys [::map-name
                                                ::top-level-key
                                                ::second-level-key]}]
-  {"Fn::FindInMap" [(keys/->key map-name) (encode-value top-level-key) (encode-value second-level-key)]})
+  {"Fn::FindInMap"
+   [(keys/->key map-name)
+    (encode-value top-level-key)
+    (encode-value second-level-key)]})
 
 (defn xref
   ([xref]

@@ -1,6 +1,7 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.core :refer [template parameter resource output xref encode sub join mapping find-in-map]]
+            [crucible.core :refer [template parameter resource output xref
+                                   encode sub join mapping find-in-map]]
             [crucible.parameters :as param]
             [crucible.outputs :as out]
             [crucible.values :as v]
