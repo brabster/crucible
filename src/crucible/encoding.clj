@@ -46,6 +46,10 @@
        :else x))
    element))
 
+(defmethod rewrite-element-data :mapping
+  [[_ element]]
+  element)
+
 (defn- rewrite-element [[key {:keys [type specification]}]]
   [(->key key) [type (rewrite-element-data [type specification])]])
 

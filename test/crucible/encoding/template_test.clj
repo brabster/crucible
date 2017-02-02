@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [crucible
              [encoding :refer [encode]]
-             [core :refer [template parameter output xref join notification-arns]]
+             [core :refer [template parameter output xref join notification-arns mapping]]
              [policies :as pol]
              [parameters :as param]]
             [crucible.aws
@@ -66,6 +66,28 @@
              (template "t"
                        :my-param (parameter)
                        :my-other-param (parameter ::param/type ::param/number))))))))
+
+(deftest template-mappings-test
+  (testing "template with single mapping"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09",
+            "Description" "t",
+            "Mappings" {"MyMap" {"foo" {"bar" "baz"}
+                                 "fee" {"fi" "fo"}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-map (mapping "foo" {"bar" "baz"}
+                                        "fee" {"fi" "fo"})))))))
+  (testing "template with multiple mappings"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09",
+            "Description" "t",
+            "Mappings" {"MyMap" {"foo" {"bar" "baz"}}
+                        "MyOtherMap" {"fee" {"fi" "fo"}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-map (mapping "foo" {"bar" "baz"})
+                       :my-other-map (mapping "fee" {"fi" "fo"}))))))))
 
 (deftest template-resources-and-parameters-test
   (testing "template with parameter and resource"

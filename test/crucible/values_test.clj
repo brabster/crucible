@@ -20,6 +20,13 @@
 
   (testing "1-index" (is (s/valid? ::v/value (cru/select 1 ["foo" (cru/xref :foo)])))))
 
+(deftest find-in-map-test
+  (testing "all literals" (is (s/valid? ::v/value (cru/find-in-map :foo "bar" "baz"))))
+  (testing "both refs" (is (s/valid? ::v/value (cru/find-in-map :foo
+                                                                (cru/xref :bar)
+                                                                (cru/xref :baz)))))
+  (testing "mixed" (is (s/valid? ::v/value (cru/find-in-map :foo "bar" (cru/xref :baz))))))
+
 (deftest import-test
   (testing "import name" (is (s/valid? ::v/value (cru/import-value "foo")))))
 
