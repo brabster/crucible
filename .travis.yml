@@ -14,3 +14,4 @@ deploy:
   script: scripts/deploy.sh
   on:
     all_branches: true
+    condition: $TRAVIS_EVENT_TYPE != cron
