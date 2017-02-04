@@ -7,11 +7,14 @@
                  [cheshire "5.7.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.5"]]
+  :dependency-check {:log true
+                     :throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
+            [com.livingsocial/lein-dependency-check "0.1.4-SNAPSHOT"]
             [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
             [jonase/eastwood "0.2.3"]
@@ -32,7 +35,10 @@
                   ["check"]
                   ["eastwood"]
                   ["bikeshed" "-m" "100"]
-                  ["cloverage"]]}
+                  ["cloverage"]]
+            "third-party-check" ["do"
+                                 ["ancient"]
+                                 ["dependency-check"]]}
   :eastwood {:include-linters [:keyword-typos
                                :non-clojure-file
                                :unused-fn-args
