@@ -7,10 +7,11 @@ cache:
     - $HOME/.m2
 
 script:
- - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then third-party-check; else lein qa; fi
+ - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then lein third-party-check; else lein qa; fi
 
 deploy:
   provider: script
   script: scripts/deploy.sh
   on:
     all_branches: true
+    condition: $TRAVIS_EVENT_TYPE != cron
