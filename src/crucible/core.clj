@@ -11,6 +11,7 @@
 (s/def ::description string?)
 
 (s/def ::element (s/cat :type #{:parameter
+                                :mapping
                                 :resource
                                 :output}
                         :specification any?))
@@ -56,6 +57,11 @@
       :as options}]
   [:parameter (assoc options ::p/type type)])
 
+(defn mapping
+  "Make a template mapping element"
+  [& {:as keymaps}]
+  [:mapping keymaps])
+
 (defn resource
   "Make a template resource element"
   [options]
@@ -89,6 +95,12 @@
   Fn::Select"
   [index values]
   (v/select index values))
+
+(defn find-in-map
+  "Returns the value corresponding to keys in a two-level map that is declared
+   in the Mappings section"
+  [map-name top-level-key second-level-key]
+  (v/find-in-map map-name top-level-key second-level-key))
 
 (defn import-value
   "Import an exported value"

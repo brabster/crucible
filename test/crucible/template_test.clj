@@ -1,6 +1,7 @@
 (ns crucible.template-test
   (:require [clojure.test :refer :all]
-            [crucible.core :refer [template parameter resource output xref encode sub join]]
+            [crucible.core :refer [template parameter resource output xref
+                                   encode sub join mapping find-in-map]]
             [crucible.parameters :as param]
             [crucible.outputs :as out]
             [crucible.values :as v]
@@ -154,3 +155,20 @@
          (template "t"
                    :vpc-cidr (parameter)
                    :vpc (ec2/vpc {::ec2/cidr-block (v/join "-" ["foo" (xref :vpc-cidr)])})))))
+
+(deftest find-in-map-fn-in-value-position
+  (is (= {:description "t",
+          :elements
+          {:cidr-map
+           {:type :mapping, :specification {"bar" {"baz" "10.0.0.0/24"}}},
+           :vpc
+           {:type :resource,
+            :specification
+            {::res/type "AWS::EC2::VPC"
+             ::res/properties {::ec2/cidr-block {::v/type ::v/find-in-map
+                                                 ::v/map-name :cidr-map
+                                                 ::v/top-level-key "bar"
+                                                 ::v/second-level-key "baz"}}}}}}
+         (template "t"
+                   :cidr-map (mapping "bar" {"baz" "10.0.0.0/24"})
+                   :vpc (ec2/vpc {::ec2/cidr-block (find-in-map :cidr-map "bar" "baz")})))))

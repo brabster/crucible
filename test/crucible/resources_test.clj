@@ -9,7 +9,8 @@
     (is (s/valid? ::res/resource-property-value (v/xref :foo))))
 
   (testing "function is valid"
-    (is (s/valid? ::res/resource-property-value (v/join "-" ["foo"])))))
+    (is (s/valid? ::res/resource-property-value (v/join "-" ["foo"])))
+    (is (s/valid? ::res/resource-property-value (v/find-in-map :foo-map "bar" "baz")))))
 
 (deftest resource-factory
   (testing "exception thrown if type does not look like a valid AWS resource type"
