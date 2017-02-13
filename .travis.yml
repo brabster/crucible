@@ -1,7 +1,6 @@
 language: clojure
 
 dist: trusty
-sudo: required
 
 lein: 2.6.1
 
