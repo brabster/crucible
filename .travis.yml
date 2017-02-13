@@ -1,5 +1,7 @@
 language: clojure
 
+dist: trusty
+
 lein: 2.6.1
 
 cache:
