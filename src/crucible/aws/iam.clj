@@ -36,7 +36,7 @@
 (s/def ::not-principal ::principal)
 
 (s/def ::action-element (spec-or-ref (s/and string?
-                                            #(re-matches #"[a-zA-Z0-9*:]+" %))))
+                                            #(re-matches #"[a-zA-Z0-9*:_\-]+" %))))
 
 (s/def ::action (s/or :single ::action-element
                       :list (s/+ ::action-element)))

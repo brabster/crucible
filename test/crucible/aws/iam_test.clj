@@ -36,6 +36,8 @@
 
 (deftest action-tests
 
+  (testing "hyphen in action" (is (valid ::iam/action "execute-api:Invoke")))
+
   (testing "all actions" (is (valid ::iam/action "*")))
 
   (testing "single action" (is (valid ::iam/action "s3:PutObject")))
