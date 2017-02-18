@@ -6,8 +6,7 @@
 
 (s/def ::security-group-ids (s/* (spec-or-ref string?)))
 
-(s/def ::vpc-config (s/keys :req [::security-group-ids]
-                            :opt [::subnet-ids]))
+(s/def ::vpc-config (s/keys :req [::security-group-ids ::subnet-ids]))
 
 (s/def ::timeout (spec-or-ref (s/and pos-int? #(<= % (* 5 60)))))
 
