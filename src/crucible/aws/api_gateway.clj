@@ -38,15 +38,15 @@
 
 (defresource deployment (apigw :deployment) ::deployment)
 
-(s/def ::deployment any?)
+(s/def ::method any?)
 
 (defresource method (apigw :method) ::method)
 
-(s/def ::method any?)
+(s/def ::model any?)
 
 (defresource model (apigw :model) ::model)
 
-(s/def ::model any?)
+(s/def ::resource any?)
 
 (defresource resource (apigw :resource) ::resource)
 
