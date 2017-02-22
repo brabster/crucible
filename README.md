@@ -73,6 +73,7 @@ Standard AWS resource types can be found as children of the [crucible.aws](src/c
 Examples of resource type usage can be found in the tests.
 
 * AWS::EC2::* partial coverage
+* AWS::ApiGateway::*
 * AWS::DynamoDB::Table
 * AWS::CloudWatch::Alarm
 * AWS::Lambda::Function
@@ -84,6 +85,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::KinesisFirehose::DeliveryStream
 * AWS::SNS::Topic
 * AWS::SNS::TopicPolicy
+* AWS::Events::Rule
 * Custom::* custom resources
 
 ## Writing your own resource type
