@@ -34,31 +34,31 @@
     (primitive-type->spec prim-type)
     (complex-type->spec res type coll-item-type)))
 
-(defn prop-fn [res x {:keys [Documentation PrimitiveType Required
+(defn ->spec [res x {:keys [Documentation PrimitiveType Required
                          UpdateType DuplicatesAllowed PrimitiveItemType Type ItemType] :as d}]
   (let [spec-name (keyword (str ":" res "/:" (->kebab-case x)))
         coll-item-type (if PrimitiveItemType (primitive-type->spec PrimitiveItemType) (non-primitive-type->spec res ItemType))
         spec-type (extract-spec-type res PrimitiveType Type ItemType coll-item-type) ]
        {:spec `(s/def ~spec-name ~spec-type) :required Required :type (if PrimitiveType PrimitiveType Type)}))
 
-(defn property-fn [r props]
+(defn get-type-properties [r props]
   (let [keyz (keys props)
-        data (map #(prop-fn r %1 (get props %1)) keyz)]
+        data (map #(->spec r %1 (get props %1)) keyz)]
        (vec data)))
 
 (defn kewyord-type [type]
   (keyword (str ":" type)))
 
-(defn my-properties-func [p]
+(defn extract-properties [p]
   (let [properties (-> (get property-types p) clojure.walk/keywordize-keys :Properties )]
-       {:type (kewyord-type p) :properties (property-fn p properties)}))
+       {:type (kewyord-type p) :properties (get-type-properties p properties)}))
 
-(defn my-resource-func [r]
+(defn extract-resources [r]
   (let [resource (-> (get resource-types r) clojure.walk/keywordize-keys :Properties )]
-       {:type (kewyord-type r) :properties (property-fn r resource)}))
+       {:type (kewyord-type r) :properties (get-type-properties r resource)}))
 
 (defn parse-resources []
-  {:property-types (vec (map my-properties-func sorted-property-keys))
-  :resource-types (vec (map my-resource-func sorted-resource-keys))})
+  {:property-types (vec (map extract-properties sorted-property-keys))
+  :resource-types (vec (map extract-resources sorted-resource-keys))})
 
 ;(parse-resources)
