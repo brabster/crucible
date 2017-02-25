@@ -48,7 +48,7 @@
                                               ::projection
                                               ::provisioned-throughput]))
 
-(s/def ::global-secondary-index (s/* ::global-secondary-index))
+(s/def ::global-secondary-indexes (s/* ::global-secondary-index))
 
 (s/def ::local-secondary-index (s/keys :req [::index-name
                                              ::key-schema
