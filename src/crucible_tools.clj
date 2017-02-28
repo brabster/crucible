@@ -89,9 +89,9 @@
   (let [aws-spec (json/decode (slurp #_ "https://d3teyb21fexa9r.cloudfront.net/latest/CloudFormationResourceSpecification.json"
                                      "test-resources/CloudFormationResourceSpecification.json"))
         property-types (get aws-spec "PropertyTypes")
-        resource-types (get aws-spec "ResourceTypes")])
-  (->> (concat property-types resource-types)
-       (mapcat extract-resources)
-       (remove nil?)
-       (doall)))
+        resource-types (get aws-spec "ResourceTypes")]
+    (->> (concat property-types resource-types)
+         (mapcat extract-resources)
+         (remove nil?)
+         (doall))))
 
