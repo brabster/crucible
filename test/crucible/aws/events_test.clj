@@ -18,3 +18,10 @@
                         ::events/state "ENABLED"
                         ::events/targets [{::events/arn (xref :my-sns-topic)
                                            ::events/id "OpsTopic"}]}))))))
+
+(deftest target-id-regex-test
+  (testing "target ID regex is required"
+    (is (thrown? Exception
+                 (events/rule {::events/targets [{::events/arn (xref :my-sns-topic)
+                                                  ::events/id "foo bar"}]}))
+        "Invalid target ID should throw exception")))
