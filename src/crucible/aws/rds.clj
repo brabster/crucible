@@ -71,4 +71,3 @@
 
 (s/def ::option-group any?)
 (defresource option-group (rds :option-group) ::option-group)
-
