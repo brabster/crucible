@@ -7,12 +7,11 @@
             [clojure.spec :as s]
             [clojure.string :as st]))
 
-(defn ->spec-name [resource-type resource-name] ;TODO deal with AccessLoggingPolicy having missing data sometimes
+(defn ->spec-name [resource-type resource-name]
   (let [[ns-part el-part] (st/split resource-type #"\.")
         ns (str "crucible.generated." (st/replace ns-part #"::" "."))
         el (str el-part (when (and (not-empty el-part) (not-empty resource-name)) "-") resource-name)
         x (keyword ns el)] ;->kebab-case
-    ;; (prn '>> x)
     x))
 
 (defn primitive-type->spec [p]
@@ -24,8 +23,7 @@
     `(spec-or-ref string?)))
 
 (defn non-primitive-type->spec [r i]
-  (let [x (->spec-name r i) #_ (keyword (str (name r) "." i))] ;; TODO deal with StepAdjustment missing name part
-    ;; (prn '--> x)
+  (let [x (->spec-name r i)]
     `(spec-or-ref ~x)))
 
 (defn complex-type->spec [res type coll-item-type]
@@ -46,9 +44,6 @@
                          (non-primitive-type->spec res ItemType))
         spec-type      (when coll-item-type
                          (extract-spec-type res PrimitiveType Type ItemType coll-item-type))]
-    #_ {:spec     `(s/def ~spec-name ~spec-type)
-        :required Required
-        :type     (if PrimitiveType PrimitiveType Type)}
     (when spec-type
       `[(s/def ~spec-name ~spec-type)])))
 
@@ -58,13 +53,12 @@
 (defn ->spec-keys [n prefix ks]
   (->> ks
        (keep first)
-       (map #(keyword n (str prefix "-" %)))
+       (map #(keyword n (str prefix (when (not-empty prefix) "-") %)))
        (into [])))
 
 (defn extract-properties [p properties]
   (let [{required true optional false} (group-by #(get (val %) "Required") properties)
         n (->spec-name p nil)]
-    ;; (prn '------>>> required optional properties)
     `(s/def ~n (s/keys :req ~(->spec-keys (namespace n) (name n) required) :opt ~(->spec-keys (namespace n) (name n) optional)))))
 
 (defn extract-resources [[p v]]
