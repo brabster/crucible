@@ -1,18 +1,36 @@
 (ns crucible-tools
   (:require [cheshire.core :as json]
-            [clojure.test :refer :all :as t]
+            [clojure.test :refer [is are testing] :as t]
             [clojure.java.io :as io]
             [crucible.resources :refer [spec-or-ref defresource] :as res]
             [camel-snake-kebab.core :refer [->kebab-case]]
             [clojure.spec :as s]
             [clojure.string :as st]))
 
-(defn ->spec-name [resource-type resource-name]
-  (let [[ns-part el-part] (st/split resource-type #"\.")
-        ns (str "crucible.generated." (st/replace ns-part #"::" "."))
-        el (str el-part (when (and (not-empty el-part) (not-empty resource-name)) "-") resource-name)
-        x (keyword ns el)] ;->kebab-case
-    x))
+;;TODO should things like Enabled be in it's own primitive ns as a boolean, rather than creating loads of different ones?
+
+(t/with-test
+  (defn ->spec-name [resource-type resource-name]
+    ;; {:pre [(string? resource-type) (string? resource-name) (not-empty resource-name)]}
+    (pr resource-type resource-name '-> )
+    (let [prefix "crucible.generated"
+          [ns-part el-part] (st/split resource-type #"\.")
+          ns (str prefix "." (st/replace ns-part #"::" ".") (when (and (not-empty el-part) (not-empty resource-name)) (str "." el-part)))
+          el (if (empty? resource-name)
+               el-part
+               resource-name)]
+      (if (empty? el)
+        (keyword prefix resource-type)
+        (keyword ns el))))
+
+  (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer/AccessLoggingPolicy
+         (->spec-name "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" nil)))
+  (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer.AccessLoggingPolicy/EmitInterval
+         (->spec-name "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" "EmitInterval")))
+  (is (= :crucible.generated.Tag/Key
+         (->spec-name "Tag" "Key")))
+  (is (= :crucible.generated/Tag
+         (->spec-name "Tag" nil))))
 
 (defn primitive-type->spec [p]
   (case p
@@ -58,6 +76,7 @@
 
 (defn extract-properties [p properties]
   (let [{required true optional false} (group-by #(get (val %) "Required") properties)
+        ;; _ (prn '--> p)
         n (->spec-name p nil)]
     `(s/def ~n (s/keys :req ~(->spec-keys (namespace n) (name n) required) :opt ~(->spec-keys (namespace n) (name n) optional)))))
 
