@@ -21,13 +21,13 @@
     `(spec-or-ref string?)))
 
 (defn non-primitive-type->spec [r i]
-   `(spec-or-ref ~(keyword (str ":" r "."  i))))
+   `(spec-or-ref ~(keyword (str r "."  i))))
 
 (defn complex-type->spec [res type coll-item-type]
   (case type
     "List" `(s/coll-of ~coll-item-type :kind vector?)
     "Map" `(s/map-of string? ~coll-item-type)
-    `(spec-or-ref ~(keyword (str ":" res "."  type)))))
+    `(spec-or-ref ~(keyword (str res "."  type)))))
 
 (defn extract-spec-type [res prim-type type item-type coll-item-type]
   (if prim-type
@@ -36,7 +36,7 @@
 
 (defn ->spec [res x {:keys [Documentation PrimitiveType Required
                          UpdateType DuplicatesAllowed PrimitiveItemType Type ItemType] :as d}]
-  (let [spec-name (keyword (str ":" res "/:" (->kebab-case x)))
+  (let [spec-name (keyword (name res) (name (->kebab-case x)))
         coll-item-type (if PrimitiveItemType (primitive-type->spec PrimitiveItemType) (non-primitive-type->spec res ItemType))
         spec-type (extract-spec-type res PrimitiveType Type ItemType coll-item-type) ]
        {:spec `(s/def ~spec-name ~spec-type) :required Required :type (if PrimitiveType PrimitiveType Type)}))
@@ -47,7 +47,7 @@
        (vec data)))
 
 (defn kewyord-type [type]
-  (keyword (str ":" type)))
+  (keyword type))
 
 (defn extract-properties [p]
   (let [properties (-> (get property-types p) clojure.walk/keywordize-keys :Properties )]
