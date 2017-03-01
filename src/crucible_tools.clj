@@ -71,10 +71,28 @@
 
 (defn extract-properties [p prefix properties]
   (let [{required true optional false} (group-by #(get (val %) "Required") properties)
-        n (->spec-name prefix p nil)]
+        n                              (->spec-name prefix p nil)
+        required                       (->spec-keys n required)
+        optional                       (->spec-keys n optional)
+        element-properties             (concat required optional)
+        constructor-args               (mapv (comp symbol ->kebab-case name) element-properties)]
     `[(ns ~(symbol (namespace n)))
+      (defn ~(symbol (str "->" (name n)))
+        ~(str "Constructor for a " n)
+        [ & ~constructor-args]
+        (let [m# (zipmap ~element-properties ~constructor-args)]
+          (if (s/valid? ~n m#)
+            m#
+            (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
+      (defn ~(symbol (str "map->" (name n)))
+        ~(str "Convert a map to a " n)
+        ~[{:keys constructor-args}]
+        (let [m# (zipmap ~element-properties ~constructor-args)]
+          (if (s/valid? ~n m#)
+            m#
+            (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (ns ~(symbol (str (namespace n) "." (name n))))
-      (s/def ~n (s/keys :req ~(->spec-keys n required) :opt ~(->spec-keys n optional)))]))
+      (s/def ~n (s/keys :req ~required :opt ~optional))]))
 
 (defn extract-resources [prefix [p v]]
   (let [properties (get v "Properties")]
