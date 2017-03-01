@@ -20,14 +20,15 @@
         (keyword prefix resource-type)
         (keyword ns el))))
 
-  (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer/AccessLoggingPolicy
-         (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" nil)))
-  (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer.AccessLoggingPolicy/EmitInterval
-         (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" "EmitInterval")))
-  (is (= :crucible.generated.Tag/Key
-         (->spec-name "crucible.generated" "Tag" "Key")))
-  (is (= :crucible.generated/Tag
-         (->spec-name "crucible.generated" "Tag" nil))))
+  (testing "->spec-name"
+    (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer/AccessLoggingPolicy
+           (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" nil)))
+    (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer.AccessLoggingPolicy/EmitInterval
+           (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" "EmitInterval")))
+    (is (= :crucible.generated.Tag/Key
+           (->spec-name "crucible.generated" "Tag" "Key")))
+    (is (= :crucible.generated/Tag
+           (->spec-name "crucible.generated" "Tag" nil)))))
 
 (defn primitive-type->spec [p]
   (case p
@@ -38,8 +39,7 @@
     `(spec-or-ref string?)))
 
 (defn non-primitive-type->spec [prefix r i]
-  (let [x (->spec-name prefix r i)]
-    `(spec-or-ref ~x)))
+  `(spec-or-ref ~(->spec-name prefix r i)))
 
 (defn complex-type->spec [res type coll-item-type]
   (case type
