@@ -1,0 +1,21 @@
+{
+  "Type": "AWS::Events::Rule",
+  "Properties": {
+    "Description": "EventRule",
+    "EventPattern": {
+      "detail-type": [ "AWS API Call via CloudTrail" ],
+      "detail": { 
+        "userIdentity": { 
+          "type": [ "Root" ]
+        }
+      }
+    },
+    "State": "ENABLED",
+    "Targets": [
+      {
+        "Arn": { "Ref": "MySnsTopic" },
+        "Id": "OpsTopic"
+      }
+    ]
+  }
+}
