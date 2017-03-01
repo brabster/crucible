@@ -151,4 +151,10 @@
 
 (defn generate-specs []
   (binding [*ns* *ns*]
-    (dorun (map eval (mapcat parse-resources region-specs)))))
+    (->>
+     (mapcat parse-resources region-specs)
+     (map #(try
+             (eval %)
+             (catch Exception e
+               (throw (ex-info "Error generating specs" {:cause e :form %})))))
+     dorun)))
