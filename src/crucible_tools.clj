@@ -65,21 +65,27 @@
 (defn get-type-properties [r prefix props]
   (mapcat #(->spec r %1 prefix (get props %1)) (keys props)))
 
-(defn ->spec-keys [n prefix ks]
+(defn ->spec-keys [^clojure.lang.Keyword n ks]
   (->> ks
        (keep first)
-       (map #(keyword n (str prefix (when (not-empty prefix) "-") %)))
-       (into [])))
+       (mapv #(keyword (str (namespace n) "." (name n)) %))))
 
 (defn extract-properties [p prefix properties]
   (let [{required true optional false} (group-by #(get (val %) "Required") properties)
         n (->spec-name prefix p nil)]
-    `(s/def ~n (s/keys :req ~(->spec-keys (namespace n) (name n) required) :opt ~(->spec-keys (namespace n) (name n) optional)))))
+    `(s/def ~n (s/keys :req ~(->spec-keys n required) :opt ~(->spec-keys n optional)))))
 
 (defn extract-resources [prefix [p v]]
   (let [properties (get v "Properties")]
     (conj (get-type-properties p prefix properties)
-          (extract-properties prefix p properties))))
+          (extract-properties p prefix properties))))
+
+(defn parse-resources [{:keys [region url]}]
+  (let [aws-spec (json/decode (slurp url))
+        prefix (str "crucible.generated." region)]
+    (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
+         (mapcat (partial extract-resources prefix))
+         (remove nil?))))
 
 (def region-specs [{:name   "Asia Pacific (Mumbai) Region"
                     :region "ap-south-1"
@@ -123,13 +129,6 @@
                    {:name   "US West (Oregon)"
                     :region "us-west-2"
                     :url    "https://d201a2mn26r7lk.cloudfront.net/latest/CloudFormationResourceSpecification.json"}])
-
-(defn parse-resources [{:keys [region url]}]
-  (let [aws-spec (json/decode (slurp url))
-        prefix (str "crucible.generated." region)]
-    (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
-         (mapcat (partial extract-resources prefix))
-         (remove nil?))))
 
 (defn generate-specs []
   (mapcat parse-resources region-specs))
