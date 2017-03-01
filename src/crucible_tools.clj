@@ -89,46 +89,65 @@
 
 (def region-specs [{:name   "Asia Pacific (Mumbai) Region"
                     :region "ap-south-1"
+                    :file   "resources/ap-south-1.json"
                     :url    "https://d2senuesg1djtx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "Asia Pacific (Seoul) Region"
                     :region "ap-northeast-2"
+                    :file   "resources/ap-northeast-2.json"
                     :url    "https://d1ane3fvebulky.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "Asia Pacific (Sydney) Region"
                     :region "ap-southeast-2"
+                    :file   "resources/ap-southeast-2.json"
                     :url    "https://d2stg8d246z9di.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "Asia Pacific (Singapore) Region"
                     :region "ap-southeast-1"
+                    :file   "resources/ap-southeast-1.json"
                     :url    "https://doigdx0kgq9el.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "Asia Pacific (Tokyo) Region"
                     :region "ap-northeast-1"
+                    :file   "resources/ap-northeast-1.json"
                     :url    "https://d33vqc0rt9ld30.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "Canada (Central) Region"
                     :region "ca-central-1"
+                    :file   "resources/ca-central-1.json"
                     :url    "https://d2s8ygphhesbe7.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "EU (Frankfurt) Region"
                     :region "eu-central-1"
+                    :file   "resources/eu-central-1.json"
                     :url    "https://d1mta8qj7i28i2.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "EU (London) Region"
                     :region "eu-west-2"
+                    :file   "resources/eu-west-2.json"
                     :url    "https://d1742qcu2c1ncx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "EU (Ireland) Region"
                     :region "eu-west-1"
+                    :file   "resources/eu-west-1.json"
                     :url    "https://d3teyb21fexa9r.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "South America (São Paulo)"
                     :region "sa-east-1"
+                    :file   "resources/sa-east-1.json"
                     :url    "https://d3c9jyj3w509b0.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "US East (N. Virginia)"
                     :region "us-east-1"
+                    :file   "resources/us-east-1.json"
                     :url    "https://d1uauaxba7bl26.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "US East (Ohio)"
                     :region "us-east-2"
+                    :file   "resources/us-east-2.json"
                     :url    "https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "US West (N. California)"
                     :region "us-west-1"
+                    :file   "resources/us-west-1.json"
                     :url    "https://d68hl49wbnanq.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
                    {:name   "US West (Oregon)"
                     :region "us-west-2"
+                    :file   "resources/us-west-2.json"
                     :url    "https://d201a2mn26r7lk.cloudfront.net/latest/CloudFormationResourceSpecification.json"}])
 
+(defn fetch-specs []
+  (doseq [{:keys [url file]} region-specs]
+    (spit file (slurp url))))
+
 (defn generate-specs []
-  (mapcat parse-resources region-specs))
+  (binding [*ns* *ns*]
+    (dorun (map eval (mapcat parse-resources region-specs)))))
