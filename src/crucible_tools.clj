@@ -10,8 +10,7 @@
 ;;TODO should things like Enabled be in it's own primitive ns as a boolean, rather than creating loads of different ones?
 (t/with-test
   (defn ->spec-name [prefix resource-type resource-name]
-    (let [;; prefix "crucible.generated"
-          [ns-part el-part] (st/split resource-type #"\.")
+    (let [[ns-part el-part] (st/split resource-type #"\.")
           ns (str prefix "." (st/replace ns-part #"::" ".") (when (and (not-empty el-part) (not-empty resource-name)) (str "." el-part)))
           el (if (empty? resource-name)
                el-part
