@@ -73,15 +73,17 @@
 (defn extract-properties [p prefix properties]
   (let [{required true optional false} (group-by #(get (val %) "Required") properties)
         n (->spec-name prefix p nil)]
-    `(s/def ~n (s/keys :req ~(->spec-keys n required) :opt ~(->spec-keys n optional)))))
+    `[(ns ~(symbol (namespace n)))
+      (ns ~(symbol (str (namespace n) "." (name n))))
+      (s/def ~n (s/keys :req ~(->spec-keys n required) :opt ~(->spec-keys n optional)))]))
 
 (defn extract-resources [prefix [p v]]
   (let [properties (get v "Properties")]
-    (conj (get-type-properties p prefix properties)
-          (extract-properties p prefix properties))))
+    (concat (get-type-properties p prefix properties)
+            (extract-properties p prefix properties))))
 
-(defn parse-resources [{:keys [region url]}]
-  (let [aws-spec (json/decode (slurp url))
+(defn parse-resources [{:keys [region file]}]
+  (let [aws-spec (json/decode (slurp (io/reader file)))
         prefix (str "crucible.generated." region)]
     (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
          (mapcat (partial extract-resources prefix))
