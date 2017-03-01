@@ -74,7 +74,7 @@
         n                              (->spec-name prefix p nil)
         required                       (->spec-keys n required)
         optional                       (->spec-keys n optional)
-        element-properties             (concat required optional)
+        element-properties             (into [] (concat required optional))
         constructor-args               (mapv (comp symbol ->kebab-case name) element-properties)]
     `[(ns ~(symbol (namespace n)))
       (defn ~(symbol (str "->" (name n)))
