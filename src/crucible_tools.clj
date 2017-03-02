@@ -10,8 +10,18 @@
 ;;TODO should things like Enabled be in it's own primitive ns as a boolean, rather than creating loads of different ones?
 (t/with-test
   (defn ->spec-name [prefix resource-type resource-name]
-    (let [[ns-part el-part] (st/split resource-type #"\.")
-          ns (str prefix "." (st/replace ns-part #"::" ".") (when (and (not-empty el-part) (not-empty resource-name)) (str "." el-part)))
+    (let [l (st/split resource-type #"::")
+          ns-part (st/join "." (butlast l))
+          el-part (last l)
+          [el-part1 el-part2] (st/split el-part #"\.")
+          [ns-part el-part] (if el-part2
+                              [(str ns-part "." el-part1) el-part2]
+                              [ns-part el-part1])
+          ns (str prefix
+                  (when (and prefix (not-empty ns-part)) ".")
+                  ns-part
+                  (when (and (not-empty el-part) (not-empty resource-name))
+                    (str "." el-part)))
           el (if (empty? resource-name)
                el-part
                resource-name)]
@@ -24,6 +34,8 @@
            (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" nil)))
     (is (= :crucible.generated.AWS.ElasticLoadBalancing.LoadBalancer.AccessLoggingPolicy/EmitInterval
            (->spec-name "crucible.generated" "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy" "EmitInterval")))
+    (is (= :crucible.generated.AWS.Lambda/EventSourceMapping
+           (->spec-name "crucible.generated" "AWS::Lambda::EventSourceMapping" nil)))
     (is (= :crucible.generated.Tag/Key
            (->spec-name "crucible.generated" "Tag" "Key")))
     (is (= :crucible.generated/Tag
@@ -67,6 +79,7 @@
 (defn ->spec-keys [^clojure.lang.Keyword n ks]
   (->> ks
        (keep first)
+       sort
        (mapv #(keyword (str (namespace n) "." (name n)) %))))
 
 (defn extract-properties [p prefix properties]
@@ -74,7 +87,7 @@
         n                              (->spec-name prefix p nil)
         required                       (->spec-keys n required)
         optional                       (->spec-keys n optional)
-        element-properties             (into [] (concat required optional))
+        element-properties             (into required optional)
         constructor-args               (mapv (comp symbol ->kebab-case name) element-properties)]
     `[(ns ~(symbol (namespace n)))
       (defn ~(symbol (str "->" (name n)))
@@ -99,9 +112,9 @@
     (concat (get-type-properties p prefix properties)
             (extract-properties p prefix properties))))
 
-(defn parse-resources [{:keys [region file]}]
+(defn parse-resources [prefix {:keys [region file]}]
   (let [aws-spec (json/decode (slurp (io/reader file)))
-        prefix (str "crucible.generated." region)]
+        prefix (str prefix "." region)]
     (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
          (mapcat (partial extract-resources prefix))
          (remove nil?))))
@@ -167,12 +180,21 @@
   (doseq [{:keys [url file]} region-specs]
     (spit file (slurp url))))
 
-(defn generate-specs []
+(defn eval-specs []
   (binding [*ns* *ns*]
     (->>
-     (mapcat parse-resources region-specs)
+     (mapcat (partial "crucible.generated" parse-resources) region-specs)
      (map #(try
              (eval %)
              (catch Exception e
                (throw (ex-info "Error generating specs" {:cause e :form %})))))
      dorun)))
+
+(defn generate-specs []
+  (doseq [{:keys [region] :as r} region-specs]
+    (let [f (str "generated-src/crucible/generated/" (.replaceAll region "-" "_") ".clj")]
+      (io/make-parents f)
+      (with-open [w (io/writer f)]
+        (doseq [sexp (parse-resources "crucible.generated" r)]
+          (.write w (pr-str sexp))
+          (.write w "\n"))))))

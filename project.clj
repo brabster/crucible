@@ -28,6 +28,7 @@
                               :username :env/clojars_username
                               :password :env/clojars_password
                               :sign-releases false}]]
+  :source-paths ["src" "generated-src"]
   :target-path "target/%s"
   :main crucible.encoding.main
   :aliases {"qa" ["do"
