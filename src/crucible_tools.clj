@@ -88,19 +88,20 @@
         required                       (->spec-keys n required)
         optional                       (->spec-keys n optional)
         element-properties             (into required optional)
-        constructor-args               (mapv (comp symbol ->kebab-case name) element-properties)]
+        constructor-args               (mapv (comp symbol ->kebab-case name) element-properties)
+        arg-sym                        (gensym "arg")]
     `[(ns ~(symbol (namespace n)))
       (defn ~(symbol (str "->" (name n)))
         ~(str "Constructor for a " n)
-        [ & ~constructor-args]
-        (let [m# (zipmap ~element-properties ~constructor-args)]
+        [ & ~(conj constructor-args :as arg-sym)]
+        (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))]
           (if (s/valid? ~n m#)
             m#
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (defn ~(symbol (str "map->" (name n)))
         ~(str "Convert a map to a " n)
-        ~[{:keys constructor-args}]
-        (let [m# (zipmap ~element-properties ~constructor-args)]
+        ~[{:keys constructor-args :as arg-sym}]
+        (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))]
           (if (s/valid? ~n m#)
             m#
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
