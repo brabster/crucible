@@ -115,8 +115,14 @@
       (concat (get-type-properties p prefix properties)
               (extract-properties p prefix properties)))))
 
+(defn load-from-source [file resource]
+  (or (try
+        (io/resource resource)
+        (catch Exception e nil))
+      (io/reader file)))
+
 (defn parse-resources [prefix {:keys [region file resource]}]
-  (let [aws-spec (json/decode (slurp (try (io/reader file) (catch java.io.FileNotFoundException e (io/resource resource)))))
+  (let [aws-spec (json/decode-stream (load-from-source file resource))
         prefix (str prefix "." region)]
     (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
          (mapcat (partial extract-resources prefix))
