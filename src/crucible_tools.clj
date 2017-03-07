@@ -101,7 +101,7 @@
       (defn ~(symbol (str "map->" (name n)))
         ~(str "Convert a map to a " n)
         ~[{:keys constructor-args :as arg-sym}]
-        (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))]
+        (let [m# (zipmap (map #(keyword (str (namespace ~n) "." (name ~n)) (name %)) (keys ~arg-sym)) (vals ~arg-sym))]
           (if (s/valid? ~n m#)
             m#
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
@@ -117,7 +117,7 @@
 
 (defn load-from-source [file resource]
   (or (try
-        (io/resource resource)
+        (io/reader (io/resource resource))
         (catch Exception e nil))
       (io/reader file)))
 
