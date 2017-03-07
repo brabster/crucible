@@ -106,76 +106,91 @@
             m#
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (ns ~(symbol (str (namespace n) "." (name n))))
-      (s/def ~n (s/keys :req ~required :opt ~optional))]))
+      (s/def ~n (s/keys :req ~required :opt ~optional))
+      (defresource ~(symbol (name n)) ~p ~n)]))
 
 (defn extract-resources [prefix [p v]]
   (let [properties (get v "Properties")]
     (concat (get-type-properties p prefix properties)
             (extract-properties p prefix properties))))
 
-(defn parse-resources [prefix {:keys [region file]}]
-  (let [aws-spec (json/decode (slurp (io/reader file)))
+(defn parse-resources [prefix {:keys [region file resource]}]
+  (let [aws-spec (json/decode (slurp (try (io/reader file) (catch java.io.FileNotFoundException e (io/resource resource)))))
         prefix (str prefix "." region)]
     (->> (concat (get aws-spec "PropertyTypes") (get aws-spec "ResourceTypes"))
          (mapcat (partial extract-resources prefix))
          (remove nil?))))
 
-(def region-specs [{:name   "Asia Pacific (Mumbai) Region"
-                    :region "ap-south-1"
-                    :file   "resources/ap-south-1.json"
-                    :url    "https://d2senuesg1djtx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "Asia Pacific (Seoul) Region"
-                    :region "ap-northeast-2"
-                    :file   "resources/ap-northeast-2.json"
-                    :url    "https://d1ane3fvebulky.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "Asia Pacific (Sydney) Region"
-                    :region "ap-southeast-2"
-                    :file   "resources/ap-southeast-2.json"
-                    :url    "https://d2stg8d246z9di.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "Asia Pacific (Singapore) Region"
-                    :region "ap-southeast-1"
-                    :file   "resources/ap-southeast-1.json"
-                    :url    "https://doigdx0kgq9el.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "Asia Pacific (Tokyo) Region"
-                    :region "ap-northeast-1"
-                    :file   "resources/ap-northeast-1.json"
-                    :url    "https://d33vqc0rt9ld30.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "Canada (Central) Region"
-                    :region "ca-central-1"
-                    :file   "resources/ca-central-1.json"
-                    :url    "https://d2s8ygphhesbe7.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "EU (Frankfurt) Region"
-                    :region "eu-central-1"
-                    :file   "resources/eu-central-1.json"
-                    :url    "https://d1mta8qj7i28i2.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "EU (London) Region"
-                    :region "eu-west-2"
-                    :file   "resources/eu-west-2.json"
-                    :url    "https://d1742qcu2c1ncx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "EU (Ireland) Region"
-                    :region "eu-west-1"
-                    :file   "resources/eu-west-1.json"
-                    :url    "https://d3teyb21fexa9r.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "South America (São Paulo)"
-                    :region "sa-east-1"
-                    :file   "resources/sa-east-1.json"
-                    :url    "https://d3c9jyj3w509b0.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "US East (N. Virginia)"
-                    :region "us-east-1"
-                    :file   "resources/us-east-1.json"
-                    :url    "https://d1uauaxba7bl26.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "US East (Ohio)"
-                    :region "us-east-2"
-                    :file   "resources/us-east-2.json"
-                    :url    "https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "US West (N. California)"
-                    :region "us-west-1"
-                    :file   "resources/us-west-1.json"
-                    :url    "https://d68hl49wbnanq.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
-                   {:name   "US West (Oregon)"
-                    :region "us-west-2"
-                    :file   "resources/us-west-2.json"
-                    :url    "https://d201a2mn26r7lk.cloudfront.net/latest/CloudFormationResourceSpecification.json"}])
+(def region-specs [{:name     "Asia Pacific (Mumbai) Region"
+                    :region   "ap-south-1"
+                    :file     "resources/ap-south-1.json"
+                    :resource "ap-south-1.json"
+                    :url      "https://d2senuesg1djtx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "Asia Pacific (Seoul) Region"
+                    :region   "ap-northeast-2"
+                    :file     "resources/ap-northeast-2.json"
+                    :resource "ap-northeast-2.json"
+                    :url      "https://d1ane3fvebulky.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "Asia Pacific (Sydney) Region"
+                    :region   "ap-southeast-2"
+                    :file     "resources/ap-southeast-2.json"
+                    :resource "ap-southeast-2.json"
+                    :url      "https://d2stg8d246z9di.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "Asia Pacific (Singapore) Region"
+                    :region   "ap-southeast-1"
+                    :file     "resources/ap-southeast-1.json"
+                    :resource "ap-southeast-1.json"
+                    :url      "https://doigdx0kgq9el.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "Asia Pacific (Tokyo) Region"
+                    :region   "ap-northeast-1"
+                    :file     "resources/ap-northeast-1.json"
+                    :resource "ap-northeast-1.json"
+                    :url      "https://d33vqc0rt9ld30.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "Canada (Central) Region"
+                    :region   "ca-central-1"
+                    :file     "resources/ca-central-1.json"
+                    :resource "ca-central-1.json"
+                    :url      "https://d2s8ygphhesbe7.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "EU (Frankfurt) Region"
+                    :region   "eu-central-1"
+                    :file     "resources/eu-central-1.json"
+                    :resource "eu-central-1.json"
+                    :url      "https://d1mta8qj7i28i2.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "EU (London) Region"
+                    :region   "eu-west-2"
+                    :file     "resources/eu-west-2.json"
+                    :resource "eu-west-2.json"
+                    :url      "https://d1742qcu2c1ncx.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "EU (Ireland) Region"
+                    :region   "eu-west-1"
+                    :file     "resources/eu-west-1.json"
+                    :resource "eu-west-1.json"
+                    :url      "https://d3teyb21fexa9r.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "South America (São Paulo)"
+                    :region   "sa-east-1"
+                    :file     "resources/sa-east-1.json"
+                    :resource "sa-east-1.json"
+                    :url      "https://d3c9jyj3w509b0.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "US East (N. Virginia)"
+                    :region   "us-east-1"
+                    :file     "resources/us-east-1.json"
+                    :resource "us-east-1.json"
+                    :url      "https://d1uauaxba7bl26.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "US East (Ohio)"
+                    :region   "us-east-2"
+                    :file     "resources/us-east-2.json"
+                    :resource "us-east-2.json"
+                    :url      "https://dnwj8swjjbsbt.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "US West (N. California)"
+                    :region   "us-west-1"
+                    :file     "resources/us-west-1.json"
+                    :resource "us-west-1.json"
+                    :url      "https://d68hl49wbnanq.cloudfront.net/latest/CloudFormationResourceSpecification.json"}
+                   {:name     "US West (Oregon)"
+                    :region   "us-west-2"
+                    :file     "resources/us-west-2.json"
+                    :resource "us-west-2.json"
+                    :url      "https://d201a2mn26r7lk.cloudfront.net/latest/CloudFormationResourceSpecification.json"}])
 
 (defn fetch-specs []
   (doseq [{:keys [url file]} region-specs]
@@ -184,7 +199,7 @@
 (defn eval-specs []
   (binding [*ns* *ns*]
     (->>
-     (mapcat (partial "crucible.generated" parse-resources) region-specs)
+     (mapcat (partial parse-resources "crucible.generated") region-specs)
      (map #(try
              (eval %)
              (catch Exception e
