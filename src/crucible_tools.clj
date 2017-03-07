@@ -110,9 +110,10 @@
       (defresource ~(symbol (name n)) ~p ~n)]))
 
 (defn extract-resources [prefix [p v]]
-  (let [properties (get v "Properties")]
-    (concat (get-type-properties p prefix properties)
-            (extract-properties p prefix properties))))
+  (when-not (= p "Tag")
+    (let [properties (get v "Properties")]
+      (concat (get-type-properties p prefix properties)
+              (extract-properties p prefix properties)))))
 
 (defn parse-resources [prefix {:keys [region file resource]}]
   (let [aws-spec (json/decode (slurp (try (io/reader file) (catch java.io.FileNotFoundException e (io/resource resource)))))

@@ -14,7 +14,7 @@
 
 (s/def ::properties any?)
 
-(s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9]+" %)))
+(s/def ::type (s/and string? #(re-matches #"([a-zA-Z0-9]+::)+[a-zA-Z0-9.]+" %)))
 
 (s/def ::resource (s/keys :req [::type ::properties]
                           :opt [::policies/policies]))
