@@ -42,7 +42,7 @@
          spec ::template
          parsed (s/conform spec input)]
      (if (= parsed ::s/invalid)
-       (throw (ex-info "Invalid input" (s/explain-data spec input)))
+       (throw (ex-info "Invalid input" {:problems (s/explain-data spec input) :input input}))
        (-> parsed
            validate
            (with-meta {::template true})))))
