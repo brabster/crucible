@@ -3,6 +3,7 @@
             [clojure.test :refer [is are testing] :as t]
             [clojure.java.io :as io]
             [crucible.resources :refer [spec-or-ref defresource] :as res]
+            [crucible.core :as cc]
             [camel-snake-kebab.core :refer [->kebab-case]]
             [clojure.spec :as s]
             [clojure.string :as st]))
@@ -96,14 +97,14 @@
         [ & ~(conj constructor-args :as arg-sym)]
         (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))]
           (if (s/valid? ~n m#)
-            m#
+            ((res/resource-factory ~p ~n) m#)
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (defn ~(symbol (str "map->" (name n)))
         ~(str "Convert a map to a " n)
         ~[{:keys constructor-args :as arg-sym}]
         (let [m# (zipmap (map #(keyword (str (namespace ~n) "." (name ~n)) (name %)) (keys ~arg-sym)) (vals ~arg-sym))]
           (if (s/valid? ~n m#)
-            m#
+            ((res/resource-factory ~p ~n) m#)
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (ns ~(symbol (str (namespace n) "." (name n))))
       (s/def ~n (s/keys :req ~required :opt ~optional))
@@ -203,15 +204,20 @@
   (doseq [{:keys [url file]} region-specs]
     (spit file (slurp url))))
 
-(defn eval-specs []
-  (binding [*ns* *ns*]
-    (->>
-     (mapcat (partial parse-resources "crucible.generated") region-specs)
-     (map #(try
-             (eval %)
-             (catch Exception e
-               (throw (ex-info "Error generating specs" {:cause e :form %})))))
-     dorun)))
+(defn eval-specs [& regions]
+  (let [selected-region? (if (seq regions)
+                           (->> regions
+                                (map name)
+                                (into #{}))
+                           (constantly true))]
+    (binding [*ns* *ns*]
+      (doseq [f (->> region-specs
+                     (filter (comp selected-region? :region))
+                     (mapcat (partial parse-resources "crucible.generated")))]
+        (try
+          (eval f)
+          (catch Exception e
+            (throw (ex-info "Error generating specs" {:cause e :form f}))))))))
 
 (defn generate-specs []
   (doseq [{:keys [region] :as r} region-specs]
