@@ -6,7 +6,8 @@
             [crucible.core :as cc]
             [camel-snake-kebab.core :refer [->kebab-case]]
             [clojure.spec :as s]
-            [clojure.string :as st]))
+            [clojure.string :as st]
+            [crucible.encoding.keys :as enc]))
 
 ;;TODO should things like Enabled be in it's own primitive ns as a boolean, rather than creating loads of different ones?
 (t/with-test
@@ -72,7 +73,8 @@
         spec-type      (when coll-item-type
                          (extract-spec-type res PrimitiveType Type ItemType coll-item-type))]
     (when spec-type
-      `[(s/def ~spec-name ~spec-type)])))
+      `[(s/def ~spec-name ~spec-type)
+        (defmethod enc/->key ~(keyword (name spec-name)) [~'_] ~x)])))
 
 (defn get-type-properties [r prefix props]
   (mapcat #(->spec r %1 prefix (get props %1)) (keys props)))
