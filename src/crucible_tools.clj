@@ -101,16 +101,22 @@
       (defn ~(symbol (str "->" (name n)))
         ~(str "Constructor for a " n)
         [ & ~(conj constructor-args :as arg-sym)]
-        (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))]
+        (let [m# (zipmap ~element-properties (take (count ~arg-sym) ~constructor-args))
+              f# (if (.contains ~p ".")
+                   identity
+                   (res/resource-factory ~p ~n))]
           (if (s/valid? ~n m#)
-            ((res/resource-factory ~p ~n) m#)
+            (f# m#)
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (defn ~(symbol (str "map->" (name n)))
         ~(str "Convert a map to a " n)
         ~[{:keys constructor-args :as arg-sym}]
-        (let [m# (zipmap (map #(keyword (str (namespace ~n) "." (name ~n)) (name %)) (keys ~arg-sym)) (vals ~arg-sym))]
+        (let [m# (zipmap (map #(keyword (str (namespace ~n) "." (name ~n)) (name %)) (keys ~arg-sym)) (vals ~arg-sym))
+              f# (if (.contains ~p ".")
+                   identity
+                   (res/resource-factory ~p ~n))]
           (if (s/valid? ~n m#)
-            ((res/resource-factory ~p ~n) m#)
+            (f# m#)
             (throw (ex-info (str "Not a valid " ~n) (s/explain-data ~n m#))))))
       (ns ~(symbol (str (namespace n) "." (name n))))
       (s/def ~n (s/keys :req ~required :opt ~optional))
