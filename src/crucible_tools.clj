@@ -9,6 +9,8 @@
             [clojure.string :as st]
             [crucible.encoding.keys :as enc]))
 
+(def fix-typos-in-spec {["AWS.RDS.DBSecurityGroup.Ingress" "CDIRIP"] ["AWS.RDS.DBSecurityGroup.Ingress" "CIDRIP"]})
+
 ;;TODO should things like Enabled be in it's own primitive ns as a boolean, rather than creating loads of different ones?
 (t/with-test
   (defn ->spec-name [prefix resource-type resource-name]
@@ -19,11 +21,11 @@
           [ns-part el-part] (if el-part2
                               [(str ns-part "." el-part1) el-part2]
                               [ns-part el-part1])
-          ns (str prefix
-                  (when (and prefix (not-empty ns-part)) ".")
-                  ns-part
+          ns (str ns-part
                   (when (and (not-empty el-part) (not-empty resource-name))
                     (str "." el-part)))
+          [ns resource-name] (fix-typos-in-spec [ns resource-name] [ns resource-name])
+          ns (str prefix (when (and prefix (not-empty ns-part)) ".") ns)
           el (if (empty? resource-name)
                el-part
                resource-name)]
@@ -41,7 +43,9 @@
     (is (= :crucible.generated.Tag/Key
            (->spec-name "crucible.generated" "Tag" "Key")))
     (is (= :crucible.generated/Tag
-           (->spec-name "crucible.generated" "Tag" nil)))))
+           (->spec-name "crucible.generated" "Tag" nil)))
+    (is (= :crucible.generated.AWS.RDS.DBSecurityGroup.Ingress/CIDRIP
+           (->spec-name "crucible.generated" "AWS::RDS::DBSecurityGroup.Ingress" "CDIRIP")))))
 
 (defn primitive-type->spec [p]
   (case p
