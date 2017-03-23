@@ -87,7 +87,29 @@
                             ::path
                             ::policies]))
 
+(s/def ::password string?)
+
+(s/def ::password-reset-required boolean?)
+
+(s/def ::login-profile (s/keys :req [::password]
+                               :opt [::password-reset-required]))
+
+(s/def ::managed-policy-arns (s/* string?))
+
+(s/def ::username (s/* string?))
+
+(s/def ::user (s/keys :opt [::groups
+                            ::login-profile
+                            ::managed-policy-arns
+                            ::path
+                            ::policies
+                            ::username]))
+
 (defresource policy "AWS::IAM::Policy" ::policy)
+
+(defresource user "AWS::IAM::User" ::user)
+
+
 
 (defn lambda-access-role
   "Create an AWS::IAM::Role that the Lambda service can assume with
