@@ -65,3 +65,7 @@
   (testing "single condition string"
     (is (valid ::iam/condition {"DateGreaterThan"
                                 {"aws:CurrentTime" "2013-08-16T12:00:00Z"}}))))
+
+(deftest user-tests
+  (testing "empty user"
+    (is (valid ::iam/user {}))))
