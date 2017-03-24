@@ -96,7 +96,7 @@
 
 (s/def ::managed-policy-arns (s/* string?))
 
-(s/def ::username string?)
+(s/def ::username (spec-or-ref string?))
 
 (s/def ::user (s/keys :opt [::groups
                             ::login-profile
