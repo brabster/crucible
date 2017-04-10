@@ -10,7 +10,13 @@
 
 (s/def ::timeout (spec-or-ref (s/and pos-int? #(<= % (* 5 60)))))
 
-(s/def ::runtime #{"nodejs" "nodejs4.3" "java8" "python2.7"})
+(s/def ::runtime #{"nodejs"
+                   "nodejs4.3"
+                   "nodejs6.10"
+                   "java8"
+                   "python2.7"
+                   "dotnetcore1.0"
+                   "nodejs4.3-edge"})
 
 (s/def ::role (spec-or-ref string?))
 
