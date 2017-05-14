@@ -7,14 +7,13 @@
                  [cheshire "5.7.1"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.5"]]
-  :dependency-check {:log true
-                     :throw true}
+  :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
-            [com.livingsocial/lein-dependency-check "0.2.1"]
+            [com.livingsocial/lein-dependency-check "0.2.2"]
             [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
             [jonase/eastwood "0.2.3"]
