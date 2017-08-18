@@ -14,11 +14,11 @@
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
             [com.livingsocial/lein-dependency-check "0.2.2"]
-            [lein-kibit "0.1.2" :exclusions [org.clojure/clojure
+            [lein-kibit "0.1.5" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
-            [jonase/eastwood "0.2.3"]
-            [lein-bikeshed "0.3.0"]
-            [lein-cloverage "1.0.6"]
+            [jonase/eastwood "0.2.4"]
+            [lein-bikeshed "0.4.1"]
+            [lein-cloverage "1.0.9"]
             [lein-codox "0.9.6"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                                :username :env/clojars_username
