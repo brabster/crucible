@@ -2,7 +2,7 @@
   "Resources in AWS::SNS::*"
   (:require [crucible.resources :refer [spec-or-ref defresource]]
             [crucible.aws.iam :as iam]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::display-name (spec-or-ref string?))
 

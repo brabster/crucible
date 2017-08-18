@@ -3,7 +3,7 @@
              [core :as cru]
              [values :as v]]
             [clojure.test :refer :all]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (deftest join-test
   (testing "no values" (is (s/valid? ::v/value (cru/join "-" []))))

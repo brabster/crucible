@@ -1,7 +1,7 @@
 (ns crucible.xref-test
   (:require  [clojure.test :refer :all]
              [crucible.values :as v]
-             [clojure.spec :as s]))
+             [clojure.spec.alpha :as s]))
 
 (deftest valid-xref
   (testing "plain xref validates"

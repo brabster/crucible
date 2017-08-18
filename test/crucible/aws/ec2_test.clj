@@ -3,7 +3,7 @@
              [crucible.aws.ec2 :as ec2]
              [crucible.resources :as res]
              [cheshire.core :as json]
-             [clojure.spec :as s]
+             [clojure.spec.alpha :as s]
              [crucible.core :refer [template encode parameter xref]]))
 
 (deftest vpc-test

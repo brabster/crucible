@@ -1,5 +1,5 @@
 (ns crucible.resources
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.policies :as policies]))
 
 (s/def ::props-type keyword?)

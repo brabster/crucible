@@ -1,6 +1,6 @@
 (ns crucible.core
   "Commonly used template construction functions"
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [clojure.walk :as walk]
             [crucible.values :as v]
             [crucible.parameters :as p]

@@ -1,7 +1,7 @@
 (ns crucible.aws.firehose
   "Resources in AWS::KinesisFirehose::DeliveryStream"
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
-            [clojure.spec :as s]
+            [clojure.spec.alpha :as s]
             [crucible.encoding.keys :refer [->key]]))
 
 (defmethod ->key :size-in-mbs [_]

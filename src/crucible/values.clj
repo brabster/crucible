@@ -1,5 +1,5 @@
 (ns crucible.values
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.resources :refer [spec-or-ref]]
             [crucible.encoding.keys :as keys]))
 

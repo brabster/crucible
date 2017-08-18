@@ -2,7 +2,7 @@
   (:require [crucible.resources :as res]
             [crucible.values :as v]
             [clojure.test :refer :all]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (deftest resource-property-type
   (testing "single ref is valid"

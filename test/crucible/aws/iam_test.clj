@@ -1,6 +1,6 @@
 (ns crucible.aws.iam-test
   (:require [crucible.aws.iam :as iam]
-            [clojure.spec :as s]
+            [clojure.spec.alpha :as s]
             [clojure.test :refer :all]))
 
 (defn valid [spec candidate]

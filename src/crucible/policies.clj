@@ -1,5 +1,5 @@
 (ns crucible.policies
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.encoding.keys :refer [->key]]))
 
 (s/def ::deletion-policy #{::retain ::delete ::snapshot})

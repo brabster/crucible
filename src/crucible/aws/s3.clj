@@ -2,7 +2,7 @@
   "Resources in AWS::S3::*"
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.aws.iam :as iam]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::arn string?)
 

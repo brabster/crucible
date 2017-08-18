@@ -7,8 +7,8 @@
             [clojure.tools.namespace.repl :as ns-repl]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.java.io :as io]
-            [clojure.spec :as s]
-            [clojure.spec.test :as stest]))
+            [clojure.spec.alpha :as s]
+            [clojure.spec.test.alpha :as stest]))
 
 (defn template-var->write-location [tvar]
   (let [template-ns (ns-name (:ns (meta tvar)))

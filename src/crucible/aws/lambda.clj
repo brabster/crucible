@@ -1,6 +1,6 @@
 (ns crucible.aws.lambda
   (:require [crucible.resources :refer [spec-or-ref defresource]]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::subnet-id (s/* (spec-or-ref string?)))
 
