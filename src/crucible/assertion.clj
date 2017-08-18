@@ -4,7 +4,7 @@
 
 (def resource= 'encoded-as)
 
-;; clojure.test doesn't print ex-data which is a pain with clojure.spec
+;; clojure.test doesn't print ex-data which is a pain with clojure.spec.alpha
 ;; remove when ex-data is printed on test failures by default...
 (defmethod test/assert-expr 'encoded-as [msg form]
   (let [expected (nth form 1)

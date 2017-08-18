@@ -4,7 +4,7 @@
   when using the resource."
   (:require [crucible.resources :refer [spec-or-ref resource-factory]]
             [crucible.encoding.keys :refer [->key]]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::service-token (spec-or-ref string?))
 

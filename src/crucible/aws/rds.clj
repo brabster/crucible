@@ -1,6 +1,6 @@
 (ns crucible.aws.rds
   "Resources in AWS::RDS::*"
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.encoding.keys :refer [->key]]
             [crucible.aws.rds.db-instance :as dbi]))

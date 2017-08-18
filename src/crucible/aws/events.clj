@@ -3,7 +3,7 @@
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.values :as v]
             [crucible.encoding.keys :refer [->key]]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::id (spec-or-ref #(re-matches #"[\.\-_A-Za-z0-9]+" %)))
 

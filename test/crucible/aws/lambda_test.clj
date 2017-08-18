@@ -3,7 +3,7 @@
              [crucible.aws.lambda :as l]
              [crucible.resources :as res]
              [cheshire.core :as json]
-             [clojure.spec :as s]
+             [clojure.spec.alpha :as s]
              [crucible.core :refer [xref account-id parameter]]
              [crucible.assertion :refer [resource=]]))
 

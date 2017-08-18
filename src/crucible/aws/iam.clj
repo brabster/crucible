@@ -2,7 +2,7 @@
   "Resources in AWS::IAM::*"
   (:require [crucible.resources :refer [resource-factory spec-or-ref defresource]]
             [crucible.encoding.keys :refer [->key]]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (s/def ::assume-role-policy-document any?)
 

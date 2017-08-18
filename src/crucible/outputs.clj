@@ -1,5 +1,5 @@
 (ns crucible.outputs
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.values :as v]))
 
 (s/def ::name ::v/value)

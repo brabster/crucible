@@ -3,7 +3,7 @@
             [crucible.core :as cru]
             [crucible.resources :as r]
             [clojure.test :refer :all]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (def testing-123-translation "Testing123Foo")
 

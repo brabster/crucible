@@ -3,7 +3,7 @@
             [crucible.parameters :as p]
             [crucible.encoding :as enc]
             [clojure.test :refer :all]
-            [clojure.spec :as s]))
+            [clojure.spec.alpha :as s]))
 
 (deftest parameters-test
   (testing "comma delimited list"

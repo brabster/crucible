@@ -1,6 +1,6 @@
 (ns crucible.aws.ec2
   "Resources in AWS::EC2::*"
-  (:require [clojure.spec :as s]
+  (:require [clojure.spec.alpha :as s]
             [crucible.resources :refer [spec-or-ref defresource] :as res]))
 
 (defn ec2 [suffix] (str "AWS::EC2::" suffix))
