@@ -47,6 +47,6 @@
                                :unused-private-vars]
              :exclude-linters [:suspicious-expression]}
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.9.0-alpha17"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.9.0-beta1"]]}
              :dev {:resource-paths ["test-resources"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}})
