@@ -11,6 +11,7 @@
 (s/def ::description string?)
 
 (s/def ::element (s/cat :type #{:parameter
+                                :condition
                                 :mapping
                                 :resource
                                 :output}
@@ -57,6 +58,11 @@
       :as options}]
   [:parameter (assoc options ::p/type type)])
 
+(defn condition
+  "Make a template condition element"
+  [value]
+  [:condition value])
+
 (defn mapping
   "Make a template mapping element"
   [& {:as keymaps}]
@@ -95,6 +101,11 @@
   Fn::Select"
   [index values]
   (v/select index values))
+
+(defn equals
+  "See Fn::Equals"
+  [x y]
+  (v/equals x y))
 
 (defn find-in-map
   "Returns the value corresponding to keys in a two-level map that is declared

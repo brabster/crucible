@@ -80,6 +80,9 @@
 (defmethod encode-value ::select [{:keys [::index ::fn-values]}]
   {"Fn::Select" [(str index) (vec (map encode-value fn-values))]})
 
+(defmethod encode-value ::equals [{:keys [::x ::y]}]
+  {"Fn::Equals" [x y]})
+
 (defmethod encode-value ::find-in-map [{:keys [::map-name
                                                ::top-level-key
                                                ::second-level-key]}]
@@ -108,6 +111,11 @@
   {::type ::select
    ::index index
    ::fn-values values})
+
+(defn equals [x y]
+  {::type ::equals
+   ::x x
+   ::y y})
 
 (defn find-in-map [map-name top-level-key second-level-key]
   {::type ::find-in-map

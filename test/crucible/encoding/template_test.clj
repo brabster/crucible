@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [crucible
              [encoding :refer [encode]]
-             [core :refer [template parameter output xref join notification-arns mapping]]
+             [core :refer [template parameter condition output xref join equals notification-arns mapping stack-name]]
              [policies :as pol]
              [parameters :as param]]
             [crucible.aws
@@ -66,6 +66,27 @@
              (template "t"
                        :my-param (parameter)
                        :my-other-param (parameter ::param/type ::param/number))))))))
+
+(deftest template-conditions-test
+  (testing "template with single condition"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Conditions" {"Production" {"Fn::Equals" [{"Ref" "AWS::StackName"} "production"]}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :production (condition (equals stack-name "production"))))))))
+
+  (testing "template with multiple conditions"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Conditions" {"Production" {"Fn::Equals" [{"Ref" "AWS::StackName"} "production"]}
+                          "Test" {"Fn::Equals" [{"Ref" "AWS::StackName"} "production"]}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :production (condition (equals stack-name "production"))
+                       :test (condition (equals stack-name "production")))))))))
 
 (deftest template-mappings-test
   (testing "template with single mapping"
