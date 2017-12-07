@@ -33,7 +33,7 @@
                   ["clean"]
                   ["check"]
                   ["eastwood"]
-                  ["bikeshed" "-m" "100"]
+                  ["bikeshed" "-m" "120"]
                   ["cloverage"]]
             "third-party-check" ["do"
                                  ["ancient"]
