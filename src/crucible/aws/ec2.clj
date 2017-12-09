@@ -33,7 +33,8 @@
 
 (defresource eip (ec2 "EIP") ::eip)
 
-(s/def ::allocation-id string?)
+(s/def ::allocation-id (spec-or-ref string?))
+(s/def ::subnet-id (spec-or-ref string?))
 (s/def ::eip string?)
 (s/def ::private-ip-address string?)
 
@@ -46,6 +47,9 @@
 (defresource eip-association (ec2 "EIPAssociation") ::eip-association)
 
 (defresource internet-gateway (ec2 "InternetGateway") (s/? (s/keys :opt [::tags])))
+
+(defresource nat-gateway (ec2 "NatGateway") (s/keys :req [::allocation-id ::subnet-id]
+                                                         :opt [::tags]))
 
 (s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
                                         :opt [::internet-gateway-id
