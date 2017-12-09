@@ -35,7 +35,6 @@
 
 (s/def ::allocation-id (spec-or-ref string?))
 (s/def ::subnet-id (spec-or-ref string?))
-(s/def ::eip string?)
 (s/def ::private-ip-address string?)
 
 (s/def ::eip-association (s/keys :opt [::allocation-id
