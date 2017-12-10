@@ -6,7 +6,8 @@
             [crucible.parameters :as p]
             [crucible.resources :as r]
             [crucible.outputs :as o]
-            [crucible.encoding :as encoding]))
+            [crucible.encoding :as encoding]
+            [expound.alpha :as expound]))
 
 (s/def ::description string?)
 
@@ -43,7 +44,8 @@
          spec ::template
          parsed (s/conform spec input)]
      (if (= parsed ::s/invalid)
-       (throw (ex-info "Invalid input" (s/explain-data spec input)))
+       (throw (AssertionError. (str "Invalid input"
+                                    (expound/expound-str spec input))))
        (-> parsed
            validate
            (with-meta {::template true})))))
