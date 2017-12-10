@@ -54,6 +54,11 @@
                                         :opt [::internet-gateway-id
                                               ::vpn-gateway-id]))
 
+(s/def ::route-table (s/keys :req [::vpc-id]
+                            :opt [::res/tags]))
+
+(defresource route-table (ec2 "RouteTable") ::route-table)
+
 (s/def ::group-description (spec-or-ref string?))
 
 (s/def ::cidr-ip (spec-or-ref string?))
