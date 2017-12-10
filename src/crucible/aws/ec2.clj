@@ -78,6 +78,7 @@
                              ::network-interface-id
                              ::vpc-peering-connection-id]))
 
+(defresource route (ec2 "Route" ::route))
 (s/def ::group-description (spec-or-ref string?))
 
 (s/def ::cidr-ip (spec-or-ref string?))
