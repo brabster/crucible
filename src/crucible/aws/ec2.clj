@@ -80,6 +80,8 @@
                                         :opt [::internet-gateway-id
                                               ::vpn-gateway-id]))
 
+(defresource vpc-gateway-attachment (ec2 "VPCGatewayAttachment") ::vpc-gateway-attachment)
+
 (s/def ::group-description (spec-or-ref string?))
 
 (s/def ::cidr-ip (spec-or-ref string?))
