@@ -59,6 +59,25 @@
 
 (defresource route-table (ec2 "RouteTable") ::route-table)
 
+(s/def ::destination-cidr-block (spec-or-ref string?))
+(s/def ::destination-ipv6-cidr-block (spec-or-ref string?))
+(s/def ::egress-only-internet-gateway-id (spec-or-ref string?))
+(s/def ::gateway-id (spec-or-ref string?))
+(s/def ::instance-id (spec-or-ref string?))
+(s/def ::nat-gateway-id (spec-or-ref string?))
+(s/def ::network-interface-id (spec-or-ref string?))
+(s/def ::vpc-peering-connection-id (spec-or-ref string?))
+
+(s/def ::route (s/keys :req [::route-table-id]
+                       :opt [::destination-cidr-block
+                             ::destination-ipv6-cidr-block
+                             ::egress-only-internet-gateway-id
+                             ::gateway-id
+                             ::instance-id
+                             ::nat-gateway-id
+                             ::network-interface-id
+                             ::vpc-peering-connection-id]))
+
 (s/def ::group-description (spec-or-ref string?))
 
 (s/def ::cidr-ip (spec-or-ref string?))
