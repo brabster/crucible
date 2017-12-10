@@ -34,6 +34,22 @@
                        :nat-gateway (ec2/nat-gateway {::ec2/allocation-id "id"
                                                ::ec2/subnet-id "id"}))))))))
 
+(deftest route-table-test
+  (testing "minimal spec"
+    (is (s/valid? ::res/resource (second (ec2/route-table {::ec2/vpc-id "id"})))))
+  (testing "full spec"
+    (is (s/valid? ::res/resource (second (ec2/route-table {::ec2/vpc-id "id"
+                                                           ::ec2/tags [{::res/key "key" ::res/value "value"}]})))))
+  (testing "template with route table"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"RouteTable" {"Type" "AWS::EC2::RouteTable"
+                                       "Properties" {"VpcId" "id"}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :route-table (ec2/route-table {::ec2/vpc-id "id"}))))))))
+
 (deftest sg-test
   (testing "encode"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
