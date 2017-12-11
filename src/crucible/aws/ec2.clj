@@ -42,6 +42,7 @@
 
 (defresource route-table (ec2 "RouteTable") ::route-table)
 
+(s/def ::route-table-id (spec-or-ref string?))
 (s/def ::destination-cidr-block (spec-or-ref string?))
 (s/def ::destination-ipv6-cidr-block (spec-or-ref string?))
 (s/def ::egress-only-internet-gateway-id (spec-or-ref string?))
@@ -62,6 +63,11 @@
                              ::vpc-peering-connection-id]))
 
 (defresource route (ec2 "Route") ::route)
+
+(s/def ::subnet-route-table-association (s/keys :req [::route-table-id
+                                                      ::subnet-id]))
+
+(defresource subnet-route-table-association (ec2 "SubnetRouteTableAssociation") ::subnet-route-table-association)
 
 (s/def ::eip-association (s/keys :opt [::allocation-id
                                        ::eip
