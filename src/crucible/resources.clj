@@ -35,14 +35,13 @@
 
 (defn resource-factory [resource-type props-spec]
   (if-not (s/valid? ::type resource-type)
-    (throw (AssertionError. (str "Invalid resource name"
-                                 (expound/expound-str ::type resource-type))))
+    (throw (ex-info (str "Invalid resource name" (expound/expound-str ::type resource-type))
+                    (s/explain-data ::type resource-type)))
     (fn [& [props & policies]]
       [:resource
        (cond
-         (invalid? props-spec props) (throw (AssertionError. (str "Invalid resource properties"
-                                                                  (expound/expound-str props-spec props))))
-
+         (invalid? props-spec props) (throw (ex-info (str "Invalid resource properties" (expound/expound-str props-spec props))
+                                                     (s/explain-data props-spec props)))
          :else (-> {::type resource-type
                     ::properties props}
                    (merge (into {} (s/conform ::policy-list policies)))))])))

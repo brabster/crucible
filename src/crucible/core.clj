@@ -44,8 +44,8 @@
          spec ::template
          parsed (s/conform spec input)]
      (if (= parsed ::s/invalid)
-       (throw (AssertionError. (str "Invalid input"
-                                    (expound/expound-str spec input))))
+       (throw (ex-info (str "Invalid input" (expound/expound-str spec input))
+                       (s/explain-data spec input)))
        (-> parsed
            validate
            (with-meta {::template true})))))
