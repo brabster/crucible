@@ -15,6 +15,7 @@
 
 ;; service http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html
 
+;; (s/def ::crucible.aws.ecs.placement-constraint/type string?) ;; used in both placement-constraint and placement-strategy, what if we need to spec further?
 (s/def ::type string?) ;; used in both placement-constraint and placement-strategy, what if we need to spec further?
 (s/def ::field (spec-or-ref string?))
 (s/def ::expression (spec-or-ref string?))
@@ -97,7 +98,7 @@
 (s/def ::family (spec-or-ref string?))
 (s/def ::memory (spec-or-ref string?))
 (s/def ::network-mode #{"bridge" "host" "awsvpc" "none"})
-(s/def ::requires-compatibilities (s/* string?))
+(s/def ::requires-compatibilities string?)
 (s/def ::task-role-arn (spec-or-ref string?))
 (s/def ::volumes (s/* ::volume))
 (s/def ::container-definitions (s/* ::container-definition))
