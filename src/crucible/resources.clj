@@ -40,8 +40,9 @@
     (fn [& [props & policies]]
       [:resource
        (cond
-         (invalid? props-spec props) (throw (ex-info (str "Invalid resource properties" (expound/expound-str props-spec props))
-                                                     (s/explain-data props-spec props)))
+         (invalid? props-spec props)
+         (throw (ex-info (str "Invalid resource properties" (expound/expound-str props-spec props))
+                         (s/explain-data props-spec props)))
          :else (-> {::type resource-type
                     ::properties props}
                    (merge (into {} (s/conform ::policy-list policies)))))])))
