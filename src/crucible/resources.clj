@@ -1,6 +1,7 @@
 (ns crucible.resources
   (:require [clojure.spec.alpha :as s]
-            [crucible.policies :as policies]))
+            [crucible.policies :as policies]
+            [expound.alpha :as expound]))
 
 (s/def ::props-type keyword?)
 
@@ -34,13 +35,14 @@
 
 (defn resource-factory [resource-type props-spec]
   (if-not (s/valid? ::type resource-type)
-    (throw (ex-info "Invalid resource name" (s/explain-data ::type resource-type)))
+    (throw (ex-info (str "Invalid resource name" (expound/expound-str ::type resource-type))
+                    (s/explain-data ::type resource-type)))
     (fn [& [props & policies]]
       [:resource
        (cond
-         (invalid? props-spec props) (throw (ex-info "Invalid resource properties"
-                                                     (s/explain-data props-spec props)))
-
+         (invalid? props-spec props)
+         (throw (ex-info (str "Invalid resource properties" (expound/expound-str props-spec props))
+                         (s/explain-data props-spec props)))
          :else (-> {::type resource-type
                     ::properties props}
                    (merge (into {} (s/conform ::policy-list policies)))))])))

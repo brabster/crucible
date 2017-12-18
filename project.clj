@@ -6,7 +6,8 @@
   :dependencies [[camel-snake-kebab "0.4.0"]
                  [cheshire "5.8.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [org.clojure/tools.cli "0.3.5"]]
+                 [org.clojure/tools.cli "0.3.5"]
+                 [expound "0.3.4"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
