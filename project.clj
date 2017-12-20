@@ -7,7 +7,7 @@
                  [cheshire "5.8.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.5"]
-                 [expound "0.3.4"]]
+                 [expound "0.4.0"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
@@ -48,6 +48,6 @@
                                :unused-private-vars]
              :exclude-linters [:suspicious-expression]}
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.9.0-beta1"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.9.0"]]}
              :dev {:resource-paths ["test-resources"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}})
