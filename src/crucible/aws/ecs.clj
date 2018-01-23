@@ -1,7 +1,8 @@
 (ns crucible.aws.ecs
   "Resources in AWS::ECS::*"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource] :as res]))
+            [crucible.encoding.keys :refer [->key]]
+            [crucible.resources :as res :refer [defresource spec-or-ref]]))
 
 (defn ecs [suffix] (str "AWS::ECS::" suffix))
 
@@ -36,6 +37,8 @@
 (s/def ::aws-vpc-configuration (s/keys :req [::subnets]
                                        :opt [::assign-public-ip
                                              ::security-groups]))
+
+(defmethod ->key :aws-vpc-configuration [_] "AwsvpcConfiguration")
 
 (s/def ::cluster (spec-or-ref string?))
 (s/def ::deployment-configuration (s/keys :req [::maximum-percent
@@ -82,12 +85,17 @@
 (s/def ::image (spec-or-ref string?))
 (s/def ::command (spec-or-ref string?))
 (s/def ::cpu (spec-or-ref integer?))
+(s/def :crucible.aws.ecs.log-configuration/log-driver (spec-or-ref string?))
+(s/def :crucible.aws.ecs.log-configuration/options map?)
+(s/def ::log-configuration (s/keys :req [:crucible.aws.ecs.log-configuration/log-driver]
+                                   :opt [:crucible.aws.ecs.log-configuration/options]))
 (s/def ::container-definition (s/keys :req [::name
                                             ::image]
                                       :opt [::memory
                                             ::port-mappings
                                             ::command
-                                            ::cpu]))
+                                            ::cpu
+                                            ::log-configuration]))
 
 (s/def ::source-path (spec-or-ref string?))
 (s/def ::host (s/keys :opt [::source-path]))
@@ -96,9 +104,10 @@
 (s/def ::cpu #{256 512 1024 2048 4096})
 (s/def ::execution-role-arn (spec-or-ref string?))
 (s/def ::family (spec-or-ref string?))
-(s/def ::memory (spec-or-ref string?))
+(s/def ::memory (spec-or-ref integer?))
 (s/def ::network-mode #{"bridge" "host" "awsvpc" "none"})
-(s/def ::requires-compatibilities string?)
+(s/def ::requires-compatibility (spec-or-ref string?))
+(s/def ::requires-compatibilities (s/* ::requires-compatibility))
 (s/def ::task-role-arn (spec-or-ref string?))
 (s/def ::volumes (s/* ::volume))
 (s/def ::container-definitions (s/* ::container-definition))

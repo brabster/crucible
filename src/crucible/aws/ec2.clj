@@ -110,7 +110,7 @@
 (s/def ::source-security-group-name (spec-or-ref string?))
 (s/def ::source-security-group-owner-id (spec-or-ref string?))
 
-(s/def ::security-group-ingress (s/* (s/keys :req [::ip-protocol]
+(s/def ::security-group-ingress-embedded (s/* (s/keys :req [::ip-protocol]
                                              :opt [::cidr-ip
                                                    ::from-port
                                                    ::to-port
@@ -120,15 +120,41 @@
 
 (s/def ::destination-security-group-id ::security-group-id)
 
-(s/def ::security-group-egress (s/* (s/keys :req [::ip-protocol]
+(s/def ::security-group-egress-embedded (s/* (s/keys :req [::ip-protocol]
                                             :opt [::from-port
                                                   ::to-port
                                                   ::destination-security-group-id])))
 
 (s/def ::security-group (s/keys :req [::group-description]
-                                :opt [::security-group-ingress
-                                      ::security-group-egress
+                                :opt [::security-group-ingress-embedded
+                                      ::security-group-egress-embedded
                                       ::res/tags
                                       ::vpc-id]))
 
 (defresource security-group (ec2 "SecurityGroup") ::security-group)
+
+(s/def ::security-group-ingress (s/keys :req [::ip-protocol]
+                                             :opt [::cidr-ip
+                                                   ::cidr-ipv6
+                                                   ::description
+                                                   ::from-port
+                                                   ::to-port
+                                                   ::group-id
+                                                   ::group-name
+                                                   ::source-security-group-id
+                                                   ::source-security-group-name
+                                                   ::source-security-group-owner-id]))
+
+(defresource security-group-ingress (ec2 "SecurityGroupIngress") ::security-group-ingress)
+
+(s/def ::security-group-egress (s/keys :req [::ip-protocol]
+                                             :opt [::cidr-ip
+                                                   ::cidr-ipv6
+                                                   ::description
+                                                   ::from-port
+                                                   ::to-port
+                                                   ::group-id
+                                                   ::destination-prefix-list-id
+                                                   ::destination-security-group-id]))
+
+(defresource security-group-egress (ec2 "SecurityGroupEgress") ::security-group-egress)
