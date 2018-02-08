@@ -42,6 +42,7 @@
 
 (defresource route-table (ec2 "RouteTable") ::route-table)
 
+(s/def ::route-table-id (spec-or-ref string?))
 (s/def ::destination-cidr-block (spec-or-ref string?))
 (s/def ::destination-ipv6-cidr-block (spec-or-ref string?))
 (s/def ::egress-only-internet-gateway-id (spec-or-ref string?))
@@ -63,6 +64,11 @@
 
 (defresource route (ec2 "Route") ::route)
 
+(s/def ::subnet-route-table-association (s/keys :req [::route-table-id
+                                                      ::subnet-id]))
+
+(defresource subnet-route-table-association (ec2 "SubnetRouteTableAssociation") ::subnet-route-table-association)
+
 (s/def ::eip-association (s/keys :opt [::allocation-id
                                        ::eip
                                        ::instance-id
@@ -71,7 +77,7 @@
 
 (defresource eip-association (ec2 "EIPAssociation") ::eip-association)
 
-(defresource internet-gateway (ec2 "InternetGateway") (s/? (s/keys :opt [::tags])))
+(defresource internet-gateway (ec2 "InternetGateway") (s/keys :opt [::tags]))
 
 (defresource nat-gateway (ec2 "NatGateway") (s/keys :req [::allocation-id ::subnet-id]
                                                          :opt [::tags]))
@@ -79,6 +85,8 @@
 (s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
                                         :opt [::internet-gateway-id
                                               ::vpn-gateway-id]))
+
+(defresource vpc-gateway-attachment (ec2 "VPCGatewayAttachment") ::vpc-gateway-attachment)
 
 (s/def ::group-description (spec-or-ref string?))
 
@@ -102,7 +110,7 @@
 (s/def ::source-security-group-name (spec-or-ref string?))
 (s/def ::source-security-group-owner-id (spec-or-ref string?))
 
-(s/def ::security-group-ingress (s/* (s/keys :req [::ip-protocol]
+(s/def ::security-group-ingress-embedded (s/* (s/keys :req [::ip-protocol]
                                              :opt [::cidr-ip
                                                    ::from-port
                                                    ::to-port
@@ -112,15 +120,41 @@
 
 (s/def ::destination-security-group-id ::security-group-id)
 
-(s/def ::security-group-egress (s/* (s/keys :req [::ip-protocol]
+(s/def ::security-group-egress-embedded (s/* (s/keys :req [::ip-protocol]
                                             :opt [::from-port
                                                   ::to-port
                                                   ::destination-security-group-id])))
 
 (s/def ::security-group (s/keys :req [::group-description]
-                                :opt [::security-group-ingress
-                                      ::security-group-egress
+                                :opt [::security-group-ingress-embedded
+                                      ::security-group-egress-embedded
                                       ::res/tags
                                       ::vpc-id]))
 
 (defresource security-group (ec2 "SecurityGroup") ::security-group)
+
+(s/def ::security-group-ingress (s/keys :req [::ip-protocol]
+                                             :opt [::cidr-ip
+                                                   ::cidr-ipv6
+                                                   ::description
+                                                   ::from-port
+                                                   ::to-port
+                                                   ::group-id
+                                                   ::group-name
+                                                   ::source-security-group-id
+                                                   ::source-security-group-name
+                                                   ::source-security-group-owner-id]))
+
+(defresource security-group-ingress (ec2 "SecurityGroupIngress") ::security-group-ingress)
+
+(s/def ::security-group-egress (s/keys :req [::ip-protocol]
+                                             :opt [::cidr-ip
+                                                   ::cidr-ipv6
+                                                   ::description
+                                                   ::from-port
+                                                   ::to-port
+                                                   ::group-id
+                                                   ::destination-prefix-list-id
+                                                   ::destination-security-group-id]))
+
+(defresource security-group-egress (ec2 "SecurityGroupEgress") ::security-group-egress)

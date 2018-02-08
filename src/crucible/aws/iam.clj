@@ -107,6 +107,8 @@
 
 (defresource policy "AWS::IAM::Policy" ::policy)
 
+(defresource role "AWS::IAM::Role" ::role)
+
 (defresource user "AWS::IAM::User" ::user)
 
 
