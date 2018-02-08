@@ -8,7 +8,7 @@
 
 ;; cluster http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
 
-(s/def ::cluster-name string?)
+(s/def ::cluster-name (spec-or-ref string?))
 ;; call this cluster-spec to keep the cluster property below simple
 (s/def ::cluster-spec (s/keys :opt [::cluster-name]))
 
@@ -83,6 +83,12 @@
                                     ::protocol]))
 (s/def ::port-mappings (s/* ::port-mapping))
 (s/def ::image (spec-or-ref string?))
+(s/def :crucible.aws.ecs.task-definition.key-value-pair/name (spec-or-ref string?))
+(s/def :crucible.aws.ecs.task-definition.key-value-pair/value (spec-or-ref string?))
+;; todo prefix as well?
+(s/def ::key-value-pair (s/keys :req [:crucible.aws.ecs.task-definition.key-value-pair/name
+                                      :crucible.aws.ecs.task-definition.key-value-pair/value]))
+(s/def ::environment (spec-or-ref (s/* ::key-value-pair)))
 (s/def ::command (spec-or-ref string?))
 (s/def ::cpu (spec-or-ref integer?))
 (s/def :crucible.aws.ecs.log-configuration/log-driver (spec-or-ref string?))
@@ -92,6 +98,7 @@
 (s/def ::container-definition (s/keys :req [::name
                                             ::image]
                                       :opt [::memory
+                                            ::environment
                                             ::port-mappings
                                             ::command
                                             ::cpu
