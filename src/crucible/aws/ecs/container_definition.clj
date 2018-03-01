@@ -1,7 +1,7 @@
 (ns crucible.aws.ecs.container-definition
   "Property ContainerDefinition of AWS::ECS::TaskDefinition"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource]]))
+            [crucible.resources :refer [spec-or-ref]]))
 
 (s/def ::image (spec-or-ref string?))
 
@@ -75,9 +75,11 @@
 (s/def ::host-port (spec-or-ref integer?))
 (s/def ::protocol (spec-or-ref string?))
 
-(s/def ::port-mappings (s/keys :req [::container-port]
+(s/def ::port-mapping (s/keys :req [::container-port]
                                :opt [::host-port
                                      ::protocol]))
+
+(s/def ::port-mappings (s/* ::port-mapping))
 
 (s/def ::privileged (spec-or-ref boolean?))
 
