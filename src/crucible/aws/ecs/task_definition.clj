@@ -1,7 +1,7 @@
 (ns crucible.aws.ecs.task-definition
   "Resources in AWS::ECS::TaskDefinition"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource]]
+            [crucible.resources :refer [spec-or-ref]]
             [crucible.aws.ecs.container-definition :as cd]))
 
 (s/def ::container-definitions (s/coll-of ::cd/container-definition :kind vector?))
@@ -14,9 +14,15 @@
 
 (s/def ::memory (spec-or-ref string?))
 
-(s/def ::network-mode (spec-or-ref string?))
+(s/def ::network-mode #{"bridge" "host" "awsvpc" "none"})
 
-(s/def ::requires-compatibilities (s/coll-of (spec-or-ref string?) :kind vector?))
+(s/def ::placement-constraints-type #{"distinctInstance" "memberOf"})
+(s/def ::placement-constraints-expression (spec-or-ref string?))
+
+(s/def ::placement-constraints (s/keys :req [::placement-constraints-type]
+                                       :opt [::placement-constraints-expression]))
+
+(s/def ::requires-compatibilities (s/coll-of #{"EC2" "FARGATE"} :kind vector?))
 
 (s/def ::task-role-arn (spec-or-ref string?))
 

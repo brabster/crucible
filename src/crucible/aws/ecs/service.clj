@@ -1,7 +1,7 @@
 (ns crucible.aws.ecs.service
   "Resources in AWS::ECS::Service"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource]]))
+            [crucible.resources :refer [spec-or-ref]]))
 
 (s/def ::task-definition (spec-or-ref string?))
 
@@ -18,7 +18,7 @@
 
 (s/def ::health-check-grace-period-seconds (spec-or-ref integer?))
 
-(s/def ::launch-type (spec-or-ref string?))
+(s/def ::launch-type #{"EC2" "FARGATE"})
 
 (s/def ::container-name (spec-or-ref string?))
 (s/def ::container-port (spec-or-ref string?))
@@ -35,9 +35,7 @@
 
 
 (s/def ::subnets (s/coll-of (spec-or-ref string?) :kind vector?))
-
-(s/def ::assign-public-ip (spec-or-ref string?))
-
+(s/def ::assign-public-ip #{"ENABLED" "DISABLED"})
 (s/def ::security-groups (s/coll-of (spec-or-ref string?) :kind vector?))
 
 
@@ -48,16 +46,17 @@
 (s/def ::network-configuration (s/keys :req []
                                        :opt [::aws-vpc-configuration]))
 
-(s/def ::type (spec-or-ref string?))
-(s/def ::expression (spec-or-ref string?))
+(s/def ::placement-constraint-type #{"distinctInstance" "memberOf"})
+(s/def ::placement-constraint-expression (spec-or-ref string?))
 
-(s/def ::placement-constraints (s/keys :req [::type]
-                                       :opt [::expression]))
+(s/def ::placement-constraints (s/keys :req [::placement-constraint-type]
+                                       :opt [::placement-constraint-expression]))
 
-(s/def ::field (spec-or-ref string?))
+(s/def ::placement-strategies-type #{"random" "spread" "binpack"})
+(s/def ::placement-strategies-field (spec-or-ref string?))
 
-(s/def ::placement-strategies (s/keys :req [::type]
-                                      :opt [::field]))
+(s/def ::placement-strategies (s/keys :req [::placement-strategies-type]
+                                      :opt [::placement-strategies-field]))
 
 (s/def ::platform-version (spec-or-ref string?))
 
