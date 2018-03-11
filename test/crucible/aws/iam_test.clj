@@ -58,10 +58,13 @@
 
 (deftest role-tests
 
-  (testing "simple role" (is (valid ::iam/role {::iam/assume-role-policy-document {::iam/version "2012-10-17"
-                                                                                   ::iam/statement [{::iam/effect "Allow"
-                                                                                                     ::iam/principal {::iam/service ["ecs-tasks.amazonaws.com"]}
-                                                                                                     ::iam/action ["sts:AssumeRole"]}]}})))
+  (testing "simple role"
+    (is (valid ::iam/role
+               {::iam/assume-role-policy-document {::iam/version "2012-10-17"
+                                                   ::iam/statement [{::iam/effect "Allow"
+                                                                     ::iam/principal {::iam/service ["ecs-tasks.amazonaws.com"]}
+                                                                     ::iam/action ["sts:AssumeRole"]}]}}))))
+
 (deftest condition-tests
 
   (testing "single condition"
