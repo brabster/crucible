@@ -55,8 +55,8 @@
           :elements
           {:igw {:type :resource
                  :specification {::res/type "AWS::EC2::InternetGateway"
-                                 ::res/properties nil}}}}
-         (template "t" :igw (ec2/internet-gateway)))))
+                                 ::res/properties {}}}}}
+         (template "t" :igw (ec2/internet-gateway {})))))
 
 (deftest two-element-template
   (is (= {:description "t"
