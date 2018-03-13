@@ -83,8 +83,8 @@
 
 (s/def ::policies (s/* ::policy))
 
-(s/def ::role (s/keys :req [::assume-role-policy-document
-                            ::path
+(s/def ::role (s/keys :req [::assume-role-policy-document]
+                      :opt [::path
                             ::policies]))
 
 (s/def ::password string?)

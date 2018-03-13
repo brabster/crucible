@@ -48,7 +48,7 @@
 
 (s/def ::top-level-key (spec-or-ref string?))
 
-(s/def ::second-level-key (spec-or-ref string?))
+(s/def ::second-level-key (spec-or-ref (s/or :string string? :keyword keyword?)))
 
 (s/def ::find-in-map (s/keys :req [::type
                                    ::map-name
