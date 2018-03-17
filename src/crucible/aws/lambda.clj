@@ -42,6 +42,8 @@
 
 (s/def ::environment (s/keys :req [::variables]))
 
+(s/def ::reserved-concurrent-executions (spec-or-ref nat-int?))
+
 (s/def ::function (s/keys :req [::code
                                 ::handler
                                 ::role
@@ -51,7 +53,8 @@
                                 ::memory-size
                                 ::runtime
                                 ::vpc-config
-                                ::environment]))
+                                ::environment
+                                ::reserved-concurrent-executions]))
 
 (defresource function "AWS::Lambda::Function" ::function)
 
