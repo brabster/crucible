@@ -15,6 +15,7 @@
                           "Handler" {"Ref" "Foo"}
                           "Runtime" "java8"
                           "MemorySize" 1024
+                          "ReservedConcurrentExecutions" 100
                           "Role" {"Ref" "Foo"}
                           "Description" {"Ref" "Foo"}
                           "Environment" {"Variables" {"Foo" "Bar"
@@ -28,6 +29,7 @@
                          ::l/description (xref :foo)
                          ::l/memory-size 1024
                          ::l/timeout 300
+                         ::l/reserved-concurrent-executions 100
                          ::l/runtime "java8"
                          ::l/role (xref :foo)
                          ::l/code {::l/s3-bucket (xref :foo)
