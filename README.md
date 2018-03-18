@@ -161,7 +161,7 @@ I create a templates directory within my project and then add it as a source-pat
 
 ## Helping Out
 
-Any help appreciated! Happy to receive any issues, pull requests, etc.
+Any help appreciated! Happy to receive any issues and pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
