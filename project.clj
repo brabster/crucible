@@ -14,7 +14,7 @@
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.3.3" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
-            [com.livingsocial/lein-dependency-check "0.2.3"]
+            [com.livingsocial/lein-dependency-check "1.0.2"]
             [lein-kibit "0.1.5" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
             [jonase/eastwood "0.2.4"]
