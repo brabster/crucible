@@ -83,8 +83,8 @@
 
 (s/def ::policies (s/* ::policy))
 
-(s/def ::role (s/keys :req [::assume-role-policy-document
-                            ::path
+(s/def ::role (s/keys :req [::assume-role-policy-document]
+                      :opt [::path
                             ::policies]))
 
 (s/def ::password string?)
@@ -106,6 +106,8 @@
                             ::username]))
 
 (defresource policy "AWS::IAM::Policy" ::policy)
+
+(defresource role "AWS::IAM::Role" ::role)
 
 (defresource user "AWS::IAM::User" ::user)
 
