@@ -37,6 +37,9 @@
   (testing "join fn strings value"
     (is (= {"Fn::Join" ["." ["foo" "bar"]]} (encode-value (join "." ["foo" "bar"])))))
 
+  (testing "something"
+    (is (= {"Fn::If" ["o" "foo" "bar"]} (encode-value (fn-if "o" "foo" "bar")))))
+
   (testing "select fn string value"
     (is (= {"Fn::Select" ["1" ["foo" "bar"]]} (encode-value (select 1 ["foo" "bar"])))))
 

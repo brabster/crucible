@@ -98,6 +98,11 @@
   ([delimiter values]
    (v/join delimiter values)))
 
+(defn fn-if
+  "See Fn:If"
+  [condition true-value false-value]
+  (v/fn-if condition true-value false-value))
+
 (defn select
   "Select a value from a list at template application time. See
   Fn::Select"
