@@ -71,14 +71,10 @@
 
 (defresource eip-association (ec2 "EIPAssociation") ::eip-association)
 
-(defresource internet-gateway (ec2 "InternetGateway") (s/? (s/keys :opt [::tags])))
+(defresource internet-gateway (ec2 "InternetGateway") (s/keys :opt [::tags]))
 
 (defresource nat-gateway (ec2 "NatGateway") (s/keys :req [::allocation-id ::subnet-id]
                                                          :opt [::tags]))
-
-(s/def ::vpc-gateway-attachment (s/keys :req [::vpc-id]
-                                        :opt [::internet-gateway-id
-                                              ::vpn-gateway-id]))
 
 (s/def ::group-description (spec-or-ref string?))
 
