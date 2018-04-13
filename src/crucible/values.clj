@@ -40,6 +40,16 @@
 
 (defmethod value-type ::join [_] ::join)
 
+(s/def ::condition-name (spec-or-ref string?))
+
+(s/def ::value-if-true (spec-or-ref string?))
+
+(s/def ::value-if-false (spec-or-ref string?))
+
+(s/def ::if (s/keys :req [::type ::condition-name ::value-if-true ::value-if-false]))
+
+(defmethod value-type ::if [_] ::if)
+
 (s/def ::select (s/keys :req [::type ::fn-values ::index]))
 
 (defmethod value-type ::select [_] ::select)
@@ -77,6 +87,9 @@
 (defmethod encode-value ::join [{:keys [::delimiter ::fn-values]}]
   {"Fn::Join" [(or delimiter "") (vec (map encode-value fn-values))]})
 
+(defmethod encode-value ::if [{::keys [condition-name value-if-true value-if-false]}]
+  {"Fn::If" [condition-name value-if-true value-if-false]})
+
 (defmethod encode-value ::select [{:keys [::index ::fn-values]}]
   {"Fn::Select" [(str index) (vec (map encode-value fn-values))]})
 
@@ -106,6 +119,13 @@
   {::type ::join
    ::fn-values values
    ::delimiter delimiter})
+
+(defn fn-if
+  [condition-name value-if-true value-if-false]
+  {::type ::if
+   ::condition-name condition-name
+   ::value-if-true value-if-true
+   ::value-if-false value-if-false})
 
 (defn select [index values]
   {::type ::select

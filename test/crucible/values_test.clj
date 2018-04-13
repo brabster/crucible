@@ -12,6 +12,9 @@
   (testing "multiple mixed" (is (s/valid? ::v/value (cru/join "-" ["foo" (cru/xref :foo)]))))
   (testing "no delimiter" (is (s/valid? ::v/value (cru/join ["foo" (cru/xref :foo)])))))
 
+(deftest if-test
+  (testing "no values" (is (s/valid? ::v/value (cru/fn-if "-" "a" "b")))))
+
 (deftest select-test
   (testing "no values" (is (s/valid? ::v/value (cru/select 0 []))))
   (testing "single literal" (is (s/valid? ::v/value (cru/select 0 ["foo"]))))
