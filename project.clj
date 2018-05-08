@@ -7,7 +7,7 @@
                  [cheshire "5.8.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.3.7"]
-                 [expound "0.5.0"]]
+                 [expound "0.6.0"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
