@@ -6,9 +6,11 @@
 
 (deftest route-tests
 
-  (testing "valid record set" (is (s/valid? ::sut/record-set {::sut/name "www.crucible.io"
-                                                              ::sut/type "A"
-                                                              ::sut/hosted-zone-name "atlascrm.io."
-                                                              ::sut/alias-target {::sut/hosted-zone-id (xref :load-balancer :canonical-hosted-zone-name-i-d)
-                                                                                  ::sut/evaluate-target-health "false"
-                                                                                  ::sut/dns-name (xref :load-balancer :canonical-hosted-zone-name)}}))))
+  (testing "valid record set"
+    (is (s/valid? ::sut/record-set
+                  {::sut/name "www.crucible.io"
+                   ::sut/type "A"
+                   ::sut/hosted-zone-name "atlascrm.io."
+                   ::sut/alias-target {::sut/hosted-zone-id (xref :load-balancer :canonical-hosted-zone-name-i-d)
+                                       ::sut/evaluate-target-health "false"
+                                       ::sut/dns-name (xref :load-balancer :canonical-hosted-zone-name)}}))))
