@@ -21,7 +21,7 @@
 (s/def ::launch-type #{"EC2" "FARGATE"})
 
 (s/def ::container-name (spec-or-ref string?))
-(s/def ::container-port (spec-or-ref string?))
+(s/def ::container-port (spec-or-ref integer?))
 (s/def ::load-balancer-name (spec-or-ref string?))
 (s/def ::target-group-arn (spec-or-ref string?))
 
