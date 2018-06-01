@@ -7,7 +7,7 @@
 (deftest route-tests
 
   (testing "valid record set"
-    (is (s/valid? ::sut/record-set
+    (is (s/valid? ::sut/resource-spec
                   {::sut/name "www.crucible.io"
                    ::sut/type "A"
                    ::sut/hosted-zone-name "atlascrm.io."
