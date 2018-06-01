@@ -1,8 +1,7 @@
 (ns crucible.aws.auto-scaling.auto-scaling-group
   "AWS::AutoScaling::AutoScalingGroup"
   (:require [clojure.spec.alpha :as s]
-            [crucible.aws.auto-scaling :as as]
-            [crucible.resources :refer [spec-or-ref defresource] :as res]))
+            [crucible.resources :refer [spec-or-ref] :as res]))
 
 (s/def ::default-result (spec-or-ref string?))
 (s/def ::heartbeat-timeout (spec-or-ref string?))
@@ -54,7 +53,7 @@
 (s/def ::vpc-zone-id (spec-or-ref string?))
 (s/def ::v-p-c-zone-identifier (s/* ::vpc-zone-id))
 
-(s/def ::auto-scaling-group (s/keys :req [::max-size
+(s/def ::resource-spec (s/keys :req [::max-size
                                           ::min-size]
                                     :opt [::availability-zones
                                           ::cool-down
@@ -73,5 +72,3 @@
                                           ::termination-policies
                                           ::v-p-c-zone-identifier
                                           ::res/tags]))
-
-(defresource auto-scaling-group (as/autoscaling "AutoScalingGroup") ::auto-scaling-group)

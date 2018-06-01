@@ -6,10 +6,10 @@
 
 (deftest launch-configuration-tests
   (testing "valid launch configuration"
-    (is (s/valid? ::sut/launch-configuration
+    (is (s/valid? ::sut/resource-spec
                   {::sut/key-name "secret"
                    ::sut/image-id "ami-something"
                    ::sut/instance-type (xref :instance-type)})))
   (testing "invalid launch configuration"
-    (is (not (s/valid? ::sut/launch-configuration
+    (is (not (s/valid? ::sut/resource-spec
                        {})))))
