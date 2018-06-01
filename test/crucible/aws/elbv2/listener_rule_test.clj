@@ -7,7 +7,7 @@
 (deftest listener-rule-tests
 
   (testing "valid listener rule"
-    (is (s/valid? ::sut/listener-rule
+    (is (s/valid? ::sut/resource-spec
                   {::sut/actions [{::sut/target-group-arn (xref :target-group)
                                    ::sut/type "forward"}]
                    ::sut/conditions [{::sut/field "host-header"

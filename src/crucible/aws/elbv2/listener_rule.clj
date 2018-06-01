@@ -1,7 +1,6 @@
 (ns crucible.aws.elbv2.listener-rule
   "AWS::ElasticLoadBalancingV2::Listener"
   (:require [clojure.spec.alpha :as s]
-            [crucible.aws.elbv2 :as elbv2]
             [crucible.resources :refer [spec-or-ref defresource] :as res]))
 
 ;; http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listenerrule.html
@@ -18,9 +17,8 @@
 (s/def ::conditions (s/* ::condition))
 (s/def ::listener-arn (spec-or-ref string?))
 (s/def ::priority #(s/int-in-range? 1 50000 %))
-(s/def ::listener-rule (s/keys :req [::actions
+
+(s/def ::resource-spec (s/keys :req [::actions
                                      ::conditions
                                      ::listener-arn
                                      ::priority]))
-
-(defresource listener-rule (elbv2/prefix "ListenerRule") ::listener-rule)

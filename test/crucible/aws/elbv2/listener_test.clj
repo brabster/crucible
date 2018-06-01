@@ -7,7 +7,7 @@
 (deftest listener-tests
 
   (testing "valid listener"
-    (is (s/valid? ::sut/listener-spec
+    (is (s/valid? ::sut/resource-spec
                   {::sut/default-actions [{::sut/target-group-arn (xref :target-group)
                                            ::sut/type "forward"}]
                    ::sut/load-balancer-arn (xref :load-balancer)

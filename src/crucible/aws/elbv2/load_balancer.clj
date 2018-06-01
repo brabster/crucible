@@ -1,8 +1,7 @@
 (ns crucible.aws.elbv2.load-balancer
   "AWS::ElasticLoadBalancingV2::LoadBalancer"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource] :as res]
-            [crucible.aws.elbv2 :as elbv2]))
+            [crucible.resources :refer [spec-or-ref defresource] :as res]))
 
 ;; http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
 
@@ -23,14 +22,12 @@
 (s/def ::subnet-mappings (s/* ::subnet-mapping))
 (s/def ::subnet (spec-or-ref string?))
 (s/def ::subnets (s/* ::subnet))
-(s/def ::load-balancer-spec (s/keys :opt [::load-balancer-attributes
-                                          ::name
-                                          ::scheme
-                                          ::security-groups
-                                          ::subnet-mappings
-                                          ::subnets
-                                          ::res/tags
-                                          ::type
-                                          ::ip-address-type]))
-
-(defresource load-balancer (elbv2/prefix "LoadBalancer") ::load-balancer-spec)
+(s/def ::resource-spec (s/keys :opt [::load-balancer-attributes
+                                     ::name
+                                     ::scheme
+                                     ::security-groups
+                                     ::subnet-mappings
+                                     ::subnets
+                                     ::res/tags
+                                     ::type
+                                     ::ip-address-type]))

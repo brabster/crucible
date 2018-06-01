@@ -7,7 +7,7 @@
 (deftest target-group-tests
 
   (testing "valid target group"
-    (is (s/valid? ::sut/target-group-spec
+    (is (s/valid? ::sut/resource-spec
                   {::sut/vpc-id (xref :vpc)
                    ::sut/port 80
                    ::sut/protocol "HTTP"

@@ -7,7 +7,7 @@
 (deftest load-balancer-tests
 
   (testing "valid load balancer"
-    (is (s/valid? ::sut/load-balancer-spec
+    (is (s/valid? ::sut/resource-spec
                   {::sut/name (join "-" [cf/stack-name "crucible"])
                    ::sut/subnets [(xref :public1) (xref :public2)]
                    ::sut/security-groups [(xref :sg-public)]}))))

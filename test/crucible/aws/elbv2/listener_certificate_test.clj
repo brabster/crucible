@@ -7,7 +7,7 @@
 (deftest listener-certificate-tests
 
   (testing "valid listener certificate"
-    (is (s/valid? ::sut/listener-certificate-spec
+    (is (s/valid? ::sut/resource-spec
                   {::sut/listener-arn (xref :listener-io)
                    ::sut/certificates [{::sut/certificate-arn
                                         (cf/find-in-map :environments cf/stack-name "CertificateArn")}]}))))

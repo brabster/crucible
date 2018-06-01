@@ -1,8 +1,7 @@
 (ns crucible.aws.elbv2.target-group
   "AWS::ElasticLoadBalancingV2::TargetGroup"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref defresource] :as res]
-            [crucible.aws.elbv2 :as elbv2]))
+            [crucible.resources :refer [spec-or-ref defresource] :as res]))
 
 ;; http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
 
@@ -34,7 +33,7 @@
 (s/def ::unhealthy-threshold-count (spec-or-ref integer?))
 (s/def ::vpc-id (spec-or-ref string?))
 
-(s/def ::target-group-spec (s/keys :req [::vpc-id
+(s/def ::resource-spec (s/keys :req [::vpc-id
                                          ::port
                                          ::protocol]
                                    :opt [::health-check-interval-seconds
@@ -50,5 +49,3 @@
                                          ::targets
                                          ::target-type
                                          ::unhealthy-threshold-count]))
-
-(defresource target-group (elbv2/prefix "TargetGroup") ::target-group-spec)
