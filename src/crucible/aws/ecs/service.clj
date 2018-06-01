@@ -1,6 +1,7 @@
 (ns crucible.aws.ecs.service
   "Resources in AWS::ECS::Service"
   (:require [clojure.spec.alpha :as s]
+            [crucible.encoding.keys :refer [->key]]
             [crucible.resources :refer [spec-or-ref]]))
 
 (s/def ::task-definition (spec-or-ref string?))
@@ -42,6 +43,8 @@
 (s/def ::aws-vpc-configuration (s/keys :req [::subnets]
                                        :opt [::assign-public-ip
                                              ::security-groups]))
+
+(defmethod ->key :aws-vpc-configuration [_] "AwsvpcConfiguration")
 
 (s/def ::network-configuration (s/keys :req []
                                        :opt [::aws-vpc-configuration]))
