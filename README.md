@@ -86,6 +86,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::SNS::Topic
 * AWS::SNS::TopicPolicy
 * AWS::Events::Rule
+* AWS::AutoScaling::AutoScalingGroup/LaunchConfiguration
 * Custom::* custom resources
 
 ## Writing your own resource type
