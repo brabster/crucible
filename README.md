@@ -83,6 +83,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::CloudFormation::Stack
 * AWS::Kinesis::Stream
 * AWS::KinesisFirehose::DeliveryStream
+* AWS::Route53::RecordSet
 * AWS::SNS::Topic
 * AWS::SNS::TopicPolicy
 * AWS::Events::Rule
