@@ -80,6 +80,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::Lambda::Function
 * AWS::Lambda::EventSourceMapping
 * AWS::IAM::Role (basic support for Lambda applications)
+* AWS::ECR::Repository
 * AWS::S3::Bucket
 * AWS::CloudFormation::Stack
 * AWS::Kinesis::Stream
