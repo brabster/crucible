@@ -1,6 +1,7 @@
 (ns crucible.aws.ecs.container-definition
-  "Property ContainerDefinition of AWS::ECS::TaskDefinition"
+  "AWS::ECS::TaskDefinition > ContainerDefinition"
   (:require [clojure.spec.alpha :as s]
+            [crucible.aws.ecs.key-value-pair :as key-value-pair]
             [crucible.resources :refer [spec-or-ref]]))
 
 (s/def ::image (spec-or-ref string?))
@@ -23,9 +24,7 @@
 
 (s/def ::entry-point (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::environment (s/keys :req [::name
-                                   ::value]
-                             :opt []))
+(s/def ::environment (s/* ::key-value-pair/entity-spec))
 
 (s/def ::essential (spec-or-ref boolean?))
 
