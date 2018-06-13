@@ -9,6 +9,6 @@
 
 (s/def ::stream (s/keys :req [::shard-count]
                         :opt [::name
-                              :crucible.resourcs/tags]))
+                              :crucible.resources/tags]))
 
 (defresource stream "AWS::Kinesis::Stream" ::stream)
