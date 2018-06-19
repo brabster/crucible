@@ -54,7 +54,8 @@
                                 ::runtime
                                 ::vpc-config
                                 ::environment
-                                ::reserved-concurrent-executions]))
+                                ::reserved-concurrent-executions
+                                ::timeout]))
 
 (defresource function "AWS::Lambda::Function" ::function)
 
