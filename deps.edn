@@ -3,4 +3,4 @@
         cheshire {:mvn/version "5.8.0"}
         org.clojure/tools.namespace {:mvn/version "0.2.11"}
         org.clojure/tools.cli {:mvn/version "0.3.7"}
-        expound {:mvn/version "0.7.0"}}}
+        expound {:mvn/version "0.7.1"}}}
