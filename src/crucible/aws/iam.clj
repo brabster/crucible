@@ -69,11 +69,11 @@
 
 (s/def ::policy-name (spec-or-ref string?))
 
-(s/def ::groups (spec-or-ref (s/* string?)))
+(s/def ::groups (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::users (spec-or-ref (s/* string?)))
+(s/def ::users (s/coll-of (spec-or-ref string?) :kind vector?))
 
-(s/def ::roles (spec-or-ref (s/* string?)))
+(s/def ::roles (s/coll-of (spec-or-ref string?) :kind vector?))
 
 (s/def ::policy (s/keys :req [::policy-name
                               ::policy-document]
