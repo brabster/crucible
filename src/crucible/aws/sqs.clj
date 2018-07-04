@@ -5,4 +5,4 @@
 
 (defn prefix [suffix] (str "AWS::SQS::" suffix))
 
-(defresource queue (prefix "Cluster") ::queue/resource-spec)
+(defresource queue (prefix "Queue") ::queue/resource-spec)
