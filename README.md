@@ -88,6 +88,7 @@ Examples of resource type usage can be found in the tests.
 * AWS::Route53::RecordSet
 * AWS::SNS::Topic
 * AWS::SNS::TopicPolicy
+* AWS::SQS::Queue
 * AWS::Events::Rule
 * AWS::AutoScaling::AutoScalingGroup/LaunchConfiguration
 * Custom::* custom resources
