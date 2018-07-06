@@ -1,7 +1,8 @@
 (ns crucible.aws.iam-test
   (:require [crucible.aws.iam :as iam]
             [clojure.spec.alpha :as s]
-            [clojure.test :refer :all]))
+            [clojure.test :refer :all]
+            [crucible.core :refer [xref] :as cf]))
 
 (defn valid [spec candidate]
   (nil? (s/explain-data spec candidate)))
@@ -79,3 +80,26 @@
 (deftest user-tests
   (testing "empty user"
     (is (valid ::iam/user {}))))
+
+(deftest policy-tests
+  (testing "attaching a policy to a user"
+    (is (valid ::iam/policy {::iam/policy-name "db-access"
+                             ::iam/users [(xref :user1) (xref :user2)]
+                             ::iam/policy-document {::iam/version "2012-10-17"
+                                                    ::iam/statement [{::iam/action ["dynamodb:*"]
+                                                                      ::iam/effect "Allow"
+                                                                      ::iam/resource "arn:aws:dynamodb:*:..."}]}})))
+  (testing "attaching a policy to a group"
+    (is (valid ::iam/policy {::iam/policy-name "db-access"
+                             ::iam/groups [(xref :group1) (xref :group2)]
+                             ::iam/policy-document {::iam/version "2012-10-17"
+                                                    ::iam/statement [{::iam/action ["dynamodb:*"]
+                                                                      ::iam/effect "Allow"
+                                                                      ::iam/resource "arn:aws:dynamodb:*:..."}]}})))
+  (testing "attaching a policy to a role"
+    (is (valid ::iam/policy {::iam/policy-name "db-access"
+                             ::iam/roles [(xref :transactor-role) (xref :backup-transactor-role)]
+                             ::iam/policy-document {::iam/version "2012-10-17"
+                                                    ::iam/statement [{::iam/action ["dynamodb:*"]
+                                                                      ::iam/effect "Allow"
+                                                                      ::iam/resource "arn:aws:dynamodb:*:..."}]}}))))
