@@ -2,8 +2,10 @@
   (:require [crucible.core :refer [parameter xref]]
             [crucible.assertion :refer [resource=]]
             [crucible.aws.s3 :as s3]
+            [crucible.aws.s3.bucket-encryption :as bucket-encryption]
             [crucible.aws.iam :as iam]
             [cheshire.core :as json]
+            [clojure.spec.alpha :as s]
             [clojure.test :refer :all]
             [clojure.java.io :as io]))
 
@@ -50,3 +52,20 @@
                                                                       "Date"]
                                                 ::s3/id "myCORSRuleId2"
                                                 ::s3/max-age 1800}]}})))))
+
+(deftest bucket-encryption
+  (testing "bucket-encryption"
+    (is (s/valid? ::s3/s3-bucket
+                  {::s3/bucket-name "secret-docs"
+                   ::s3/bucket-encryption
+                   {::bucket-encryption/server-side-encryption-configuration
+                    [{::bucket-encryption/server-side-encryption-by-default
+                      {::bucket-encryption/kms-master-key-id "1234"
+                       ::bucket-encryption/sse-algorithm "aws:kms"}}]}}))
+    (is (not (s/explain ::s3/s3-bucket
+                        {::s3/bucket-name "secret-docs"
+                         ::s3/bucket-encryption
+                         {::bucket-encryption/server-side-encryption-configuration
+                          [{::bucket-encryption/server-side-encryption-by-default
+                            {::bucket-encryption/kms-master-key-id "1234"
+                             ::bucket-encryption/sse-algorithm "AES256"}}]}})))))
