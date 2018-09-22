@@ -2,6 +2,7 @@
   "Resources in AWS::S3::*"
   (:require [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.aws.iam :as iam]
+            [crucible.aws.s3.bucket-encryption :as bucket-encryption]
             [clojure.spec.alpha :as s]))
 
 (s/def ::arn string?)
@@ -83,6 +84,8 @@
 (s/def ::bucket-name (spec-or-ref (s/and string?
                                          #(re-matches #"[a-z0-9-.]+" %))))
 
+(s/def ::bucket-encryption (spec-or-ref ::bucket-encryption/resource-property-spec))
+
 (s/def ::access-control #{"AuthenticatedRead"
                           "AwsExecRead"
                           "BucketOwnerRead"
@@ -93,6 +96,7 @@
                           "PublicReadWrite"})
 
 (s/def ::s3-bucket (s/keys :opt [::bucket-name
+                                 ::bucket-encryption
                                  ::access-control
                                  ::cors-configuration
                                  ::lifecycle-configuration
