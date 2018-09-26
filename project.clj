@@ -6,13 +6,13 @@
   :dependencies [[camel-snake-kebab "0.4.0"]
                  [cheshire "5.8.1"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [org.clojure/tools.cli "0.4.0"]
+                 [org.clojure/tools.cli "0.4.1"]
                  [expound "0.7.1"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
-  :plugins [[org.clojure/tools.cli "0.4.0" :exclusions [org.clojure/clojure]]
+  :plugins [[org.clojure/tools.cli "0.4.1" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.10"]
             [com.livingsocial/lein-dependency-check "1.0.2"]
             [lein-kibit "0.1.5" :exclusions [org.clojure/clojure
