@@ -6,7 +6,7 @@
 ;; http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
 
 (s/def ::key string?)
-(s/def ::value string?)
+(s/def ::value (spec-or-ref string?))
 (s/def ::name (spec-or-ref string?))
 (s/def ::scheme (spec-or-ref #{"internet-facing" "internal"}))
 (s/def ::type (spec-or-ref #{"application" "network"}))
