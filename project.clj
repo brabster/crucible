@@ -7,20 +7,20 @@
                  [cheshire "5.8.1"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [org.clojure/tools.cli "0.4.1"]
-                 [expound "0.7.1"]]
+                 [expound "0.7.2"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.4.1" :exclusions [org.clojure/clojure]]
-            [lein-ancient "0.6.10"]
+            [lein-ancient "0.6.15"]
             [com.livingsocial/lein-dependency-check "1.0.2"]
-            [lein-kibit "0.1.5" :exclusions [org.clojure/clojure
+            [lein-kibit "0.1.6" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
-            [jonase/eastwood "0.2.4"]
-            [lein-bikeshed "0.4.1"]
-            [lein-cloverage "1.0.9"]
-            [lein-codox "0.9.6"]]
+            [jonase/eastwood "0.3.3"]
+            [lein-bikeshed "0.5.1"]
+            [lein-cloverage "1.0.13"]
+            [lein-codox "0.10.5"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                                :username :env/clojars_username
                                :password :env/clojars_password}]
@@ -48,6 +48,6 @@
                                :unused-private-vars]
              :exclude-linters [:suspicious-expression]}
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.9.0"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.10.0"]]}
              :dev {:resource-paths ["test-resources"]
                    :dependencies [[org.clojure/test.check "0.9.0"]]}})
