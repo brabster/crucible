@@ -49,12 +49,8 @@
   (testing "encode with kinesis source"
     (is (resource= {"Type" "AWS::KinesisFirehose::DeliveryStream",
                     "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
-                                  "S3DestinationConfiguration"
-                                  {"BucketARN" {"Ref" "Foo"},
-                                   "BufferingHints" {"IntervalInSeconds" 9,
-                                                     "SizeInMBs" {"Ref" "Foo"}},
-                                   "CompressionFormat" "UNCOMPRESSED",
-                                   "Prefix" {"Ref" "Foo"},
+                                  "KinesisStreamSourceConfiguration"
+                                  {"KinesisStreamARN" {"Ref" "Foo"}
                                    "RoleARN" {"Ref" "Foo"}}}}
                    (fh/firehose
                     {::fh/delivery-stream-name (xref :foo)
