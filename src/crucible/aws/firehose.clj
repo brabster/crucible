@@ -19,6 +19,9 @@
 (defmethod ->key :bucket-arn [_]
   "BucketARN")
 
+(defmethod ->key :kinesis-stream-arn [_]
+  "KinesisStreamARN")
+
 (s/def ::arn (spec-or-ref string?))
 
 (s/def ::delivery-stream-name (spec-or-ref string?))
