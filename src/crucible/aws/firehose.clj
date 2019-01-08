@@ -19,6 +19,9 @@
 (defmethod ->key :bucket-arn [_]
   "BucketARN")
 
+(defmethod ->key :kinesis-stream-arn [_]
+  "KinesisStreamARN")
+
 (s/def ::arn (spec-or-ref string?))
 
 (s/def ::delivery-stream-name (spec-or-ref string?))
@@ -63,7 +66,13 @@
                                        :opt [::cloud-watch-logging-options
                                              ::encryption-configuration]))
 
+(s/def ::kinesis-stream-arn ::arn)
+
+(s/def ::kinesis-stream-source-configuration (s/keys :req [::kinesis-stream-arn
+                                                           ::role-arn]))
+
 (s/def ::firehose (s/keys :opt [::delivery-stream-name
-                                ::s3-destination-configuration]))
+                                ::s3-destination-configuration
+                                ::kinesis-stream-source-configuration]))
 
 (defresource firehose "AWS::KinesisFirehose::DeliveryStream" ::firehose)
