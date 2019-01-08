@@ -26,7 +26,7 @@
                       ::fh/prefix  (xref :foo)
                       ::fh/role-arn  (xref :foo)}}))))
 
-(testing "encode without delivery stream name"
+  (testing "encode without delivery stream name"
     (is (resource= {"Type" "AWS::KinesisFirehose::DeliveryStream",
                     "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
                                   "S3DestinationConfiguration"
