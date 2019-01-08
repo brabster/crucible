@@ -63,7 +63,13 @@
                                        :opt [::cloud-watch-logging-options
                                              ::encryption-configuration]))
 
+(s/def ::kinesis-stream-arn ::arn)
+
+(s/def ::kinesis-stream-source-configuration (s/keys :req [::kinesis-stream-arn
+                                                           ::role-arn]))
+
 (s/def ::firehose (s/keys :opt [::delivery-stream-name
-                                ::s3-destination-configuration]))
+                                ::s3-destination-configuration
+                                ::kinesis-stream-source-configuration]))
 
 (defresource firehose "AWS::KinesisFirehose::DeliveryStream" ::firehose)

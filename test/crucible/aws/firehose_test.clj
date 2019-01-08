@@ -26,7 +26,7 @@
                       ::fh/prefix  (xref :foo)
                       ::fh/role-arn  (xref :foo)}}))))
 
-  (testing "encode without delivery stream name"
+(testing "encode without delivery stream name"
     (is (resource= {"Type" "AWS::KinesisFirehose::DeliveryStream",
                     "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
                                   "S3DestinationConfiguration"
@@ -44,4 +44,20 @@
                                             ::fh/size-in-mbs (xref :foo)}
                       ::fh/compression-format "UNCOMPRESSED"
                       ::fh/prefix  (xref :foo)
-                      ::fh/role-arn  (xref :foo)}})))))
+                      ::fh/role-arn  (xref :foo)}}))))
+
+  (testing "encode with kinesis source"
+    (is (resource= {"Type" "AWS::KinesisFirehose::DeliveryStream",
+                    "Properties" {"DeliveryStreamName" {"Ref" "Foo"},
+                                  "S3DestinationConfiguration"
+                                  {"BucketARN" {"Ref" "Foo"},
+                                   "BufferingHints" {"IntervalInSeconds" 9,
+                                                     "SizeInMBs" {"Ref" "Foo"}},
+                                   "CompressionFormat" "UNCOMPRESSED",
+                                   "Prefix" {"Ref" "Foo"},
+                                   "RoleARN" {"Ref" "Foo"}}}}
+                   (fh/firehose
+                    {::fh/delivery-stream-name (xref :foo)
+                     ::fh/kinesis-stream-source-configuration
+                     {::fh/kinesis-stream-arn (xref :foo)
+                      ::fh/role-arn (xref :foo)}})))))
