@@ -11,9 +11,19 @@
     (is (= {"Type" "AWS::SNS::Topic",
             "Properties"
             {"TopicName" "SampleTopic"}}
-           (rewrite-element-data (sns/topic {::sns/topic-name "SampleTopic"}))))))
+           (rewrite-element-data
+            (sns/topic {::sns/topic-name "SampleTopic"})))))
 
-
+  (testing "encode"
+    (is (= {"Type" "AWS::SNS::Topic",
+            "Properties"
+            {"TopicName" "SampleTopicWithSubscription"
+             "Subscription" [{"Protocol" "email"
+                              "Endpoint" "test@test.com"}]}}
+           (rewrite-element-data
+            (sns/topic {::sns/topic-name "SampleTopicWithSubscription"
+                        ::sns/subscription [{::sns/protocol "email"
+                                             ::sns/endpoint "test@test.com"}]}))))))
 
 (deftest sns-topic-policy
   (testing "encode"
