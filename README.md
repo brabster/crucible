@@ -148,6 +148,42 @@ following overrides the natural translation of `:template-url` to
 
 Note, these translations take place during the final JSON encoding step and do not see keyword namespacing.
 
+## Severless Application Model templates
+
+The [AWS Serverless Application Model](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md) (SAM) is supported by using [SAM resources](/src/crucible/aws/serverless) and the [SAM encoder](/src/crucible/encoding/serverless.clj). All CloudFormation resources are valid SAM resources and they can be combined in the same template. The `crucible.core/template` function can be used to generate a template data structure for SAM resources.
+
+### Globals
+
+AWS SAM supports [global properties](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#globals-section) for functions and APIs. There is a two-arity version of `build` and `encode` in the SAM encoder that accepts a template and a globals object.
+
+### Example
+
+In the example below, the second argument to `encoding.sam/build` can be omitted if globals are not used.
+
+```clojure
+(ns crucible.sam-example
+  (:require [crucible.aws.kinesis :as k]
+            [crucible.aws.serverless.function :as f]
+            [crucible.aws.serverless.function.event-source :as es]
+            [crucible.aws.serverless.function.event-source.kinesis :as es.k]
+            [crucible.aws.serverless.globals :as g]
+            [crucible.core :refer [template xref]]
+            [crucible.encoding.serverless :as encoding.sam]))
+
+(-> {:stream-processor (f/function
+                        {::f/handler "index.handler"
+                         ::f/runtime "nodejs6.10"
+                         ::f/code-uri "src/"
+                         ::f/events {:stream {::es/type "Kinesis"
+                                              ::es.k/properties {::es.k/stream (xref :stream :arn)
+                                                                 ::es.k/starting-position "TRIM_HORIZON"}}}})
+     :stream (k/stream {::k/shard-count 1})}
+    (template "A function that processes data from a Kinesis stream.")
+    (encoding.sam/build (g/globals {::g/function {::f/memory-size 1024
+                                                  ::f/timeout 15}})))
+```
+
+
 ## CLI Support
 
 Basic CLI support, intended for use with Leiningen, is provided in the `crucible.encoding.main/-main` function. Running this function will reload the namespaces available in the project, then enumerate any vars that have a metadata tag provided by the `crucible.core/template` function. These vars are then encoded into CloudFormation templates and exported to the local filesystem. They can then be used directly or uploaded to S3 for use with CloudFormation.
