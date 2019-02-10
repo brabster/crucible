@@ -54,6 +54,8 @@
 (s/def ::condition (s/map-of (s/or :str string?
                                    :kwd keyword?) (s/map-of string? any?)))
 
+(s/def ::effect #{"Allow" "Deny"})
+
 (s/def ::statement (s/* (s/keys :opt [::effect
                                       ::principal
                                       ::not-principal

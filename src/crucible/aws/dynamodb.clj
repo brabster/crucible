@@ -1,6 +1,7 @@
 (ns crucible.aws.dynamodb
   "Resources in AWS::DynamoDB::*"
-  (:require [crucible.resources :refer [spec-or-ref defresource]]
+  (:require [crucible.encoding.keys :refer [->key]]
+            [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec.alpha :as s]))
 
 (s/def ::table-name (spec-or-ref string?))
@@ -34,7 +35,8 @@
 (s/def ::projection (s/keys :opt [::non-key-attributes
                                   ::projection-type]))
 
-(s/def ::capacity-units (spec-or-ref string?))
+(s/def ::capacity-units (spec-or-ref (s/or :string string?
+                                           :integer int?)))
 
 (s/def ::read-capacity-units ::capacity-units)
 
@@ -63,12 +65,22 @@
 
 (s/def ::stream-specification (s/keys :req [::stream-view-type]))
 
+(s/def ::sse-enabled (spec-or-ref boolean?))
+
+(defmethod ->key ::sse-enabled [_] "SSEEnabled")
+
+(s/def ::sse-specification
+  (s/keys :req [::sse-enabled]))
+
+(defmethod ->key ::sse-specification [_] "SSESpecification")
+
 (s/def ::table (s/keys :req [::attribute-definitions
                              ::key-schema
                              ::provisioned-throughput]
                        :opt [::table-name
                              ::stream-specification
                              ::global-secondary-indexes
-                             ::local-secondary-indexes]))
+                             ::local-secondary-indexes
+                             ::sse-specification]))
 
 (defresource table "AWS::DynamoDB::Table" ::table)
