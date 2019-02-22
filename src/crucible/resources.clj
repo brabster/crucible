@@ -20,8 +20,14 @@
 (s/def ::resource (s/keys :req [::type ::properties]
                           :opt [::policies/policies]))
 
+(defmacro spec-or-ref
+  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
+  [spec]
+  `(s/or :literal ~spec
+         :reference :crucible.values/value))
+
 (s/def ::key string?)
-(s/def ::value string?)
+(s/def ::value (spec-or-ref string?))
 (s/def ::tag (s/keys :req [::key ::value]))
 (s/def ::tags (s/* ::tag))
 
@@ -46,12 +52,6 @@
          :else (-> {::type resource-type
                     ::properties props}
                    (merge (into {} (s/conform ::policy-list policies)))))])))
-
-(defmacro spec-or-ref
-  "Allows the given spec, keyed as :literal, or a referenced value, keyed as :reference."
-  [spec]
-  `(s/or :literal ~spec
-         :reference :crucible.values/value))
 
 (defmacro defresource
   "Adds a resource factory function to the namespace, documenting the AWS type"
