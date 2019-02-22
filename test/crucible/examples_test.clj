@@ -41,17 +41,23 @@
 
 (deftest example-more-complex
   (testing "Matches documented output"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09",
-            "Description" "A more complex sample template",
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "A more complex sample template"
             "Outputs"
-            {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}},
+            {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}
             "Parameters"
             {"MyVpcCidr"
-             {"Type" "String", "AllowedValues" ["10.0.0.0/24" "10.0.0.0/16"]}},
+             {"Type" "String", "AllowedValues" ["10.0.0.0/24" "10.0.0.0/16"]}}
             "Resources"
             {"MyVpc"
-             {"Type" "AWS::EC2::VPC",
-              "Properties" {"CidrBlock" {"Ref" "MyVpcCidr"}},
-              "DeletionPolicy" "Retain",
+             {"Type" "AWS::EC2::VPC"
+              "Properties"
+              {"CidrBlock" {"Ref" "MyVpcCidr"}
+               "Tags"
+               [{"Key" "Xref", "Value" {"Ref" "MyVpcCidr"}}
+                {"Key" "String", "Value" "Hello"}
+                {"Key" "StackName", "Value" {"Ref" "AWS::StackName"}}]}
+              "DeletionPolicy" "Retain"
               "DependsOn" "MyVpcCidr"}}}
-           (json/decode (encode more-complex))))))
+         (json/decode (encode more-complex))))))
+
