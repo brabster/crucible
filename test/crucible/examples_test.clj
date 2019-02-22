@@ -60,4 +60,3 @@
               "DeletionPolicy" "Retain"
               "DependsOn" "MyVpcCidr"}}}
          (json/decode (encode more-complex))))))
-
