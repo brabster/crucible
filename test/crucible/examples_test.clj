@@ -1,9 +1,10 @@
 (ns crucible.examples-test
   (:require  [clojure.test :refer :all]
              [crucible
-              [core :refer [template parameter resource output xref encode join]]
+              [core :refer [template parameter resource output xref encode join stack-name]]
               [policies :as pol]
               [parameters :as param]]
+             [crucible.resources :as res]
              [crucible.aws.ec2 :as ec2]
              [cheshire.core :as json]))
 
@@ -27,24 +28,35 @@
                             :my-vpc-cidr (parameter ::param/type ::param/string
                                                     ::param/allowed-values ["10.0.0.0/24"
                                                                             "10.0.0.0/16"])
-                            :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)}
+                            :my-vpc (ec2/vpc {::ec2/cidr-block (xref :my-vpc-cidr)
+                                              ::res/tags [{::res/key "Xref"
+                                                           ::res/value (xref :my-vpc-cidr)}
+                                                          {::res/key "String"
+                                                           ::res/value "Hello"}
+                                                          {::res/key "StackName"
+                                                           ::res/value stack-name}]}
                                              (pol/deletion ::pol/retain)
                                              (pol/depends-on :my-vpc-cidr))
                             :vpc (output (join "/" ["foo" (xref :my-vpc)]))))
 
 (deftest example-more-complex
   (testing "Matches documented output"
-    (is (= {"AWSTemplateFormatVersion" "2010-09-09",
-            "Description" "A more complex sample template",
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "A more complex sample template"
             "Outputs"
-            {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}},
+            {"Vpc" {"Value" {"Fn::Join" ["/" ["foo" {"Ref" "MyVpc"}]]}}}
             "Parameters"
             {"MyVpcCidr"
-             {"Type" "String", "AllowedValues" ["10.0.0.0/24" "10.0.0.0/16"]}},
+             {"Type" "String", "AllowedValues" ["10.0.0.0/24" "10.0.0.0/16"]}}
             "Resources"
             {"MyVpc"
-             {"Type" "AWS::EC2::VPC",
-              "Properties" {"CidrBlock" {"Ref" "MyVpcCidr"}},
-              "DeletionPolicy" "Retain",
+             {"Type" "AWS::EC2::VPC"
+              "Properties"
+              {"CidrBlock" {"Ref" "MyVpcCidr"}
+               "Tags"
+               [{"Key" "Xref", "Value" {"Ref" "MyVpcCidr"}}
+                {"Key" "String", "Value" "Hello"}
+                {"Key" "StackName", "Value" {"Ref" "AWS::StackName"}}]}
+              "DeletionPolicy" "Retain"
               "DependsOn" "MyVpcCidr"}}}
-           (json/decode (encode more-complex))))))
+         (json/decode (encode more-complex))))))
