@@ -96,6 +96,9 @@
 (defmethod encode-value ::equals [{:keys [::x ::y]}]
   {"Fn::Equals" [x y]})
 
+(defmethod encode-value ::base64 [{:keys [::input-string]}]
+  {"Fn::Base64" input-string})
+
 (defmethod encode-value ::find-in-map [{:keys [::map-name
                                                ::top-level-key
                                                ::second-level-key]}]
@@ -160,3 +163,13 @@
 (defn sub [string-to-interpolate]
   {::type ::sub
    ::sub-literal string-to-interpolate})
+
+
+(defmethod value-type ::base64 [_] ::base64)
+
+(s/def ::input-string (spec-or-ref string?))
+(s/def ::base64 (s/keys :req [::input-string]))
+
+(defn base64 [input-string]
+  {::type ::base64
+   ::input-string input-string})
