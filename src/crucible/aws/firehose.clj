@@ -59,12 +59,12 @@
                                                 ::no-encryption-config]))
 
 (s/def ::s3-destination-configuration (s/keys :req [::bucket-arn
-                                                   ::buffering-hints
-                                                   ::compression-format
-                                                   ::prefix
-                                                   ::role-arn]
-                                       :opt [::cloud-watch-logging-options
-                                             ::encryption-configuration]))
+                                                    ::buffering-hints
+                                                    ::compression-format
+                                                    ::prefix
+                                                    ::role-arn]
+                                              :opt [::cloud-watch-logging-options
+                                                    ::encryption-configuration]))
 
 (s/def ::kinesis-stream-arn ::arn)
 
