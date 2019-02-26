@@ -7,7 +7,8 @@
   (testing "valid auto scaling group"
     (is (s/valid? ::sut/resource-spec
                   {::sut/min-size "2"
-                   ::sut/max-size "2"})))
+                   ::sut/max-size "2"
+                   ::sut/availability-zones ["us-east-1"]})))
   (testing "invalid auto scaling group"
     (is (not (s/valid? ::sut/resource-spec
                        {})))))

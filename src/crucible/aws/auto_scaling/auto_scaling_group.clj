@@ -21,6 +21,7 @@
 
 (s/def ::min-size (spec-or-ref string?))
 (s/def ::max-size (spec-or-ref string?))
+(s/def ::availability-zone (spec-or-ref string?))
 (s/def ::availability-zones (s/* ::availability-zone))
 (s/def ::cool-down (spec-or-ref string?))
 (s/def ::desired-capacity (spec-or-ref string?))
