@@ -39,9 +39,9 @@
               ::f/policies ["AWSLambdaExecute"
                             {::iam/version "2012-10-17"
                              ::iam/statement [{::iam/effect "Allow"
-                                                ::iam/action ["s3:GetObject"
-                                                              "s3:GetObjectACL"]
-                                                ::iam/resource "arn:aws:s3:::my-bucket/*"}]}]
+                                               ::iam/action ["s3:GetObject"
+                                                             "s3:GetObjectACL"]
+                                               ::iam/resource "arn:aws:s3:::my-bucket/*"}]}]
               ::f/environment {::f/variables {:TABLE_NAME "my-table"}}
               ::f/events {:photo-upload {::es/type "S3"
                                          ::properties {::bucket "my-photo-bucket"}}}
