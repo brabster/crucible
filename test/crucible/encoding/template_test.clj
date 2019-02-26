@@ -28,27 +28,26 @@
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
                                         (pol/deletion ::pol/retain)))))))))
 
-
 (deftest template-resource-with-creation-policies-test
   (testing "template with resource with deletion policy"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Description" "t"
             "Resources" {"MyAsg" {"Type" "AWS::AutoScaling::AutoScalingGroup"
                                   "Properties" {"MaxSize" "0" "MinSize" "1"}
-                                  "CreationPolicy" {"ResourceSignal" 
-                                                    {"Count" 1 
-                                                     "Timeout" "PT10M"}}}}}
+                                  "CreationPolicy"
+                                  {"ResourceSignal"
+                                   {"Count" 1
+                                    "Timeout" "PT10M"}}}}}
            (cheshire.core/decode
             (encode
              (template "t"
                        :my-asg (as/auto-scaling-group
                                 {::sut/max-size "0"
                                  ::sut/min-size "1"}
-                                (pol/creation-policy 
+                                (pol/creation-policy
                                  {::pol/resource-signal
                                   {::pol/count 1
                                    ::pol/timeout "PT10M"}})))))))))
-
 
 (deftest template-resource-with-update-policies-test
   (testing "template with resource with deletion policy"
@@ -56,7 +55,7 @@
             "Description" "t"
             "Resources" {"MyAsg" {"Type" "AWS::AutoScaling::AutoScalingGroup"
                                   "Properties" {"MaxSize" "0" "MinSize" "1"}
-                                  "CreationPolicy" {"AutoScalingRollingUpdate" 
+                                  "CreationPolicy" {"AutoScalingRollingUpdate"
                                                     {"MaxBatchSize" 1
                                                      "MinInstanceInService" 0
                                                      "PauseTime" "PT10M"
@@ -73,7 +72,6 @@
                                    ::pol/min-instance-in-service 0
                                    ::pol/pause-time "PT10M"
                                    ::pol/wait-on-resource-signals true}})))))))))
-
 
 (deftest template-resources-test
   (testing "template with single resource"
