@@ -1,5 +1,6 @@
 (ns crucible.encoding.template-test
   (:require [clojure.test :refer :all]
+            [crucible.aws.auto-scaling.auto-scaling-group :as sut]
             [crucible
              [encoding :refer [encode]]
              [core :refer [template parameter condition output xref join equals notification-arns mapping stack-name]]
@@ -7,6 +8,7 @@
              [parameters :as param]]
             [crucible.aws
              [ec2 :as ec2]
+             [auto-scaling :as as]
              [dynamodb :as ddb]]))
 
 (def vpc-crucible (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}))
@@ -25,6 +27,51 @@
              (template "t"
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
                                         (pol/deletion ::pol/retain)))))))))
+
+(deftest template-resource-with-creation-policies-test
+  (testing "template with resource with deletion policy"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyAsg" {"Type" "AWS::AutoScaling::AutoScalingGroup"
+                                  "Properties" {"MaxSize" "0" "MinSize" "1"}
+                                  "CreationPolicy"
+                                  {"ResourceSignal"
+                                   {"Count" 1
+                                    "Timeout" "PT10M"}}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-asg (as/auto-scaling-group
+                                {::sut/max-size "0"
+                                 ::sut/min-size "1"}
+                                (pol/creation-policy
+                                 {::pol/resource-signal
+                                  {::pol/count 1
+                                   ::pol/timeout "PT10M"}})))))))))
+
+(deftest template-resource-with-update-policies-test
+  (testing "template with resource with deletion policy"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyAsg" {"Type" "AWS::AutoScaling::AutoScalingGroup"
+                                  "Properties" {"MaxSize" "0" "MinSize" "1"}
+                                  "CreationPolicy" {"AutoScalingRollingUpdate"
+                                                    {"MaxBatchSize" 1
+                                                     "MinInstanceInService" 0
+                                                     "PauseTime" "PT10M"
+                                                     "WaitOnResourceSignals" true}}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-asg (as/auto-scaling-group
+                                {::sut/max-size "0"
+                                 ::sut/min-size "1"}
+                                (pol/update-policy
+                                 {::pol/auto-scaling-rolling-update
+                                  {::pol/max-batch-size 1
+                                   ::pol/min-instance-in-service 0
+                                   ::pol/pause-time "PT10M"
+                                   ::pol/wait-on-resource-signals true}})))))))))
 
 (deftest template-resources-test
   (testing "template with single resource"
