@@ -1,6 +1,7 @@
 (ns crucible.encoding.template-test
   (:require [clojure.test :refer :all]
-            [crucible.aws.auto-scaling.auto-scaling-group :as sut]
+            [crucible.aws.auto-scaling.auto-scaling-group :as asg]
+            [crucible.aws.auto-scaling.launch-configuration :as lc]
             [crucible
              [encoding :refer [encode]]
              [core :refer [template parameter condition output xref join equals
@@ -65,8 +66,8 @@
             (encode
              (template "t"
                        :my-asg (as/auto-scaling-group
-                                {::sut/max-size "0"
-                                 ::sut/min-size "1"}
+                                {::asg/max-size "0"
+                                 ::asg/min-size "1"}
                                 (pol/update-policy
                                  {::pol/auto-scaling-rolling-update
                                   {::pol/max-batch-size 1
@@ -227,9 +228,9 @@
              (template "t"
                        :foo (parameter)
                        :my-cfg (as/launch-configuration
-                                {::sut/image-id "abc-1234"
-                                 ::sut/instance-type "t2.large"
-                                 ::sut/user-data (base64 (join [(xref :foo) "bar"]))}))))))))
+                                {::lc/image-id "abc-1234"
+                                 ::lc/instance-type "t2.large"
+                                 ::lc/user-data (base64 (join [(xref :foo) "bar"]))}))))))))
 
 (deftest resource-reference-validation-test
   (testing "reference non-existent parameter from resource property throws"
