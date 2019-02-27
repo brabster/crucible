@@ -26,7 +26,7 @@
   (s/keys :req [::http-method
                 ::resource-path]))
 
-(s/def ::method-settings (s/* ::method-settings))
+(s/def ::method-settings (s/* ::method-setting))
 
 (s/def ::endpoint-configuration #{"REGIONAL" "EDGE" "PRIVATE"})
 
