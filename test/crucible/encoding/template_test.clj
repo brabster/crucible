@@ -52,12 +52,12 @@
                                    ::pol/timeout "PT10M"}})))))))))
 
 (deftest template-resource-with-update-policies-test
-  (testing "template with resource with deletion policy"
+  (testing "template with resource with update policy"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Description" "t"
             "Resources" {"MyAsg" {"Type" "AWS::AutoScaling::AutoScalingGroup"
                                   "Properties" {"MaxSize" "0" "MinSize" "1"}
-                                  "CreationPolicy" {"AutoScalingRollingUpdate"
+                                  "UpdatePolicy" {"AutoScalingRollingUpdate"
                                                     {"MaxBatchSize" 1
                                                      "MinInstanceInService" 0
                                                      "PauseTime" "PT10M"
