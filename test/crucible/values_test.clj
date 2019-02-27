@@ -35,3 +35,6 @@
 
 (deftest sub-test
   (testing "substitution string" (is (s/valid? ::v/value (cru/sub "${foo} bar")))))
+
+(deftest base64-test
+  (testing "base64 fn" (is (s/valid? ::v/base64 (cru/base64 "hello")))))

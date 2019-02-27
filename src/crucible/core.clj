@@ -130,6 +130,11 @@
   [string-to-interpolate]
   (v/sub string-to-interpolate))
 
+(defn base64
+  "The intrinsic function Fn::Base64 returns the Base64 representation of the input string."
+  [input-string]
+  (v/base64 input-string))
+
 (defn encode
   "Encode a template into JSON for use by CloudFormation"
   [template]

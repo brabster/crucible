@@ -1,15 +1,17 @@
 (ns crucible.encoding.template-test
   (:require [clojure.test :refer :all]
-            [crucible.aws.auto-scaling.auto-scaling-group :as sut]
+            [crucible.aws.auto-scaling.auto-scaling-group :as asg]
+            [crucible.aws.auto-scaling.launch-configuration :as lc]
             [crucible
              [encoding :refer [encode]]
-             [core :refer [template parameter condition output xref join equals notification-arns mapping stack-name]]
+             [core :refer [template parameter condition output xref join equals
+                           notification-arns mapping stack-name base64]]
              [policies :as pol]
              [parameters :as param]]
             [crucible.aws
              [ec2 :as ec2]
-             [auto-scaling :as as]
-             [dynamodb :as ddb]]))
+             [dynamodb :as ddb]
+             [auto-scaling :as as]]))
 
 (def vpc-crucible (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}))
 (def vpc-cf {"Type" "AWS::EC2::VPC"
@@ -42,8 +44,8 @@
             (encode
              (template "t"
                        :my-asg (as/auto-scaling-group
-                                {::sut/max-size "0"
-                                 ::sut/min-size "1"}
+                                {::asg/max-size "0"
+                                 ::asg/min-size "1"}
                                 (pol/creation-policy
                                  {::pol/resource-signal
                                   {::pol/count 1
@@ -64,8 +66,8 @@
             (encode
              (template "t"
                        :my-asg (as/auto-scaling-group
-                                {::sut/max-size "0"
-                                 ::sut/min-size "1"}
+                                {::asg/max-size "0"
+                                 ::asg/min-size "1"}
                                 (pol/update-policy
                                  {::pol/auto-scaling-rolling-update
                                   {::pol/max-batch-size 1
@@ -207,6 +209,28 @@
             (encode
              (template "t"
                        :my-resource (ec2/vpc {::ec2/cidr-block notification-arns}))))))))
+
+(deftest template-base64-test
+  (testing "template with single mapping"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyCfg"
+                         {"Type" "AWS::AutoScaling::LaunchConfiguration"
+                          "Properties"
+                          {"ImageId" "abc-1234"
+                           "InstanceType" "t2.large"
+                           "UserData"
+                           {"Fn::Base64"
+                            {"Fn::Join" ["" [{"Ref" "Foo"} "bar"]]}}}}}
+            "Parameters" {"Foo" {"Type" "String"}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :foo (parameter)
+                       :my-cfg (as/launch-configuration
+                                {::lc/image-id "abc-1234"
+                                 ::lc/instance-type "t2.large"
+                                 ::lc/user-data (base64 (join [(xref :foo) "bar"]))}))))))))
 
 (deftest resource-reference-validation-test
   (testing "reference non-existent parameter from resource property throws"
