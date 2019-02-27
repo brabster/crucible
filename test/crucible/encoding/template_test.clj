@@ -7,7 +7,6 @@
                            notification-arns mapping stack-name base64]]
              [policies :as pol]
              [parameters :as param]]
-            [crucible.aws.auto-scaling.launch-configuration :as sut]
             [crucible.aws
              [ec2 :as ec2]
              [dynamodb :as ddb]
