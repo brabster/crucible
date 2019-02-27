@@ -44,8 +44,8 @@
             (encode
              (template "t"
                        :my-asg (as/auto-scaling-group
-                                {::sut/max-size "0"
-                                 ::sut/min-size "1"}
+                                {::asg/max-size "0"
+                                 ::asg/min-size "1"}
                                 (pol/creation-policy
                                  {::pol/resource-signal
                                   {::pol/count 1
