@@ -30,6 +30,21 @@
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
                                         (pol/deletion ::pol/retain)))))))))
 
+
+(deftest template-resource-with-metadata-test
+  (testing "template with resource with metadata policy"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" {"MyVpc" {"Type" "AWS::EC2::VPC"
+                                  "Properties" {"CidrBlock" "10.0.0.0/16"}
+                                  "Metadata" {"Instances" {"Description" "Info about vpc"}}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
+                                        (pol/metadata {"Instances" 
+                                                       {"Description" "Info about vpc"}})))))))))
+
 (deftest template-resource-with-creation-policies-test
   (testing "template with resource with deletion policy"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
