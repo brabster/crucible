@@ -42,7 +42,7 @@
             (encode
              (template "t"
                        :my-vpc (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}
-                                        (pol/metadata {"Instances" 
+                                        (pol/metadata {"Instances"
                                                        {"Description" "Info about vpc"}})))))))))
 
 (deftest template-resource-with-creation-policies-test

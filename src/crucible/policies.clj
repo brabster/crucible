@@ -44,7 +44,7 @@
 
 (s/def ::depends-on keyword?)
 
-(s/def ::policy (s/or 
+(s/def ::policy (s/or
                  :deletion-policy ::deletion-policy
                  :depends-on ::depends-on
                  :creation-policy ::creation-policy
