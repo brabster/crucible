@@ -26,7 +26,7 @@
 (s/def ::role ::sam/arn)
 
 (s/def ::policies (s/or :name string?
-                        :policy ::iam/policy
+                        :policy ::iam/policy-document
                         :list (s/* (s/or :name string?
                                          :policy ::iam/policy-document))))
 
