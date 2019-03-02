@@ -28,7 +28,7 @@
 (s/def ::hosted-zone-id (spec-or-ref string?))
 (s/def ::hosted-zone-name (spec-or-ref string?))
 (s/def ::region (spec-or-ref string?))
-(s/def ::resource-records (spec-or-ref string?))
+(s/def ::resource-records (s/coll-of (spec-or-ref string?) :kind vector?))
 (s/def ::set-identifier (spec-or-ref string?))
 (s/def ::ttl (spec-or-ref string?))
 (s/def ::type (spec-or-ref string?))

@@ -13,4 +13,5 @@
                    ::sut/hosted-zone-name "atlascrm.io."
                    ::sut/alias-target {::sut/hosted-zone-id (xref :load-balancer :canonical-hosted-zone-name-i-d)
                                        ::sut/evaluate-target-health "false"
+                                       ::sut/resource-records ["http://example.com"]
                                        ::sut/dns-name (xref :load-balancer :canonical-hosted-zone-name)}}))))
