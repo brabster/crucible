@@ -54,6 +54,15 @@
 (s/def ::vpc-zone-id (spec-or-ref string?))
 (s/def ::v-p-c-zone-identifier (s/* ::vpc-zone-id))
 
+(s/def ::key string?)
+(s/def ::resource-type string?)
+(s/def ::resource-id string?)
+(s/def ::propagate-at-launch boolean?)
+(s/def ::value (spec-or-ref string?))
+(s/def ::tag (s/keys :req [::key ::value]
+                     :opt [::resource-id ::resource-type ::propagate-at-launch]))
+(s/def ::tags (s/* ::tag))
+
 (s/def ::resource-spec (s/keys :req [::max-size
                                           ::min-size]
                                     :opt [::availability-zones
@@ -72,4 +81,5 @@
                                           ::target-group-arns
                                           ::termination-policies
                                           ::v-p-c-zone-identifier
+                                          ::tags
                                           ::res/tags]))
