@@ -1,7 +1,10 @@
 (ns crucible.aws.auto-scaling.auto-scaling-group
   "AWS::AutoScaling::AutoScalingGroup"
   (:require [clojure.spec.alpha :as s]
-            [crucible.resources :refer [spec-or-ref] :as res]))
+            [crucible.resources :refer [spec-or-ref] :as res]
+            [crucible.encoding.keys :refer [->key]]))
+
+(defmethod ->key :cool-down [_] "Cooldown")
 
 (s/def ::default-result (spec-or-ref string?))
 (s/def ::heartbeat-timeout (spec-or-ref string?))
