@@ -26,6 +26,8 @@
 
 (s/def ::delivery-stream-name (spec-or-ref string?))
 
+(s/def ::delivery-stream-type (spec-or-ref #{"DirectPut" "KinesisStreamAsSource"}))
+
 (s/def ::bucket-arn ::arn)
 
 (s/def ::interval-in-seconds (spec-or-ref pos-int?))
@@ -72,6 +74,7 @@
                                                            ::role-arn]))
 
 (s/def ::firehose (s/keys :opt [::delivery-stream-name
+                                ::delivery-stream-type
                                 ::s3-destination-configuration
                                 ::kinesis-stream-source-configuration]))
 
