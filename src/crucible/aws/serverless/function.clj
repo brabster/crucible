@@ -15,6 +15,8 @@
    (s/or :string string?
          :s3-location ::sam/s3-location)))
 
+(s/def ::inline-code (spec-or-ref string?))
+
 (s/def ::function-name (spec-or-ref string?))
 
 (s/def ::description (spec-or-ref string?))
@@ -42,10 +44,13 @@
 (s/def ::tags ::sam/tags)
 
 (s/def ::function
-  (s/keys :req [::handler
-                ::runtime
-                ::code-uri]
-          :opt [::function-name
+  (s/keys :opt [::handler ; required but could be in globals
+                ::runtime ; required but could be in globals
+                ;; either code-uri or inline-code are required but either could
+                ;; be defined in globals
+                ::code-uri
+                ::inline-code
+                ::function-name
                 ::description
                 ::memory-size
                 ::timeout
