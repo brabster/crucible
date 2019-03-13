@@ -19,4 +19,3 @@
                 ::name]))
 
 (defresource db-parameter-group "AWS::Neptune::DBParameterGroup" ::db-parameter-group)
-

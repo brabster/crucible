@@ -21,4 +21,3 @@
 (s/def ::name (spec-or-ref string?))
 
 (s/def ::parameters (spec-or-ref (s/map-of string? string?)))
-
