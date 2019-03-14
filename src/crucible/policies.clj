@@ -44,31 +44,38 @@
 
 (s/def ::depends-on keyword?)
 
+(s/def ::condition keyword?)
+
 (s/def ::policy (s/or
                  :deletion-policy ::deletion-policy
                  :depends-on ::depends-on
                  :creation-policy ::creation-policy
                  :update-policy ::update-policy
-                 :metadata ::metadata))
+                 :metadata ::metadata
+                 :condition ::condition))
 
 (s/def ::policies (s/keys :opt [::deletion-policy
                                 ::depends-on
                                 ::creation-policy
                                 ::update-policy
-                                ::metadata]))
+                                ::metadata
+                                ::condition]))
 
 
 (defn deletion [policy]
-  policy)
+  {::deletion-policy policy})
 
 (defn depends-on [kw]
-  kw)
+  {::depends-on kw})
 
 (defn creation-policy [policy]
-  policy)
+  {::creation-policy policy})
 
 (defn update-policy [policy]
-  policy)
+  {::update-policy policy})
 
 (defn metadata [policy]
-  policy)
+  {::metadata policy})
+
+(defn condition [kw]
+  {::condition kw})

@@ -135,11 +135,17 @@
   (testing "template with single condition"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Description" "t"
-            "Conditions" {"Production" {"Fn::Equals" [{"Ref" "AWS::StackName"} "production"]}}}
+            "Conditions" {"Production" {"Fn::Equals" [{"Ref" "AWS::StackName"} "production"]}}
+            "Resources" {"MyVpc" {"Type" "AWS::EC2::VPC" "Properties" {"CidrBlock" "0.0.0.0/0"}
+                                  "Condition" "Production"}}}
            (cheshire.core/decode
             (encode
              (template "t"
-                       :production (condition (equals stack-name "production"))))))))
+                       :production (condition (equals stack-name "production"))
+                       :my-vpc (ec2/vpc
+                                {::ec2/cidr-block "0.0.0.0/0"}
+                                (pol/condition :production))
+                       ))))))
 
   (testing "template with multiple conditions"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
