@@ -20,7 +20,7 @@ please mention that on your PR or a comment to your PR.
 ### Current maintainers:
 - [brabster](https://github.com/brabster)
 - [keerts](https://github.com/keerts)
-- [shooit]((https://github.com/shooit)
+- [shooit](https://github.com/shooit)
 
 1. Check that there's some kind of test coverage for code changes.
    The minimum is just to check that the new code produces a template without error.
