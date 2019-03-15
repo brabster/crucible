@@ -37,7 +37,7 @@
 
 (def invalid? (complement s/valid?))
 
-(s/def ::policy-list (s/* ::policies/policy))
+(s/def ::policy-list (s/* ::policies/policies))
 
 (defn resource-factory [resource-type props-spec]
   (if-not (s/valid? ::type resource-type)
