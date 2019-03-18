@@ -45,10 +45,10 @@
 (s/def ::load-balancer-names (s/* ::load-balancer-name))
 (s/def ::metric-collection (s/keys :req [::granularity]
                                    :opt [::metrics]))
-(s/def ::metric-collections (s/* ::metric-collection))
+(s/def ::metrics-collection (s/* ::metric-collection))
 (s/def ::notification-configuration (s/keys :req [::notification-types
                                                   ::topic-arn]))
-(s/def ::notification-configurations (s/* ::metric-collection))
+(s/def ::notification-configurations (s/* ::metrics-collection))
 (s/def ::placement-group (spec-or-ref string?))
 (s/def ::target-group-arn (spec-or-ref string?))
 (s/def ::target-group-arns (s/* ::target-group-arn))
