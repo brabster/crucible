@@ -18,4 +18,4 @@
           :opt [::db-subnet-group-name
                 :crucible.resources/tags]))
 
-(defresource db-subnet-group "AWS::Neptune::SubnetGroup" ::db-subnet-group)
+(defresource db-subnet-group "AWS::Neptune::DBSubnetGroup" ::db-subnet-group)
