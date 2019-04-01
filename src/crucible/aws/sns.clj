@@ -8,12 +8,12 @@
 
 (s/def ::topic-name (spec-or-ref string?))
 
-(s/def ::endpoint string?)
+(s/def ::endpoint (spec-or-ref string?))
 
 (s/def ::protocol #{"http" "https" "email" "email-json" "sms" "sqs" "application" "lambda"})
 
-(s/def ::subscription (s/* (s/keys :req [::endpoint
-                                         ::protocol])))
+(s/def ::subscription (s/coll-of (s/keys :req [::endpoint
+                                               ::protocol])))
 
 (s/def ::topic (s/keys :opt [::display-name
                              ::topic-name
