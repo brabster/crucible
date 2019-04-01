@@ -5,9 +5,13 @@
             [crucible.encoding.keys :refer [->key]]
             [clojure.spec.alpha :as s]))
 
-(defmethod ->key ::ok-actions [_] "OKActions")
+(defmethod ->key :ok-actions [_] "OKActions")
 
-(s/def ::actions-enabled (spec-or-ref string? #_boolean?))
+(s/def ::actions-enabled (spec-or-ref boolean?))
+
+(s/def ::actions (s/coll-of (spec-or-ref string?) :kind vector?))
+
+(s/def ::alarm-actions ::actions)
 
 (s/def ::alarm-description (spec-or-ref string?))
 
@@ -26,18 +30,24 @@
 
 (s/def ::dimensions (s/coll-of ::dimension :kind vector?))
 
-(s/def ::evaluation-periods (spec-or-ref string? #_pos-int?))
+(s/def ::evaluation-periods (spec-or-ref pos-int?))
+
+;; The percentile statistic for the metric. Specify a value between p0.0 and p100.
+(s/def ::extended-statistic (spec-or-ref (s/and string?
+                                                #(clojure.string/starts-with? % "p"))))
+
+(s/def ::insufficient-data-actions ::actions)
 
 (s/def ::metric-name (spec-or-ref string?))
 
 (s/def ::namespace (spec-or-ref string?))
 
-(s/def ::ok-actions (s/coll-of (spec-or-ref string?) :kind vector?))
-(s/def ::insufficient-data-actions ::ok-actions)
-(s/def ::alarm-actions (s/coll-of (spec-or-ref string?) :kind vector?))
+(s/def ::ok-actions ::actions)
 
-(s/def ::period (spec-or-ref string? #_(s/and pos-int?
-                                              #(= 0 (mod % 60)))))
+;; The time over which the specified statistic is applied.
+;; Specify time in seconds, in multiples of 60.
+(s/def ::period (spec-or-ref (s/and pos-int?
+                                    #(zero? (mod % 60)))))
 
 (s/def ::statistic (spec-or-ref #{"SampleCount"
                                   "Average"
@@ -45,7 +55,12 @@
                                   "Minimum"
                                   "Maximum"}))
 
-(s/def ::threshold (spec-or-ref string? #_number?))
+(s/def ::threshold (spec-or-ref double?))
+
+(s/def ::treat-missing-data (spec-or-ref #{"breaching"
+                                           "notBreaching"
+                                           "ignore"
+                                           "missing"}))
 
 (s/def ::unit (spec-or-ref #{"Seconds"
                              "Microseconds"
@@ -79,7 +94,6 @@
                              ::metric-name
                              ::namespace
                              ::period
-                             ::statistic
                              ::threshold]
                        :opt [::actions-enabled
                              ::alarm-actions
@@ -88,6 +102,7 @@
                              ::dimensions
                              ::insufficient-data-actions
                              ::ok-actions
+                             ::statistic
                              ::unit]))
 
 (defresource alarm "AWS::CloudWatch::Alarm" ::alarm)
