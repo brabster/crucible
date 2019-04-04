@@ -134,3 +134,10 @@
                                                                  "logs:PutLogEvents"]
                                                        ::effect "Allow"
                                                        ::resource "*"})}}]}))
+
+(s/def ::instance-profile-name (spec-or-ref string?))
+
+(s/def ::instance-profile (s/keys :req [::roles]
+                                  :opt [::path]))
+
+(defresource instance-profile "AWS::IAM::InstanceProfile" ::instance-profile)
