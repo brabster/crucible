@@ -11,7 +11,8 @@
             [crucible.aws
              [ec2 :as ec2]
              [dynamodb :as ddb]
-             [auto-scaling :as as]]))
+             [auto-scaling :as as]
+             [iam :as iam]]))
 
 (def vpc-crucible (ec2/vpc {::ec2/cidr-block "10.0.0.0/16"}))
 (def vpc-cf {"Type" "AWS::EC2::VPC"
@@ -256,3 +257,20 @@
 (deftest resource-reference-validation-test
   (testing "reference non-existent parameter from resource property throws"
     (is (thrown? Exception (template "t" :my-resource (ec2/vpc {::ec2/cidr-block (xref :foo)}))))))
+
+(deftest iam-instance-profile-test
+  (testing "template with instance profile"
+    (is (= {"AWSTemplateFormatVersion" "2010-09-09"
+            "Description" "t"
+            "Resources" 
+            {"InstanceProfile"
+             {"Type" "AWS::IAM::InstanceProfile",
+              "Properties" {"Path" "/",
+                            "Roles" ["my-role"]}}}}
+           (cheshire.core/decode
+            (encode
+             (template "t"
+                       :instance-profile
+                       (iam/instance-profile
+                        {::iam/path "/"
+                         ::iam/roles ["my-role"]}))))))))
