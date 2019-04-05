@@ -262,7 +262,7 @@
   (testing "template with instance profile"
     (is (= {"AWSTemplateFormatVersion" "2010-09-09"
             "Description" "t"
-            "Resources" 
+            "Resources"
             {"InstanceProfile"
              {"Type" "AWS::IAM::InstanceProfile",
               "Properties" {"Path" "/",
