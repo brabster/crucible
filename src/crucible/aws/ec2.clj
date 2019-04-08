@@ -120,3 +120,28 @@
                                       ::vpc-id]))
 
 (defresource security-group (ec2 "SecurityGroup") ::security-group)
+
+(s/def ::device-name (spec-or-ref string?))
+(s/def ::volume-size (spec-or-ref int?))
+(s/def ::volume-type #{"standard" "io1" "gp2" "st1" "sc1"})
+(s/def ::ebs (s/keys :req [::volume-size]))
+(s/def ::block-device-mappings (s/*
+                                (s/keys :req [::device-name
+                                              ::ebs])))
+
+(s/def ::auto-enable-io boolean?)
+(s/def ::encrypted boolean?)
+(s/def ::iops int?)
+(s/def ::kms-key-id string?)
+(s/def ::size int?)
+(s/def ::snapshot-id string?)
+(s/def ::volume (s/keys :req [::availability-zone]
+                        :opt [::volume-type
+                              ::auto-enable-io
+                              ::iops
+                              ::kms-key-id
+                              ::size
+                              ::snapshot-id
+                              ::res/tags]))
+
+(defresource ebs-volume "AWS::EC2::Volume" ::volume)
