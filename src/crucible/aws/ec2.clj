@@ -135,7 +135,7 @@
 (s/def ::kms-key-id string?)
 (s/def ::size int?)
 (s/def ::snapshot-id string?)
-(s/def ::volume (s/keys :req [::ec2/availability-zone]
+(s/def ::volume (s/keys :req [::availability-zone]
                         :opt [::volume-type
                               ::auto-enable-io
                               ::iops

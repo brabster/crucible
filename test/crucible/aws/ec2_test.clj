@@ -97,3 +97,14 @@
                   (xref :elastic-load-balancer (keyword "SourceSecurityGroup.OwnerAlias"))
                   :source-security-group-name
                   (xref :elastic-load-balancer (keyword "SourceSecurityGroup.GroupName"))}]}))))))))
+
+(deftest ebs-volume-test
+  (testing "test ebs volume spec"
+    (is (s/valid? ::res/resource 
+                  (second (ec2/ebs-volume
+                           {::ec2/availability-zone "us-east-1c"
+                            ::ec2/size 200
+                            ::ec2/volume-type "gp2"
+                            ::res/tags [{::res/key "Name"
+                                         ::res/value "My Volume"}]}))))))
+
