@@ -2,8 +2,8 @@
   (:require [clojure.spec.alpha :as s]
             [crucible.encoding.keys :refer [->key]]))
 
-(s/def ::min-successful-instance-percent int?)
-(s/def ::auto-scaling-creation-policy (s/keys :opt [::min-successful-instance-percent]))
+(s/def ::min-successful-instances-percent int?)
+(s/def ::auto-scaling-creation-policy (s/keys :opt [::min-successful-instances-percent]))
 
 (s/def ::count int?)
 (s/def ::timeout string?)
@@ -20,14 +20,14 @@
 (s/def ::auto-scaling-replacing-update (s/keys :opt [::will-replace]))
 
 (s/def ::max-batch-size int?)
-(s/def ::min-instance-in-service int?)
+(s/def ::min-instances-in-service int?)
 (s/def ::pause-time string?)
 (s/def ::suspend-processes (s/* string?))
 (s/def ::wait-on-resource-signals boolean?)
 
 (s/def ::auto-scaling-rolling-update (s/keys :opt [::max-batch-size
-                                                   ::min-instance-in-service
-                                                   ::min-successful-instance-percent
+                                                   ::min-instances-in-service
+                                                   ::min-successful-instances-percent
                                                    ::pause-time
                                                    ::suspend-processes
                                                    ::wait-on-resource-signals]))
