@@ -75,7 +75,7 @@
                                   "Properties" {"MaxSize" "0" "MinSize" "1"}
                                   "UpdatePolicy" {"AutoScalingRollingUpdate"
                                                     {"MaxBatchSize" 1
-                                                     "MinInstanceInService" 0
+                                                     "MinInstancesInService" 0
                                                      "PauseTime" "PT10M"
                                                      "WaitOnResourceSignals" true}}}}}
            (cheshire.core/decode
@@ -87,7 +87,7 @@
                                 (pol/update-policy
                                  {::pol/auto-scaling-rolling-update
                                   {::pol/max-batch-size 1
-                                   ::pol/min-instance-in-service 0
+                                   ::pol/min-instances-in-service 0
                                    ::pol/pause-time "PT10M"
                                    ::pol/wait-on-resource-signals true}})))))))))
 
