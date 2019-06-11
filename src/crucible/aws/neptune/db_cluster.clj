@@ -5,7 +5,8 @@
             [crucible.encoding.keys :refer [->key]]
             [crucible.resources :refer [spec-or-ref defresource]]))
 
-(s/def ::availability-zones (spec-or-ref (s/* string?)))
+(s/def ::availability-zones (spec-or-ref (s/coll-of (spec-or-ref string?)
+                                                    :kind vector?)))
 
 (s/def ::backup-retention-period (spec-or-ref pos-int?))
 
@@ -30,7 +31,8 @@
 
 (s/def ::storage-encrypted (spec-or-ref boolean?))
 
-(s/def ::vpc-security-group-ids (spec-or-ref (s/* string?)))
+(s/def ::vpc-security-group-ids (spec-or-ref (s/coll-of (spec-or-ref string?)
+                                                        :kind vector?)))
 
 (s/def ::db-cluster
   (s/keys :opt [::availability-zones
