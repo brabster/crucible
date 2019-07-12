@@ -8,10 +8,10 @@
 (defn rds [resource] (str "AWS::RDS::" (->key resource)))
 
 (defmethod ->key :db-cluster [_] "DBCluster")
-(defmethod ->key :db-instance [_] "DBCluster")
-(defmethod ->key :db-security-group [_] "DBCluster")
-(defmethod ->key :db-security-group-ingress [_] "DBCluster")
-(defmethod ->key :db-subnet-group [_] "DBCluster")
+(defmethod ->key :db-instance [_] "DBInstance")
+(defmethod ->key :db-security-group [_] "DBSecurityGroup")
+(defmethod ->key :db-security-group-ingress [_] "DBSecurityGroupIngress")
+(defmethod ->key :db-subnet-group [_] "DBSubnetGroup")
 
 (s/def ::db-instance (s/keys :opt [::dbi/allocated-storage
                                    ::dbi/allow-major-version-upgrade
