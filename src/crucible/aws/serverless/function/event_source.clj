@@ -8,8 +8,17 @@
             [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec.alpha :as s]))
 
-(s/def ::type
-  #{"S3" "SNS" "Kinesis" "DynamoDB" "Api" "Schedule" "CloudWatchEvent" "CloudWatchLogs"})
+(s/def ::type #{"AlexaSkill"
+                "Api"
+                "CloudWatchEvent"
+                "CloudWatchLogs"
+                "DynamoDB"
+                "IoTRule"
+                "Kinesis"
+                "S3"
+                "Schedule"
+                "SNS"
+                "SQS"})
 
 (defmulti event-source ::type)
 
