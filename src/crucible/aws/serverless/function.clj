@@ -17,7 +17,7 @@
 
 (s/def ::inline-code (spec-or-ref string?))
 
-(s/def ::function-name (spec-or-ref string?))
+(s/def ::function-name (spec-or-ref (s/and string? #(<= (count %) 64))))
 
 (s/def ::description (spec-or-ref string?))
 
