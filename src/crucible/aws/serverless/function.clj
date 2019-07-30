@@ -2,6 +2,7 @@
   (:require [crucible.aws.iam :as iam]
             [crucible.aws.lambda :as lambda]
             [crucible.aws.serverless :as sam]
+            [crucible.aws.serverless.function.dead-letter-queue :as dlq]
             [crucible.aws.serverless.function.event-source :as event-source]
             [crucible.resources :refer [spec-or-ref defresource]]
             [clojure.spec.alpha :as s]))
@@ -43,6 +44,8 @@
 
 (s/def ::tags ::sam/tags)
 
+(s/def ::reserved-concurrent-executions (spec-or-ref int?))
+
 (s/def ::function
   (s/keys :opt [::handler ; required but could be in globals
                 ::runtime ; required but could be in globals
@@ -58,6 +61,8 @@
                 ::policies
                 ::environment
                 ::vpc-config
-                ::tags]))
+                ::tags
+                ::dlq/dead-letter-queue
+                ::reserved-concurrent-executions]))
 
 (defresource function "AWS::Serverless::Function" ::function)
