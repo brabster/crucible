@@ -65,13 +65,13 @@
 
 (s/def ::event-source-arn (spec-or-ref string?))
 
-(s/def ::starting-postition (spec-or-ref #{"TRIM_HORIZON" "LATEST"}))
+(s/def ::starting-position (spec-or-ref #{"TRIM_HORIZON" "LATEST"}))
 
 (s/def ::event-source-mapping (s/keys :req [::event-source-arn
-                                            ::function-name
-                                            ::starting-position]
+                                            ::function-name]
                                       :opt [::batch-size
-                                            ::enabled]))
+                                            ::enabled
+                                            ::starting-position]))
 
 (defresource event-source-mapping "AWS::Lambda::EventSourceMapping" ::event-source-mapping)
 
