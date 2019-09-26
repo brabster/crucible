@@ -1,9 +1,8 @@
 (ns crucible.aws.cloudwatch.anomaly-detector
-  (:require [crucible.aws.cloudwatch :as cloudwatch]
-            [crucible.resources :refer [spec-or-ref defresource] :as res]
+  (:require [clojure.spec.alpha :as s]
+            [crucible.aws.cloudwatch :as cloudwatch]
             [crucible.encoding.keys :refer [->key]]
-            [crucible.values :as v]
-            [clojure.spec.alpha :as s]))
+            [crucible.resources :refer [defresource spec-or-ref]]))
 
 (s/def ::value (spec-or-ref string?))
 
