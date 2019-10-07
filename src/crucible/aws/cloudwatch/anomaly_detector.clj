@@ -10,7 +10,7 @@
 
 (s/def ::dimension (s/keys :req [::name ::value]))
 
-(s/def ::dimensions (s/coll-of ::dimension :kind vector?))
+(s/def ::dimensions (s/coll-of ::dimension))
 
 (s/def ::stat ::cloudwatch/statistic)
 
