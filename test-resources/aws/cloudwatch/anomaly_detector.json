@@ -1,0 +1,19 @@
+{
+  "Type" : "AWS::CloudWatch::AnomalyDetector",
+  "Properties" : {
+    "Configuration" : {
+      "ExcludedTimeRanges": [{
+        "EndTime": "2019-07-01T23:59:59",
+        "StartTime": "2019-07-01T23:59:59"
+      }],
+      "MetricTimeZone": "America/New_York"
+      },
+      "Dimensions" : [{
+        "Name": "Memory",
+        "Value": "UsedMemory"
+      }],
+      "MetricName" : "JvmMetric",
+      "Namespace" : "AWSSDK/Java",
+      "Stat" : "Average"
+    }
+}
