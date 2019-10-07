@@ -27,8 +27,7 @@
 
 (s/def ::ranges (s/coll-of ::range))
 
-(s/def ::name-space (spec-or-ref string?))
-(defmethod ->key :name-space [_] "Namespace")
+(s/def ::namespace (spec-or-ref string?))
 
 (s/def ::metric-name (spec-or-ref string?))
 
@@ -39,7 +38,7 @@
 (s/def ::configuration (s/keys :opt [::excluded-time-ranges ::metric-time-zone]))
 
 (s/def ::anomaly-detector (s/keys :req [::metric-name
-                                        ::name-space
+                                        ::namespace
                                         ::stat]))
 
 (defresource anomaly-detector "AWS::CloudWatch::AnomalyDetector" ::anomaly-detector)

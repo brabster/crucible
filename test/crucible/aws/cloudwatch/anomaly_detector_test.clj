@@ -10,7 +10,7 @@
     (is (resource=
          (json/decode (slurp (io/resource "aws/cloudwatch/anomaly_detector.json")))
          (ad/anomaly-detector
-          {::ad/name-space "AWSSDK/Java"
+          {::ad/namespace "AWSSDK/Java"
            ::ad/stat "Average"
            ::ad/metric-name "JvmMetric"
            ::ad/configuration
