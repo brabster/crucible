@@ -20,15 +20,21 @@
 (s/def ::comparison-operator (spec-or-ref #{"GreaterThanOrEqualToThreshold"
                                             "GreaterThanThreshold"
                                             "LessThanThreshold"
-                                            "LessThanOrEqualToThreshold"}))
+                                            "LessThanOrEqualToThreshold"
+                                            "LessThanLowerThreshold"
+                                            "LessThanLowerOrGreaterThanUpperThreshold"}))
 
 (s/def ::value (spec-or-ref string?))
 
 (s/def ::name (spec-or-ref string?))
 
+(s/def ::datapoints-to-alarm (spec-or-ref int?))
+
 (s/def ::dimension (s/keys :req [::name ::value]))
 
 (s/def ::dimensions (s/coll-of ::dimension :kind vector?))
+
+(s/def ::evaluate-low-sample-count-percentile (spec-or-ref string?))
 
 (s/def ::evaluation-periods (spec-or-ref pos-int?))
 
@@ -39,6 +45,31 @@
 (s/def ::insufficient-data-actions ::actions)
 
 (s/def ::metric-name (spec-or-ref string?))
+
+(s/def ::expression (spec-or-ref string?))
+
+(s/def ::id (spec-or-ref string?))
+
+(s/def ::label (spec-or-ref string?))
+
+(s/def ::metric (s/keys :opt [::dimensions
+                              ::metric-name
+                              ::namespace]))
+
+(s/def ::metric-stat (s/keys :req [::metric
+                                   ::period
+                                   ::stat]
+                             :opt [::unit]))
+
+(s/def ::return-data (spec-or-ref boolean?))
+
+(s/def ::metric-data-query (s/keys :req [::id]
+                                   :opt [::expression
+                                         ::label
+                                         ::metric-stat
+                                         ::return-data]))
+
+(s/def ::metrics (s/coll-of ::metric-data-query))
 
 (s/def ::namespace (spec-or-ref string?))
 
@@ -56,6 +87,8 @@
                                   "Maximum"}))
 
 (s/def ::threshold (spec-or-ref double?))
+
+(s/def ::threshold-metric-id (spec-or-ref string?))
 
 (s/def ::treat-missing-data (spec-or-ref #{"breaching"
                                            "notBreaching"
@@ -90,12 +123,10 @@
                              "None"}))
 
 (s/def ::alarm (s/keys :req [::comparison-operator
-                             ::evaluation-periods
+                             ::evaluation-periods]
+                       :opt [::namespace
                              ::metric-name
-                             ::namespace
-                             ::period
-                             ::threshold]
-                       :opt [::actions-enabled
+                             ::actions-enabled
                              ::alarm-actions
                              ::alarm-description
                              ::alarm-name
@@ -103,6 +134,12 @@
                              ::insufficient-data-actions
                              ::ok-actions
                              ::statistic
-                             ::unit]))
+                             ::unit
+                             ::datapoints-to-alarm
+                             ::evaluate-low-sample-count-percentile
+                             ::metrics
+                             ::period
+                             ::threshold
+                             ::threshold-metric-id]))
 
 (defresource alarm "AWS::CloudWatch::Alarm" ::alarm)
