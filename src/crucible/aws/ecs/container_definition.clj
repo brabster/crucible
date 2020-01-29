@@ -2,7 +2,8 @@
   "AWS::ECS::TaskDefinition > ContainerDefinition"
   (:require [clojure.spec.alpha :as s]
             [crucible.aws.ecs.key-value-pair :as key-value-pair]
-            [crucible.resources :refer [spec-or-ref]]))
+            [crucible.resources :refer [spec-or-ref]]
+            [crucible.aws.ecs.secret :as secret]))
 
 (s/def ::image (spec-or-ref string?))
 
@@ -87,6 +88,8 @@
 (s/def ::hard-limit (spec-or-ref integer?))
 (s/def ::soft-limit (spec-or-ref integer?))
 
+(s/def ::secrets (s/coll-of ::secret/secret-spec :kind vector?))
+
 (s/def ::ulimits (s/keys :req [::hard-limit
                                ::soft-limit]
                          :opt [::name]))
@@ -123,6 +126,7 @@
                                             ::port-mappings
                                             ::privileged
                                             ::readonly-root-filesystem
+                                            ::secrets
                                             ::ulimits
                                             ::user
                                             ::volumes-from
