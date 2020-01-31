@@ -12,7 +12,7 @@
 (defmethod ->key :db-parameter-group-name [_] "DBParameterGroupName")
 (defmethod ->key :db-security-groups [_] "DBSecurityGroups")
 (defmethod ->key :db-snapshot-identifier [_] "DBSnapshotIdentifier")
-(defmethod ->key :db-snapshot-group-name [_] "DBSubnetGroupName")
+(defmethod ->key :db-subnet-group-name [_] "DBSubnetGroupName")
 (defmethod ->key :domain-iam-role-name [_] "DomainIAMRoleName")
 (defmethod ->key :multi-az [_] "MultiAZ")
 (defmethod ->key :source-db-instance-identifier [_] "SourceDBInstanceIdentifier")
@@ -46,7 +46,7 @@
 
 (s/def ::db-snapshot-identifier (spec-or-ref string?))
 
-(s/def ::db-snapshot-group-name (spec-or-ref string?))
+(s/def ::db-subnet-group-name (spec-or-ref string?))
 
 (s/def ::domain (spec-or-ref string?))
 
