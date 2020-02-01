@@ -3,6 +3,7 @@
   (:require [clojure.spec.alpha :as s]
             [crucible.resources :refer [spec-or-ref defresource] :as res]
             [crucible.encoding.keys :refer [->key]]
+            [crucible.aws.rds.db-subnet-group :as db-subnet-group]
             [crucible.aws.rds.db-instance :as dbi]))
 
 (defn rds [resource] (str "AWS::RDS::" (->key resource)))
@@ -63,8 +64,7 @@
 (s/def ::db-security-group-ingress any?)
 (defresource db-security-group-ingress (rds :db-security-group-ingress) ::db-security-group-ingress)
 
-(s/def ::db-subnet-group any?)
-(defresource db-subnet-group (rds :db-subnet-group) ::db-subnet-group)
+(defresource db-subnet-group (rds :db-subnet-group) ::db-subnet-group/db-subnet-group-spec)
 
 (s/def ::event-subscription any?)
 (defresource event-subscription (rds :event-subscription) ::event-subscription)
