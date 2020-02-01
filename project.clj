@@ -3,11 +3,11 @@
   :url "http://github.com/brabster/crucible"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[camel-snake-kebab "0.4.0"]
-                 [cheshire "5.8.1"]
-                 [org.clojure/tools.namespace "0.2.11"]
+  :dependencies [[camel-snake-kebab "0.4.1"]
+                 [cheshire "5.9.0"]
+                 [org.clojure/tools.namespace "0.3.1"]
                  [org.clojure/tools.cli "0.4.2"]
-                 [expound "0.7.2"]]
+                 [expound "0.8.4"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
   :codox {:output-path "target/docs"
@@ -48,6 +48,6 @@
                                :unused-private-vars]
              :exclude-linters [:suspicious-expression]}
   :profiles {:uberjar {:aot :all}
-             :provided {:dependencies [[org.clojure/clojure "1.10.0"]]}
+             :provided {:dependencies [[org.clojure/clojure "1.10.1"]]}
              :dev {:resource-paths ["test-resources"]
-                   :dependencies [[org.clojure/test.check "0.9.0"]]}})
+                   :dependencies [[org.clojure/test.check "0.10.0"]]}})
