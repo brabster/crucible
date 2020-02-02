@@ -14,13 +14,13 @@
           :source-uri "https://github.com/brabster/crucible/blob/{version}/{filepath}#L{line}"}
   :plugins [[org.clojure/tools.cli "0.4.2" :exclusions [org.clojure/clojure]]
             [lein-ancient "0.6.15"]
-            [com.livingsocial/lein-dependency-check "1.0.2"]
-            [lein-kibit "0.1.6" :exclusions [org.clojure/clojure
+            [com.livingsocial/lein-dependency-check "1.1.4"]
+            [lein-kibit "0.1.8" :exclusions [org.clojure/clojure
                                              org.clojure/tools.cli]]
-            [jonase/eastwood "0.3.3"]
-            [lein-bikeshed "0.5.1"]
-            [lein-cloverage "1.0.13"]
-            [lein-codox "0.10.5"]]
+            [jonase/eastwood "0.3.7"]
+            [lein-bikeshed "0.5.2"]
+            [lein-cloverage "1.1.2"]
+            [lein-codox "0.10.7"]]
   :repositories [["snapshots" {:url "https://clojars.org/repo"
                                :username :env/clojars_username
                                :password :env/clojars_password}]
