@@ -5,8 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[camel-snake-kebab "0.4.1"]
                  [cheshire "5.10.0"]
-                 [org.clojure/tools.namespace "0.3.1"]
-                 [org.clojure/tools.cli "0.4.2"]
+                 [org.clojure/tools.namespace "1.0.0"]
+                 [org.clojure/tools.cli "1.0.194"]
                  [expound "0.8.4"]]
   :dependency-check {:throw true}
   :exclusions [org.clojure/clojure]
@@ -50,4 +50,4 @@
   :profiles {:uberjar {:aot :all}
              :provided {:dependencies [[org.clojure/clojure "1.10.1"]]}
              :dev {:resource-paths ["test-resources"]
-                   :dependencies [[org.clojure/test.check "0.10.0"]]}})
+                   :dependencies [[org.clojure/test.check "1.0.0"]]}})
