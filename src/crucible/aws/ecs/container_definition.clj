@@ -57,8 +57,11 @@
 (s/def ::log-driver (spec-or-ref string?))
 (s/def ::options (s/map-of (s/or :kw keyword? :str string?) (spec-or-ref string?)))
 
+(s/def ::secret-options (s/coll-of map?))
+
 (s/def ::log-configuration (s/keys :req [::log-driver]
-                                   :opt [::options]))
+                                   :opt [::options
+                                         ::secret-options]))
 
 (s/def ::memory (spec-or-ref integer?))
 
