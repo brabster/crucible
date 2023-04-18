@@ -67,9 +67,11 @@
 (s/def ::source-volume (spec-or-ref string?))
 (s/def ::read-only (spec-or-ref boolean?))
 
-(s/def ::mount-points (s/keys :req [::container-path
+(s/def ::mount-point (s/keys :req [::container-path
                                     ::source-volume]
                               :opt [::read-only]))
+
+(s/def ::mount-points (s/coll-of ::mount-point))
 
 (s/def ::container-port (spec-or-ref integer?))
 (s/def ::host-port (spec-or-ref integer?))
